@@ -22,13 +22,12 @@ for path in paths:
             prices_table.append(tickers_parse)
             print(path_in_str)
         else:
-
+            pass
     except:
         pass
 
 # export everything
 prices_table = pd.concat(prices_table)
 prices_table.drop_duplicates()
-prices_table.to_csv(os.path.join(cwd,input_folder,"2_prices_updated.csv"), index=False)
-
+prices_table.to_csv(os.path.join(cwd,input_folder,"2_process_prices.csv"), index=False)
 print('process_prices - done')

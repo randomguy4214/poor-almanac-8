@@ -1,6 +1,4 @@
 #!/usr/bin/python
-import sys
-
 print('update_prices - initiating.')
 
 import os
@@ -12,7 +10,6 @@ prices_folder = "data"
 output_folder = "0_output"
 temp_folder = "temp"
 prices_temp = "prices"
-financials_temp = "financials"
 
 #check year
 todays_date = datetime.date.today()
@@ -21,19 +18,16 @@ full_year = datetime.timedelta(days = 365)
 year_ago = todays_date - full_year
 year_ago_str = str(year_ago)
 
-#setting up tiingo
-api_token_df = pd.read_csv(os.path.join(cwd,"0_api_token.csv"))
-api_token = api_token_df.iloc[0,1]
-url1 = "https://api.tiingo.com/tiingo/"
-daily_str = "daily/"
-prices_str = "/prices"
-start_date = "?startDate="
-token = "token="
+#setting up fmpcloud
+#https://fmpcloud.io/api/v3/historical-price-full/AAPL?datatype=csv&timeseries=255&apikey=
+token_df = pd.read_csv(os.path.join(cwd,"0_api_token.csv"))
+token = token_df.iloc[0,1]
+url1 = "https://fmpcloud.io/api/v3/historical-price-full/"
+time_str = "timeseries=255" # set to 255 exchange working days (ca. full year)
+apikey = "apikey="
 amp = "&"
-csv = "format=csv"
-fund_str = "fundamentals/"
-daily_2_str = "/daily?"
-# https://api.tiingo.com/tiingo/fundamentals/aapl/daily?token=&format=csv
+csv = "?datatype=csv"
+timeseries = "timeseries="
 
 # prepare tickers list
 tickers_narrowed = pd.read_csv(os.path.join(cwd,"0_symbols.csv"))
@@ -53,17 +47,11 @@ for t in tickers.split(' '):
         n = pd.to_numeric(tickers_narrowed["symbol"][tickers_narrowed["symbol"] == t].index).values
         if n > last_ticker_nn:
             # download marcap
-            final_url_2 = url1 + fund_str + t + daily_2_str + token + api_token + amp + csv
-            df2 = pd.read_csv(final_url_2)
-            # download prices
-            final_url = url1 + daily_str + t + prices_str + start_date + year_ago_str + amp + token + api_token + amp + csv
+            final_url = url1 + t + csv + amp + time_str + amp + apikey + token
             df = pd.read_csv(final_url)
-            # merge & export
-            df_merged = pd.merge(df,df2, how='left', left_on=['date'], right_on=['date'], suffixes=('', '_drop'))
-            df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
-            df_merged['symbol'] = t
+            df['symbol'] = t
             name = t + ".csv"
-            df_merged.to_csv(os.path.join(cwd, input_folder, temp_folder, prices_temp, name))
+            df.to_csv(os.path.join(cwd, input_folder, temp_folder, prices_temp, name))
             # print & export last_n
             nn = n[0] # get number out of numpy.array
             nnn = round(nn/index_max*100,1)

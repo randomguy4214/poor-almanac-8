@@ -1,19 +1,17 @@
 #!/usr/bin/python
-
 print('0 checks - initiated')
 
 import os
 import pandas as pd
-
-pd.options.mode.chained_assignment = None  # default='warn'
 
 # set directories and files
 cwd = os.getcwd()
 input_folder = "0_input"
 temp_folder = "temp"
 prices_temp = "prices"
-financials_temp = "financials"
-
+financials_a_temp = "financials_a"
+financials_q_temp = "financials_q"
+other_temp = "other"
 
 # check folder 0_input
 if not os.path.exists(os.path.join(cwd,input_folder)):
@@ -29,34 +27,27 @@ if not os.path.exists(os.path.join(cwd,input_folder,temp_folder)):
 else:
     print("temp folder exists")
 
-# check temp prices folders
+# check temp subfolders
 if not os.path.exists(os.path.join(cwd,input_folder,temp_folder, prices_temp)):
     os.mkdir(os.path.join(cwd,input_folder,temp_folder, prices_temp))
-    print("temp prices csv folder created")
+    os.mkdir(os.path.join(cwd, input_folder, temp_folder, financials_a_temp))
+    os.mkdir(os.path.join(cwd, input_folder, temp_folder, financials_q_temp))
+    os.mkdir(os.path.join(cwd, input_folder, temp_folder, other_temp))
+    print("temp subfolders created")
 else:
-    print("temp prices csv folder exists")
-
-# check prices and financials folders
-if not os.path.exists(os.path.join(cwd, input_folder, temp_folder, financials_temp)):
-    os.mkdir(os.path.join(cwd, input_folder, temp_folder, financials_temp))
-    print("temp financials csv folder created")
-else:
-    print("temp financials csv exists")
+    print("temp subfolders exist")
 
 # check drop list tickers
 if not os.path.exists(os.path.join(cwd,"0_drop_list.xlsx")):
     drop_list = pd.DataFrame({
         'symbol': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
             , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-
         'industry': ['Biotechnology', 'Shell Companies', 'Banks—Regional', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
             , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-
         'country': ['United States', 'Germany', 'France', 'United Kingdom', 'Belgium', 'Netherlands Antilles'
             , 'South Korea', 'Switzerland', 'Taiwan', 'Austria', 'Netherlands', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                              })
-
     drop_list.to_excel(os.path.join(cwd,"0_drop_list.xlsx"))
     print("drop_list created")
 else:
@@ -79,10 +70,14 @@ else:
     print("good! prices_last_ticker_filtered already exists")
 
 # check financials_last_ticker
-if not os.path.exists(os.path.join(cwd,input_folder,temp_folder,"financials_last_ticker.csv")):
-    financials_quarterly_last_ticker = pd.DataFrame({'number': [0] })
-    financials_quarterly_last_ticker.to_csv(os.path.join(cwd,input_folder,temp_folder,"financials_last_ticker.csv"))
-    print("financials_last_ticker created")
+if not os.path.exists(os.path.join(cwd,input_folder,temp_folder,"financials_a_last_ticker.csv")):
+    financials_a_last_ticker = pd.DataFrame({'number': [0] })
+    financials_a_last_ticker.to_csv(os.path.join(cwd,input_folder,temp_folder,"financials_a_last_ticker.csv"))
+    print("financials_a_last_ticker created")
+
+    financials_q_last_ticker = pd.DataFrame({'number': [0] })
+    financials_q_last_ticker.to_csv(os.path.join(cwd,input_folder,temp_folder,"financials_q_last_ticker.csv"))
+    print("financials_q_last_ticker created")
 else:
     print("good! financials_last_ticker already exists")
 
@@ -90,15 +85,21 @@ else:
 if not os.path.exists(os.path.join(cwd,"0_api_token.csv")):
     api_token = pd.DataFrame({'api_token': [0] })
     api_token.to_csv(os.path.join(cwd,"0_api_token.csv"))
-    print("api_token created - please fill in real api")
+    print("api_token created - please fill in real api token")
 else:
-    print("good! api_token already exists")
+    print("good! api token already exists")
 
 # check meta file
-if not os.path.exists(os.path.join(cwd,"0_meta.csv")):
-    print("meta not created, please upload")
+if not os.path.exists(os.path.join(cwd,"0_symbols.csv")):
+    api_token_df = pd.read_csv(os.path.join(cwd,"0_api_token.csv"))
+    api_token = api_token_df.iloc[0,1]
+    url1 = "https://fmpcloud.io/api/v3/financial-statement-symbol-lists?datatype=csv&apikey="
+    url_symbols = url1 + api_token
+    df = pd.read_csv(url_symbols)
+    df.to_csv(os.path.join(cwd, "0_symbols.csv"))
+    print("symbols downloaded if you put your api token")
 else:
-    print("good! meta data already exists")
+    print("good! symbols already exist")
 
 print(cwd, '<<< working directory')
 print('0 checks - done')

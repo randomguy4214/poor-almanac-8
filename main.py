@@ -1,16 +1,27 @@
-# This is a sample Python script.
+#!/usr/bin/python
+bundle_main = "bundle_main"
+from bundle_main import checks
+# multithreaded import of prices and fundamentals.
+from threading import Thread
+def a():
+    from bundle_main import update_prices
+    from bundle_main import process_prices
+def b():
+    from bundle_main import update_financials_q
+    from bundle_main import process_financials_q
+def c():
+    from bundle_main import update_financials_a
+    from bundle_main import process_financials_q
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+# initiate multithreading
+Thread(target=a).start()
+Thread(target=b).start()
+Thread(target=c).start()
 
+# wait until they will finish
+Thread(target=a).join()
+Thread(target=b).join()
+Thread(target=c).join()
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+from bundle_main import datasets_merge
+from bundle_main import output

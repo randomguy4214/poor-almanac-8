@@ -1,11 +1,11 @@
 #!/usr/bin/python
-print('financials_process_annually - initiating.')
+print('financials_q - initiating.')
 import os
 import pandas as pd
 cwd = os.getcwd()
 input_folder = "0_input"
 temp_folder = "temp"
-financials_temp = "financials_annually"
+financials_temp = "financials_q"
 from pathlib import Path
 paths = Path(os.path.join(cwd,input_folder,temp_folder,financials_temp)).glob('**/*.csv')
 financials_table = []
@@ -24,15 +24,14 @@ for path in paths:
 # export
 financials_table = pd.concat(financials_table)
 financials_table.drop_duplicates()
-financials_table.to_csv(os.path.join(cwd,input_folder,"3_fundamentals_processed.csv"), index=False)
-financials_table.to_excel(os.path.join(cwd,input_folder,"3_fundamentals_processed.xlsx"))
+financials_table.to_csv(os.path.join(cwd,input_folder,"3_processed_financials_q.csv"), index=False)
 # export tickers
 stocks = financials_table[['symbol']].astype(str).drop_duplicates()
 stocks = stocks.sort_values(by=['symbol'], ascending= True)
-stocks.to_csv(os.path.join(cwd,input_folder,"2_tickers_fundamentals.csv"), index = False)
+stocks.to_csv(os.path.join(cwd,input_folder,"3_symbols_financials_q.csv"), index = False)
 # export column
 df_columns=pd.DataFrame(financials_table.columns.T)
-df_columns.to_excel(os.path.join(cwd,input_folder,'3_fundamentals_columns_annually.xlsx'))
+df_columns.to_excel(os.path.join(cwd,input_folder,'3_columns_financials_q.xlsx'))
 
-print('financials_process_annually - done')
+print('financials_q - processed')
 
