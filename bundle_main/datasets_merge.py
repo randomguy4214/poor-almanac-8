@@ -100,10 +100,20 @@ df_merged = pd.merge(df_to_merge, financials_TTM_sum
                      , right_on=['symbol'], suffixes=('', '_drop'))
 df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
 
+# merge other
+df_to_merge = df_merged
+df_merged = pd.merge(df_to_merge, other_table
+                     , how='left', left_on=['symbol']
+                     , right_on=['symbol'], suffixes=('', '_drop'))
+df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
+
+#
+#
 #
 df = df_merged
 #
-
+#
+#
 
 # adding variables
 #
