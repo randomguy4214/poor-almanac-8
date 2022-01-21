@@ -11,23 +11,14 @@ output_folder = "0_output"
 temp_folder = "temp"
 prices_temp = "prices"
 
-#check year
-todays_date = datetime.date.today()
-curr_year = todays_date.year
-full_year = datetime.timedelta(days = 365)
-year_ago = todays_date - full_year
-year_ago_str = str(year_ago)
-
 #setting up fmpcloud
-#https://fmpcloud.io/api/v3/historical-price-full/AAPL?datatype=csv&timeseries=255&apikey=
+#https://fmpcloud.io/api/v3/quote/AAPL?datatype=csv&timeseries=255&apikey=
 token_df = pd.read_csv(os.path.join(cwd,"0_api_token.csv"))
 token = token_df.iloc[0,1]
-url1 = "https://fmpcloud.io/api/v3/historical-price-full/"
-time_str = "timeseries=255" # set to 255 exchange working days (ca. full year)
+url1 = "https://fmpcloud.io/api/v3/quote/"
 apikey = "apikey="
 amp = "&"
 csv = "?datatype=csv"
-timeseries = "timeseries="
 
 # prepare tickers list
 tickers_narrowed = pd.read_csv(os.path.join(cwd,"0_symbols.csv"))
@@ -46,7 +37,7 @@ for t in tickers.split(' '):
     try:
         n = pd.to_numeric(tickers_narrowed["symbol"][tickers_narrowed["symbol"] == t].index).values
         if n > last_ticker_nn:
-            final_url = url1 + t + csv + amp + time_str + amp + apikey + token
+            final_url = url1 + t + csv + amp + apikey + token
             df = pd.read_csv(final_url)
             df['symbol'] = t
             name = t + ".csv"

@@ -24,6 +24,7 @@ for path in paths:
 # export
 financials_table = pd.concat(financials_table)
 financials_table.drop_duplicates()
+financials_table = financials_table.iloc[: , 1:]
 financials_table.to_csv(os.path.join(cwd,input_folder,"3_processed_financials_a.csv"), index=False)
 # export tickers
 stocks = financials_table[['symbol']].astype(str).drop_duplicates()

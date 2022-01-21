@@ -29,5 +29,6 @@ for path in paths:
 # export everything
 prices_table = pd.concat(prices_table)
 prices_table.drop_duplicates()
-prices_table.to_csv(os.path.join(cwd,input_folder,"2_process_prices.csv"), index=False)
+prices_table = prices_table.iloc[: , 1:]
+prices_table.to_csv(os.path.join(cwd,input_folder,"2_processed_prices.csv"), index=False)
 print('process_prices - done')
