@@ -15,170 +15,126 @@ output_folder = "0_output"
 temp_folder = "temp"
 
 # import
-prices_table = pd.read_csv(os.path.join(cwd,input_folder,"2_prices_updated.csv"), low_memory=False)
-fundamentals_table = pd.read_csv(os.path.join(cwd,input_folder,"3_fundamentals_processed.csv"), low_memory=False)
-print("importing fundamentals and prices is done")
+prices_table = pd.read_csv(os.path.join(cwd,input_folder,"2_processed_prices.csv"), low_memory=False)
+financials_a = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_financials_a.csv"), low_memory=False)
+financials_q = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_financials_q.csv"), low_memory=False)
+other_table = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_other.csv"), low_memory=False)
 
-# select only latest quarterly data to filter out balance sheet
-fundamentals_table = fundamentals_table[fundamentals_table['Period'] == "t0"]
-print("fundamentals_table period = t0")
+# select only latest year and last X years
+financials_a_last = financials_a.sort_values(['symbol','date'], ascending=False).groupby('symbol').head(1)
+financials_a_X = financials_a.sort_values(['symbol','date'], ascending=False).groupby('symbol').head(5)
 
-# splitting annual data
-df_y0 = fundamentals_table_annually[fundamentals_table_annually['Period'] == "y0"]
-df_y0.rename(columns={'totalRevenue': 'revenue_last_year'}, inplace=True)
-df_y0 = df_y0[['symbol', 'revenue_last_year']]
-
-# finding historical averages
-df_avg_historical = fundamentals_table.groupby(['symbol'])[['totalRevenue', 'capitalExpenditures', 'costOfRevenue', 'propertyPlantEquipment']].mean()
-df_avg_historical = df_avg_historical.reset_index(drop=False)
-df_avg_historical.rename(columns={'totalRevenue': 'mean_historical_revenue'
-                                    , 'capitalExpenditures': 'mean_historical_capex'
-                                    , 'costOfRevenue': 'mean_historical_costOfRevenue'
-                                  , 'propertyPlantEquipment': 'mean_historical_propertyPlantEquipment'}, inplace=True)
-df_avg_historical = df_avg_historical[['symbol', 'mean_historical_revenue', 'mean_historical_costOfRevenue'
-                                    , 'mean_historical_capex', 'mean_historical_propertyPlantEquipment']]
+# historical calc
+financials_a_last.rename(columns={'revenue': 'revenue_last_year'}, inplace=True)
+financials_mean = financials_a_X.groupby(['symbol'])[['revenue'
+                        , 'capitalExpenditure', 'costOfRevenue'
+                        , 'propertyPlantEquipmentNet']].mean()
+financials_mean.rename(columns={'revenue': 'mean_revenue'
+                       , 'capitalExpenditures': 'mean_capex'
+                       , 'costOfRevenue': 'mean_costOfRevenue'
+                       , 'propertyPlantEquipmentNet': 'mean_PPEnet'}
+                       , inplace=True)
 print("historical averages calculated")
 
-# merge fundamentals and prices
-df_merged = pd.merge(fundamentals_table, prices_table, how='left', left_on=['symbol'], right_on=['symbol'], suffixes=('', '_drop'))
+# merge last annual financials and prices
+df_merged = pd.merge(financials_a_last, prices_table
+                     , how='left', left_on=['symbol']
+                     , right_on=['symbol'], suffixes=('', '_drop'))
 df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
-df_merged.rename(columns={'52 Week High 3': '52h'
-    , '52 Week Low 3': '52l'
-    , 'Quote Price': 'p'
-    , 'Quarterly Revenue Growth (yoy)': 'QtrGrwth'}, inplace=True)
-print("raw fundamentals and prices merged")
-
-# merge TTM
+df_merged.rename(columns={'yearHigh': '52h'
+    , 'yearLow': '52l'
+    , 'price': 'p'}, inplace=True)
+# merge historical financials
 df_to_merge = df_merged
-df_merged = pd.merge(df_to_merge, df_ttm, how='left', left_on=['symbol'], right_on=['symbol'], suffixes=('', '_drop'))
+df_merged = pd.merge(df_to_merge, financials_mean
+                     , how='left', left_on=['symbol']
+                     , right_on=['symbol'], suffixes=('', '_drop'))
 df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
-print("ttm merged")
+df_annually = df_merged
 
-# merge last_year_revenue
+# select quarters
+financials_q_last = financials_q.sort_values(['symbol','date'], ascending=False).groupby('symbol').head(1)
+financials_q_last.rename(columns={'revenue': 'revenue_last_q'
+                                  , 'operatingExpenses':'operatingExpenses_last_q'
+                                  , 'totalStockholdersEquity' : 'totalStockholdersEquity_last_q'
+                                  , 'totalCurrentAssets':'totalCurrentAssets_last_q'
+                                  , 'totalCurrentLiabilities':'totalCurrentLiabilities_last_q'
+                                  , 'netDebt':'netDebt_last_q'
+                                  }
+                        , inplace=True)
+financials_q_minus_one_last = financials_q.sort_values(['symbol','date']
+                        , ascending=False).groupby('symbol').head(2).drop_duplicates(['symbol'], keep='last')
+financials_q_minus_one_last.rename(columns={'revenue': 'revenue_minus_one_q'
+                        , 'operatingExpenses':'operatingExpenses_minus_one_q'
+                        , 'netCashProvidedByOperatingActivites': 'ncfo_minus_one_q'}
+                        , inplace=True)
+
+# calc QoQ growth
+df_merged = pd.merge(financials_q_last, financials_q_minus_one_last
+                     , how='left', left_on=['symbol']
+                     , right_on=['symbol'], suffixes=('', '_drop'))
+df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
+df_QoQ = df_merged
+df_QoQ['QoQRev'] = df_QoQ['revenue_last_q'] / df_QoQ['revenue_minus_one_q'] -1
+df_QoQ['QoQncfo'] = df_QoQ['netCashProvidedByOperatingActivites'] / df_QoQ['ncfo_minus_one_q'] - 1
+
+# merge previous with QoQ
+df_to_merge = df_annually
+df_merged = pd.merge(df_to_merge, df_QoQ
+                     , how='left', left_on=['symbol']
+                     , right_on=['symbol'], suffixes=('', '_drop'))
+df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
+
+# calculate TTM
+financials_TTM = financials_q.sort_values(['symbol','date'], ascending=False).groupby('symbol').head(4)
+financials_TTM_sum = financials_TTM.groupby(['symbol']).sum()
+financials_TTM_sum.rename(columns={'revenue': 'revenue_TTM'
+                        , 'netCashProvidedByOperatingActivites': 'ncfo_TTM'
+                        , 'capitalExpenditure': 'capex_TTM'}
+                        , inplace=True)
+
+# merge previous with TTM
 df_to_merge = df_merged
-df_merged = pd.merge(df_to_merge, df_y0, how='left', left_on=['symbol'], right_on=['symbol'], suffixes=('', '_drop'))
+df_merged = pd.merge(df_to_merge, financials_TTM_sum
+                     , how='left', left_on=['symbol']
+                     , right_on=['symbol'], suffixes=('', '_drop'))
 df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
-print("last year revenue merged")
 
-# merge df_avg_historical
-df_to_merge = df_merged
-df_merged = pd.merge(df_to_merge, df_avg_historical, how='left', left_on=['symbol'], right_on=['symbol'], suffixes=('', '_drop'))
-df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
-print("historical averaged data")
-
-# fix prices and shares if missing or trash
-df_merged['p'].fillna(df_merged['Previous Close'], inplace=True)
-df_merged['p'].fillna(df_merged['Open'], inplace=True)
-df_merged['52l'].fillna(df_merged['fiftyTwoWeekLow'], inplace=True)
-df_merged['52h'].fillna(df_merged['fiftyTwoWeekHigh'], inplace=True)
-df_merged.loc[df_merged['sharesOutstanding'] < 1000, 'sharesOutstanding'] = df_merged['marketCap']/df_merged['p']
-
-# adding from low/high
-df_merged.loc[df_merged['p'] < df_merged['52l'], 'p'] = df_merged['52l'] # fix too low price
-df_merged['from_low'] = (df_merged['p'] - df_merged['52l'])/df_merged['52l'] * 100
-df_merged['from_high'] = (df_merged['p'] - df_merged['52h'])/df_merged['52h'] * 100
-#df_merged = df_merged[~(df_merged['from_low'] == 0) & ~(df_merged['from_high'] == -100)]
-#df_merged = df_merged[(df_merged['p'] > 0.001)]
-print('added low/high and filtered some trash')
-
-#fix if missing
-df_merged['sharesOutstanding'].fillna(df_merged['marketCap']/df_merged['p'], inplace=True)
-cols_to_format = [i for i in df_merged.columns]
-for col in cols_to_format:
-    try:
-        if col in ['p', 'from_low', 'from_high', 'SharesOutstanding']:
-            df_merged[col]=df_merged[col].fillna(0)
-        else:
-            pass
-    except:
-        pass
-
-print('fixed prices and sharesOutstanding')
-
-# find latest shorts value
-df_shorts = pd.DataFrame(df_merged.filter(regex='Short % of Float|symbol')).iloc[:,:]
-df_shorts.dropna(how='all', axis=1, inplace=True)
-#df_shorts_names = df_shorts.columns.str.strip('Short % of Float')
-df_shorts_names = df_shorts.columns.str.extract('.*\((.*)\).*')
-df_shorts_names.rename(columns={ df_shorts_names.columns[0]: "date" }, inplace = True)
-df_shorts_names_dates = pd.to_datetime(df_shorts_names['date'])#, errors='coerce')
-df_shorts.columns = df_shorts_names_dates
-df_shorts_names_dates = df_shorts_names_dates.sort_values(ascending=False)
-df_shorts = df_shorts[df_shorts_names_dates]
-df_shorts.columns = [*df_shorts.columns[:-1], 'symbol']
-df_shorts = df_shorts.melt(id_vars=["symbol"], var_name="Date")
-df_shorts = df_shorts.dropna(axis = 0)
-df_shorts.columns = [*df_shorts.columns[:-1], 'Short%']
-#df_shorts.to_excel(os.path.join(cwd,input_folder,'4_df_shorts.xlsx'), index=False)
-print("shorts calculated")
-
-# merge shorts
-df_to_merge = df_merged
-df_merged = pd.merge(df_to_merge, df_shorts, how='left', left_on=['symbol'], right_on=['symbol'], suffixes=('', '_drop'))
-df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
-df_merged.drop_duplicates()
-df_merged.reset_index(drop=True, inplace=True)
-#df_merged.to_excel(os.path.join(cwd,input_folder,'5_df_shorts.xlsx'), index=False)
-print("shorts merged")
-
-# drop irrelevant shorts columns
-df_merged.drop([col for col in df_merged.columns if 'Short %' in col],axis=1,inplace=True)
-df_merged.drop([col for col in df_merged.columns if 'Shares Short' in col],axis=1,inplace=True)
-df_merged.drop([col for col in df_merged.columns if 'Short Ratio' in col],axis=1,inplace=True)
-
-print("start calculations")
+#
 df = df_merged
-# fix numbers naming with KMB
-# from https://stackoverflow.com/questions/39684548/convert-the-string-2-90k-to-2900-or-5-2m-to-5200000-in-pandas-dataframe
-df['Debt'] = (df['Total Debt (mrq)'].replace(r'[ktmbKTMB]+$', '', regex=True).astype(float) *
-            df['Total Debt (mrq)'].str.extract(r'[\d\.]+([ktmbKTMB]+)', expand=False).fillna(1).replace(
-            ['k', 't', 'm', 'b', 'K', 'T', 'M', 'B']
-            , [10**3, 10**3, 10**6, 10**9, 10**3, 10**3, 10**6, 10**9]).astype(int))
+#
 
-df['SO'] = (df['Shares Outstanding 5'].replace(r'[ktmbKTMB]+$', '', regex=True).astype(float) *
-            df['Shares Outstanding 5'].str.extract(r'[\d\.]+([ktmbKTMB]+)', expand=False).fillna(1).replace(
-            ['k', 't', 'm', 'b', 'K', 'T', 'M', 'B']
-            , [10**3, 10**3, 10**6, 10**9, 10**3, 10**3, 10**6, 10**9]).astype(int))
 
-df['marCap'] = (df['Market Cap'].replace(r'[ktmbKTMB]+$', '', regex=True).astype(float) *
-            df['Market Cap'].str.extract(r'[\d\.]+([ktmbKTMB]+)', expand=False).fillna(1).replace(
-            ['k', 't', 'm', 'b', 'K', 'T', 'M', 'B']
-            , [10**3, 10**3, 10**6, 10**9, 10**3, 10**3, 10**6, 10**9]).astype(int))
+# adding variables
+#
+df['from_low'] = (df_merged['p'] - df_merged['52l']) / df_merged['52l'] * 100
+df['from_high'] = (df_merged['p'] - df_merged['52h']) / df_merged['52h'] * 100
+df['mean_OpMarg'] = (df['mean_revenue'] - df['mean_costOfRevenue']) / df['mean_revenue'] * 100
+df['marg_TTM'] = (df['revenue_TTM'] - df['operatingExpenses_last_q']) / df['revenue_TTM'] * 100
+df['Sales_absolute_increase'] = df['revenue_TTM'] - df['revenue_last_year']
 
-df['marCap'] = df['marCap'].fillna(df['SO'] * df['p'])
-df['marCap'] = df['marCap'] / 1000000
-
-# start creating new variables
-df['NAV'].fillna(df['totalStockholderEquity'], inplace=True)
-df['Short%'] = df['Short%'].str.rstrip('%').str.replace(',','').astype('float')
-df['OpMarg'] = ((df['mean_historical_revenue'] - df['mean_historical_costOfRevenue']) / df['mean_historical_revenue'] * 100).astype('float')
-df['%Ins'] = df['% Held by Insiders 1'].str.rstrip('%').str.replace(',','').astype('float')
-df['%QtrGrwth'] = df['QtrGrwth'].str.rstrip('%').str.replace(',','').astype('float')
-df['BVPS'] = df['Book Value Per Share (mrq)']
-
-# calculate additional variables
-df['Sales_absolute_increase'] = df['totalRevenueTTM'] - df['revenue_last_year']
-df['%YoYGrwth'] = (df['Sales_absolute_increase'] / df['revenue_last_year'] ) -1
-df['maint_capex_ratio'] = df['mean_historical_propertyPlantEquipment'] / df['mean_historical_revenue']
+# capex
+df['maint_capex_ratio'] = df['mean_PPEnet'] / df['mean_revenue']
 df['growth_capex'] = df['maint_capex_ratio'] * df['Sales_absolute_increase']
-df['capex_more_correct'] = df['capitalExpendituresTTM'] - df['growth_capex']
-df['capex_more_correct'] = df['capex_more_correct'].fillna(df['capitalExpendituresTTM'])
-df['capex_more_correct'] = df['capex_more_correct'].fillna(df['totalCashflowsFromInvestingActivities'])
+df['capex_more_correct'] = df['capex_TTM'] - df['growth_capex']
+df['capex_more_correct'] = df['capex_more_correct'].fillna(df['capex_TTM'])
+df['capex_more_correct'] = df['capex_more_correct'].fillna(df['netCashUsedForInvestingActivites'])
 
-df['NAV/S'] = df['NAV'] / df['sharesOutstanding']
+# NAV, B/S/p, OwnEa, WC
+df['totalStockholdersEquity_last_q'] = df['totalStockholdersEquity_last_q'].fillna(df['totalStockholdersEquity'])
+df['NAV/S'] = df['totalStockholdersEquity_last_q'] / df['sharesOutstanding']
 df['B/S/p'] = df['NAV/S'] / df['p']
-df['OwnEa'] =  df['totalCashFromOperatingActivitiesTTM'] + df['capex_more_correct']
+df['OwnEa'] =  df['ncfo_TTM'] + df['capex_more_correct']
 df['OwnEa/S'] = df['OwnEa'] / df['sharesOutstanding']
 df['OwnEa/S/p'] = df['OwnEa/S'] / df['p']
-
-df['marg'] = (df['totalRevenueTTM'] - df['totalOperatingExpensesTTM']) / df['totalRevenueTTM'] * 100
-df['WC/S'] = df['WC'] / df['sharesOutstanding']
+df['WC'] =  df['totalCurrentAssets_last_q'] - df['totalCurrentLiabilities_last_q']
+df['WC/S'] = df['WC']/ df['sharesOutstanding']
 df['WC/S/p'] = df['WC/S'] / df['p']
-df['WC/Debt'] = df['WC'] / df['Debt']
-df['Eq/Debt'] = df['totalStockholderEquity'] / (df['totalStockholderEquity'] + df['Debt'])
-df['Rev/S/p'] = df['Revenue Per Share (ttm)'] / df['p']
+df['WC/D'] = df['WC'] / df['netDebt_last_q']
+df['Eq/D'] = df['totalStockholdersEquity_last_q'] / (df['totalStockholdersEquity_last_q'] + df['netDebt_last_q'])
+df['Rev/S/p'] = df['revenue_TTM'] / df['sharesOutstanding'] / df['p']
 
-print('additional variables calculated')
+print('variables calculated')
 
 # fillna again
 cols_to_fillna = [i for i in df.columns]
@@ -190,7 +146,6 @@ for col in cols_to_fillna:
             pass
     except:
         pass
-print('fillna is done')
 
 # format
 cols_to_format = [i for i in df.columns]
@@ -213,8 +168,7 @@ print('reordering is done')
 #  export
 print('export will take a while')
 df_merged.to_csv(os.path.join(cwd,input_folder,"4_merged.csv"))
-df_merged.to_excel(os.path.join(cwd,input_folder,"4_merged.xlsx"))
-
+#df_merged.to_excel(os.path.join(cwd,input_folder,"4_merged.xlsx"))
 # export tickers again. just to have more narrowed result
 stocks = df_merged[['symbol']].sort_values(by=['symbol'], ascending= True).drop_duplicates()
 stocks.to_csv(os.path.join(cwd,input_folder,"4_tickers_narrowed.csv"), index = False)
@@ -225,3 +179,9 @@ df_columns=pd.DataFrame(df_merged.columns.T)
 df_columns.to_excel(os.path.join(cwd,input_folder,'4_merged_columns.xlsx'))
 
 print('datasets_merge - done')
+
+'''
+# debug
+df.reset_index(drop=False, inplace=True)
+df.to_csv(os.path.join(cwd,input_folder,"df.csv"), index = False)
+'''
