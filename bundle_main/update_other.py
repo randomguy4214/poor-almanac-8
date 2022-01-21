@@ -45,7 +45,7 @@ for t in tickers.split(' '):
             # print & export last_n
             nn = n[0] # get number out of numpy.array
             nnn = round(nn/index_max*100,1)
-            print("prices:", t, "/" ,nn, "from", index_max, "/", nnn, "%")
+            print("other:", t, "/" ,nn, "from", index_max, "/", nnn, "%")
             last_ticker = pd.DataFrame({'number':n})
             last_ticker.to_csv(os.path.join(cwd, input_folder, temp_folder, "other_last_ticker.csv"))
     except:
