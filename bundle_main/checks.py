@@ -53,24 +53,16 @@ if not os.path.exists(os.path.join(cwd,"0_drop_list.xlsx")):
 else:
     print("good! drop_list already exists")
 
-# check prices_last_ticker
+# check last_ticker
 if not os.path.exists(os.path.join(cwd,input_folder,temp_folder,"prices_last_ticker.csv")):
     prices_last_ticker = pd.DataFrame({'number': [0] })
     prices_last_ticker.to_csv(os.path.join(cwd,input_folder,temp_folder,"prices_last_ticker.csv"))
     print("prices_last_ticker created")
-else:
-    print("good! prices_last_ticker already exists")
 
-# check prices_last_ticker_filtered
-if not os.path.exists(os.path.join(cwd,input_folder,temp_folder,"prices_last_ticker_filtered.csv")):
     prices_last_ticker = pd.DataFrame({'number': [0] })
     prices_last_ticker.to_csv(os.path.join(cwd,input_folder,temp_folder,"prices_last_ticker_filtered.csv"))
     print("prices_last_ticker_filtered created")
-else:
-    print("good! prices_last_ticker_filtered already exists")
 
-# check financials_last_ticker
-if not os.path.exists(os.path.join(cwd,input_folder,temp_folder,"financials_a_last_ticker.csv")):
     financials_a_last_ticker = pd.DataFrame({'number': [0] })
     financials_a_last_ticker.to_csv(os.path.join(cwd,input_folder,temp_folder,"financials_a_last_ticker.csv"))
     print("financials_a_last_ticker created")
@@ -78,8 +70,12 @@ if not os.path.exists(os.path.join(cwd,input_folder,temp_folder,"financials_a_la
     financials_q_last_ticker = pd.DataFrame({'number': [0] })
     financials_q_last_ticker.to_csv(os.path.join(cwd,input_folder,temp_folder,"financials_q_last_ticker.csv"))
     print("financials_q_last_ticker created")
+
+    financials_q_last_ticker = pd.DataFrame({'number': [0] })
+    financials_q_last_ticker.to_csv(os.path.join(cwd,input_folder,temp_folder,"other_last_ticker.csv"))
+    print("other_last_ticker created")
 else:
-    print("good! financials_last_ticker already exists")
+    print("good! last_ticker already exists")
 
 # check api_token
 if not os.path.exists(os.path.join(cwd,"0_api_token.csv")):

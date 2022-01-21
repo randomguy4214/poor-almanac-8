@@ -12,16 +12,22 @@ def b():
 def c():
     from bundle_main import update_financials_a
     from bundle_main import process_financials_q
+def d():
+    from bundle_main import update_other
+    from bundle_main import process_other
+
 
 # initiate multithreading
 Thread(target=a).start()
 Thread(target=b).start()
 Thread(target=c).start()
+Thread(target=d).start()
 
 # wait until they will finish
 Thread(target=a).join()
 Thread(target=b).join()
 Thread(target=c).join()
+Thread(target=d).join()
 
 from bundle_main import datasets_merge
 from bundle_main import output
