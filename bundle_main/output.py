@@ -23,6 +23,7 @@ df = pd.read_csv(os.path.join(cwd,input_folder,"4_merged.csv"), low_memory=False
 cols_to_order = [
     'industry'
     , 'country'
+    , 'companyName'
     , 'symbol'
     , 'p'
     , 'from_low'
@@ -31,7 +32,6 @@ cols_to_order = [
     , '52h'
     , 'mean_OpMarg'
     , 'marg_TTM'
-    #, 'OwnEa/SO'
     , 'OwnEa/S/p'
     , 'Rev/S/p'
     , 'QoQRev'
