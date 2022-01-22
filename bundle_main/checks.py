@@ -44,8 +44,8 @@ if not os.path.exists(os.path.join(cwd,"0_drop_list.xlsx")):
             , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         'industry': ['Biotechnology', 'Shell Companies', 'Banks—Regional', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
             , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        'country': ['United States', 'Germany', 'France', 'United Kingdom', 'Belgium', 'Netherlands Antilles'
-            , 'South Korea', 'Switzerland', 'Taiwan', 'Austria', 'Netherlands', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        'country': ['US', 'DE', 'GB', 'FR', 0, 0
+            , 0, 'CH', 'TW', 'AT', 'NL', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                              })
     drop_list.to_excel(os.path.join(cwd,"0_drop_list.xlsx"))

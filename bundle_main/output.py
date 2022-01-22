@@ -54,22 +54,24 @@ df_export.to_excel(os.path.join(cwd,output_raw), index=False)
 
 # filter by drop list
 drop_list_ticker = drop_list['symbol'].tolist()
-df_export = df_export[~df_export['symbol'].isin(drop_list_ticker)] # drop some tickers
-drop_list_industry = drop_list['industry'].tolist()
-df_export = df_export[~df_export['industry'].isin(drop_list_industry)] # drop some industries
+#df_export = df_export[~df_export['symbol'].isin(drop_list_ticker)] # drop some tickers
+#drop_list_industry = drop_list['industry'].tolist()
+#df_export = df_export[~df_export['industry'].isin(drop_list_industry)] # drop some industries
 drop_list_country = drop_list['country'].tolist()
 df_export = df_export[df_export['country'].isin(drop_list_country)] # drop some industries
 
 # filter by variables
 df_export = df_export[(df_export['p'] > 0)] # impossible
 df_export = df_export[(df_export['marketCap'] >= 1)] # more than 1m marcap
+df_export = df_export[(df_export['from_low'] <= 15)]
+df_export = df_export[(df_export['QoQRev'] <= 2000)]
 #df_export = df_export[(df_export['from_low'] < 30)] # less than x% increase from lowest point
-df_export = df_export[(df_export['p'] < 5)] # less than 5 bucks
+#df_export = df_export[(df_export['p'] < 5)] # less than 5 bucks
 df_export = df_export[df_export['B/S/p'] > 0.6] # Book to market
 
 # export
-#output_filtered = '5_df_output_filtered.xlsx'
-#df_export.to_excel(os.path.join(cwd,output_filtered), index=False)
+output_filtered = '5_df_output_filtered.xlsx'
+df_export.to_excel(os.path.join(cwd,output_filtered), index=False)
 
 # export tickers again. just to have more narrowed result
 stocks = df_export[['symbol']].sort_values(by=['symbol'], ascending= True).drop_duplicates()
