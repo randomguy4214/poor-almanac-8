@@ -118,6 +118,7 @@ df = df_merged
 # adding variables
 #
 df['from_low'] = (df_merged['p'] - df_merged['52l']) / df_merged['52l'] * 100
+df.loc[(df['from_low'] < 0), 'from_low'] = 0
 df['from_high'] = (df_merged['p'] - df_merged['52h']) / df_merged['52h'] * 100
 df['mean_OpMarg'] = (df['mean_revenue'] - df['mean_costOfRevenue']) / df['mean_revenue'] * 100
 df['marg_TTM'] = (df['revenue_TTM'] - df['operatingExpenses_last_q']) / df['revenue_TTM'] * 100
@@ -161,7 +162,7 @@ for col in cols_to_fillna:
 cols_to_format = [i for i in df.columns]
 for col in cols_to_format:
     try:
-        if col in ['p', 'B/S/p']:
+        if col in ['p', 'B/S/p', '52l', '52h']:
             df[col]=df[col].round(2)
         else:
             df[col] = df[col].round(0)
@@ -176,7 +177,7 @@ df_merged = df_merged[new_columns]
 print('reordering is done')
 
 #  export
-print('export will take a while')
+print('export')
 df_merged.to_csv(os.path.join(cwd,input_folder,"4_merged.csv"))
 #df_merged.to_excel(os.path.join(cwd,input_folder,"4_merged.xlsx"))
 # export tickers again. just to have more narrowed result
