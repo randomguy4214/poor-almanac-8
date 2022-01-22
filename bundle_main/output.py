@@ -21,11 +21,9 @@ df = pd.read_csv(os.path.join(cwd,input_folder,"4_merged.csv"), low_memory=False
 
 # reorder and select relevant columns
 cols_to_order = [
-    # 'industry'
-    #, 'country'
-    #, 'longName'
-    #,
-    'symbol'
+    'industry'
+    , 'country'
+    , 'symbol'
     , 'p'
     #, 'Market Cap'
     , 'from_low'
