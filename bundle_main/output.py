@@ -25,7 +25,6 @@ cols_to_order = [
     , 'country'
     , 'symbol'
     , 'p'
-    #, 'Market Cap'
     , 'from_low'
     , '52l'
     , 'from_high'
@@ -37,7 +36,6 @@ cols_to_order = [
     , 'Rev/S/p'
     , 'QoQRev'
     , 'QoQncfo'
-    #, '%YoYGrwth'
     , 'B/S/p'
     , 'WC/D'
     , 'Eq/D'
@@ -47,7 +45,7 @@ cols_to_order = [
     #, 'capitalExpendituresTTM'
     #, 'capex_more_correct'
     #, 'sharesOutstanding'
-    #, 'marCap'
+    , 'marketCap'
     ]
 
 # reorder
@@ -58,7 +56,7 @@ df_export = df[cols_to_order]
 df_export.sort_values(by=['from_low'], ascending=[True], inplace=True, na_position ='last')
 output_raw = '5_df_output_unflitered.xlsx'
 df_export.to_excel(os.path.join(cwd,output_raw), index=False)
-'''
+
 # filter by drop list
 drop_list_ticker = drop_list['symbol'].tolist()
 df_export = df_export[~df_export['symbol'].isin(drop_list_ticker)] # drop some tickers
@@ -67,14 +65,12 @@ df_export = df_export[~df_export['industry'].isin(drop_list_industry)] # drop so
 drop_list_country = drop_list['country'].tolist()
 df_export = df_export[df_export['country'].isin(drop_list_country)] # drop some industries
 
-
 # filter by variables
-#df_export = df_export[(df_export['from_low'] >= 0)] # impossible
-df_export = df_export[(df_export['marCap'] >= 1)] # more than 1m marcap
+df_export = df_export[(df_export['p'] > 0)] # impossible
+df_export = df_export[(df_export['marketCap'] >= 1)] # more than 1m marcap
 #df_export = df_export[(df_export['from_low'] < 30)] # less than x% increase from lowest point
-#df_export = df_export[(df_export['price'] < 5)] # less than 5 bucks
-#df_export = df_export[df_export['B/S/P'] > 0.6] # Book to market
-'''
+df_export = df_export[(df_export['p'] < 5)] # less than 5 bucks
+df_export = df_export[df_export['B/S/p'] > 0.6] # Book to market
 
 # export
 output_filtered = '5_df_output_filtered.xlsx'
