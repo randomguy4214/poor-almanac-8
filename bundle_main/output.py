@@ -39,12 +39,7 @@ cols_to_order = [
     , 'B/S/p'
     , 'WC/D'
     , 'Eq/D'
-    #, 'Short%'
-    #, '%Ins'
-    #, 'totalCashFromOperatingActivitiesTTM'
-    #, 'capitalExpendituresTTM'
-    #, 'capex_more_correct'
-    #, 'sharesOutstanding'
+    , 'cik'
     , 'marketCap'
     ]
 
@@ -80,4 +75,4 @@ df_export = df_export[df_export['B/S/p'] > 0.6] # Book to market
 stocks = df_export[['symbol']].sort_values(by=['symbol'], ascending= True).drop_duplicates()
 stocks.to_csv(os.path.join(cwd,input_folder,"5_tickers_filtered.csv"), index = False)
 
-print('please see the raw results in ' + output_raw + ' and filteted in '+ output_filtered)
+print('please check the results')
