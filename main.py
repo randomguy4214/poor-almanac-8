@@ -11,7 +11,7 @@ def b():
     from bundle_main import process_financials_q
 def c():
     from bundle_main import update_financials_a
-    from bundle_main import process_financials_q
+    from bundle_main import process_financials_a
 def d():
     from bundle_main import update_other
     from bundle_main import process_other

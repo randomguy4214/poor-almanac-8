@@ -33,7 +33,7 @@ tickers = ' '.join(tickers_narrowed["symbol"].astype(str)).strip()
 last_ticker = pd.read_csv(os.path.join(cwd,input_folder,temp_folder,"financials_a_last_ticker.csv"),index_col=0)
 last_ticker_n = last_ticker.values[0]
 last_ticker_nn = last_ticker_n[0]
-print("last ticker in financials was number ", last_ticker_nn)
+print("last ticker in financials_a was number ", last_ticker_nn)
 
 # start importing
 index_max = pd.to_numeric(tickers_narrowed.index.values.max())
@@ -64,7 +64,7 @@ for t in tickers.split(' '):
             # print & export last_n
             nn = n[0] # get number out of numpy.array
             nnn = round(nn/index_max*100,1)
-            print("fundamentals annual:", t, "/" ,nn, "from", index_max, "/", nnn, "%")
+            print("fundamentals_a:", t, "/" ,nn, "from", index_max, "/", nnn, "%")
             financials_last_ticker = pd.DataFrame({'number': n})
             financials_last_ticker.to_csv(os.path.join(cwd, input_folder, temp_folder, "financials_a_last_ticker.csv"))
     except:
