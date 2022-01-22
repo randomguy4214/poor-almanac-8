@@ -16,7 +16,6 @@ def d():
     from bundle_main import update_other
     from bundle_main import process_other
 
-
 # initiate multithreading
 Thread(target=a).start()
 Thread(target=b).start()
