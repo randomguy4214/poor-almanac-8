@@ -73,8 +73,8 @@ df_export = df_export[(df_export['p'] < 5)] # less than 5 bucks
 df_export = df_export[df_export['B/S/p'] > 0.6] # Book to market
 
 # export
-output_filtered = '5_df_output_filtered.xlsx'
-df_export.to_excel(os.path.join(cwd,output_filtered), index=False)
+#output_filtered = '5_df_output_filtered.xlsx'
+#df_export.to_excel(os.path.join(cwd,output_filtered), index=False)
 
 # export tickers again. just to have more narrowed result
 stocks = df_export[['symbol']].sort_values(by=['symbol'], ascending= True).drop_duplicates()
