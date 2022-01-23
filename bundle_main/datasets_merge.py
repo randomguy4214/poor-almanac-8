@@ -176,25 +176,33 @@ df['Rev/S/p'] = df['revenue_TTM'] / df['sharesOutstanding'] / df['p']
 print('variables calculated')
 
 # fixing
+df['ImplQoQRev'] = df['ImplQoQRev'].fillna(df['ImplYoYRev'] / 4)
+df['ImplQoQncfo'] = df['ImplQoQncfo'].fillna(df['ImplYoYncfo'] / 4)
+
 cols_to_fillna = [i for i in df.columns]
 for col in cols_to_fillna:
     try:
+        df[col] = df[col].fillna(0)
+        '''
         if col in ['p', 'from_low', 'from_high', 'OpMarg', 'B/S/p', 'marg', 'marCap'
-                   , 'B/S/p', '52l', '52h', 'ImplYoYRev', 'ImplQoQRev', 'ImplYoYncfo', 'ImplQoQncfo']:
+            , 'B/S/p', '52l', '52h', 'ImplYoYRev', 'ImplQoQRev', 'ImplYoYncfo', 'ImplQoQncfo'
+            , 'marg_TTM', 'OwnEa/S/p', 'Rev/S/p', 'Eq/D'
+            , 'WC/D', 'Eq/D', 'cik']:
             df[col]=df[col].fillna(0)
         else:
             pass
+        '''
     except:
         pass
 
-df['ImplQoQRev'] = df['ImplQoQRev'].fillna(df['ImplYoYRev'] / 4)
-df['ImplQoQncfo'] = df['ImplQoQncfo'].fillna(df['ImplYoYncfo'] / 4)
 
 # format
 cols_to_format = [i for i in df.columns]
 for col in cols_to_format:
     try:
-        if col in ['p', 'B/S/p', '52l', '52h', 'ImplYoYRev', 'ImplQoQRev', 'ImplYoYncfo', 'ImplQoQncfo']:
+        if col in ['p', 'B/S/p', '52l', '52h'
+            , 'Eq/D'
+            , 'ImplYoYRev', 'ImplQoQRev', 'ImplYoYncfo', 'ImplQoQncfo']:
             df[col]=df[col].round(2)
         else:
             df[col] = df[col].round(0)
