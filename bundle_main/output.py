@@ -1,15 +1,9 @@
 #!/usr/bin/python
 
 import os
-
 import pandas as pd
 
 pd.options.mode.chained_assignment = None  # default='warn'
-
-# formatting
-pd.set_option('display.max_columns', None)
-pd.options.display.float_format = '{:20,.2f}'.format
-pd.options.mode.use_inf_as_na = True
 
 # set directories and files
 cwd = os.getcwd()
@@ -34,8 +28,8 @@ cols_to_order = [
     , 'marg_TTM'
     , 'OwnEa/S/p'
     , 'Rev/S/p'
-    , 'QoQRev'
-    , 'QoQncfo'
+    , 'ImplQoQRev'
+    , 'ImplQoQncfo'
     , 'B/S/p'
     , 'WC/D'
     , 'Eq/D'
@@ -64,7 +58,7 @@ df_export = df_export[df_export['country'].isin(drop_list_country)] # drop some 
 df_export = df_export[(df_export['p'] > 0)] # impossible
 df_export = df_export[(df_export['marketCap'] >= 1)] # more than 1m marcap
 df_export = df_export[(df_export['from_low'] <= 15)]
-df_export = df_export[(df_export['QoQRev'] <= 2000)]
+df_export = df_export[(df_export['ImplQoQRev'] <= 2000)]
 #df_export = df_export[(df_export['from_low'] < 30)] # less than x% increase from lowest point
 #df_export = df_export[(df_export['p'] < 5)] # less than 5 bucks
 df_export = df_export[df_export['B/S/p'] > 0.6] # Book to market
