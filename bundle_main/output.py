@@ -43,6 +43,7 @@ cols_to_order = [
     , 'Eq/D'
     , 'cik'
     , 'marketCap'
+    , 'isFund'
     ]
 
 # reorder
