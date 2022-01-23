@@ -188,6 +188,7 @@ for col in cols_to_fillna:
         pass
 
 df['ImplQoQRev'] = df['ImplQoQRev'].fillna(df['ImplYoYRev'] / 4)
+df['ImplQoQncfo'] = df['ImplQoQncfo'].fillna(df['ImplYoYncfo'] / 4)
 
 # format
 cols_to_format = [i for i in df.columns]
