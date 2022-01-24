@@ -261,7 +261,7 @@ for col in cols_to_format:
     try:
         if col in [
             'p', 'B/S/p', '52l', '52h'
-            , 'Eq/D'
+            , 'Eq/D', 'WC/S/p'
             , 'ImplYoYRev', 'ImplQoQRev', 'ImplYoYncfo', 'ImplQoQncfo'
             , 'ImplQoQRevBooking', 'ImplYoYRevBooking']:
             df[col]=df[col].round(2)
