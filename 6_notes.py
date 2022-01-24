@@ -2,7 +2,9 @@ import os
 import pandas as pd
 cwd = os.getcwd()
 input_folder = "0_input"
-symbols = pd.read_csv(os.path.join(cwd,"6_notes_symbols.csv"), low_memory=False)
+notes = pd.read_excel(os.path.join(cwd,"6_notes.xlsx"))
+symbols = notes['symbol']
+print(symbols)
 output_unfiltered = pd.read_excel(os.path.join(cwd,"5_df_output_unflitered.xlsx"))
 df_merged = pd.merge(symbols, output_unfiltered
                      , how='left', left_on=['symbol']
@@ -14,5 +16,5 @@ df_merged = pd.merge(df_to_merge, dataset_merged
                      , how='left', left_on=['symbol']
                      , right_on=['symbol'], suffixes=('', '_drop'))
 df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
-df_merged.to_excel(os.path.join(cwd,'6_notes_processed.xlsx'))
+df_merged.to_excel(os.path.join(cwd,'6_notes.xlsx'))
 
