@@ -185,10 +185,10 @@ df = df_annual_quarters_mean_prices_TTM_other
 # deferred revenues
 df['booking_y'] = df['deferredRevenue'] - df['deferredRevenue_minus_one_y']
 df['booking_minus_one_y'] = df['deferredRevenue_minus_one_y'] - df['deferredRevenue_minus_two_y']
-df['booking_q'] = df['deferredRevenue_last_q'] - df['deferredRevenue_minus_one_q']
-df['booking_minus_one_q'] = df['deferredRevenue_minus_one_q'] - df['deferredRevenue_minus_two_q']
 df['rev_plus_booking_y'] = df['revenue'] + df['booking_y']
 df['rev_plus_booking_minus_one_y'] = df['revenue_minus_one_y'] + df['booking_minus_one_y']
+df['booking_q'] = df['deferredRevenue_last_q'] - df['deferredRevenue_minus_one_q']
+df['booking_minus_one_q'] = df['deferredRevenue_minus_one_q'] - df['deferredRevenue_minus_two_q']
 df['rev_plus_booking_q'] = df['revenue_last_q'] + df['booking_q']
 df['rev_plus_booking_minus_one_q'] = df['revenue_minus_one_q'] + df['booking_minus_one_q']
 
