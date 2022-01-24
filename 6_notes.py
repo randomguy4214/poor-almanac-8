@@ -7,7 +7,7 @@ pd.options.mode.chained_assignment = None  # default='warn'
 # set directories and files
 cwd = os.getcwd()
 input_folder = "0_input"
-symbols = pd.read_csv(os.path.join(cwd,"6_notes.csv"), low_memory=False)
+symbols = pd.read_csv(os.path.join(cwd,"6_notes_symbols.csv"), low_memory=False)
 output_unfiltered = pd.read_excel(os.path.join(cwd,"5_df_output_unflitered.xlsx"))
 df_merged = pd.merge(symbols, output_unfiltered
                      , how='left', left_on=['symbol']
