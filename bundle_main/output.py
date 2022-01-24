@@ -1,15 +1,8 @@
 #!/usr/bin/python
 
 import os
-
 import pandas as pd
-
 pd.options.mode.chained_assignment = None  # default='warn'
-
-# formatting
-pd.set_option('display.max_columns', None)
-pd.options.display.float_format = '{:20,.2f}'.format
-pd.options.mode.use_inf_as_na = True
 
 # set directories and files
 cwd = os.getcwd()
