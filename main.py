@@ -1,32 +1,20 @@
 #!/usr/bin/python
-bundle_main = "bundle_main"
-from bundle_main import checks
-# multithreaded import of prices and fundamentals.
-from threading import Thread
-def a():
-    from bundle_main import update_prices
-    from bundle_main import process_prices
-def b():
-    from bundle_main import update_financials_q
-    from bundle_main import process_financials_q
-def c():
-    from bundle_main import update_financials_a
-    from bundle_main import process_financials_a
-def d():
-    from bundle_main import update_other
-    from bundle_main import process_other
+bundle_process = "bundle_process"
+bundle_update = "bundle_update"
+bundle_merge_output = "bundle_merge_output"
+bundle_other = "bundle_other"
 
-# initiate multithreading
-Thread(target=a).start()
-Thread(target=b).start()
-Thread(target=c).start()
-Thread(target=d).start()
+from bundle_other import checks
 
-# wait until they will finish
-Thread(target=a).join()
-Thread(target=b).join()
-Thread(target=c).join()
-Thread(target=d).join()
+from bundle_update import update_prices
+from bundle_update import update_financials_a
+from bundle_update import update_financials_q
+from bundle_update import update_other
 
-from bundle_main import datasets_merge
-from bundle_main import output
+from bundle_process import process_prices
+from bundle_process import process_financials_a
+from bundle_process import process_financials_q
+from bundle_process import process_other
+
+from bundle_merge_output import datasets_merge
+from bundle_merge_output import output

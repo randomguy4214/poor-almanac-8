@@ -40,7 +40,7 @@ index_max = pd.to_numeric(tickers_narrowed.index.values.max())
 for t in tickers.split(' '):
     try:
         n = pd.to_numeric(tickers_narrowed["symbol"][tickers_narrowed["symbol"] == t].index).values
-        if n > last_ticker_n:
+        if n >= last_ticker_n:
             inc = url1 + inc_st + t + csv + amp + apikey + token
             bs = url1 + bs_st + t + csv + amp + apikey + token
             cf = url1 + cf_st + t + csv + amp + apikey + token

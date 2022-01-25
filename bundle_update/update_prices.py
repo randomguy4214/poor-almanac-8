@@ -22,9 +22,9 @@ csv = "?datatype=csv"
 
 # prepare tickers list
 tickers_narrowed = pd.read_csv(os.path.join(cwd,"0_symbols.csv"))
+tickers_narrowed.drop_duplicates(inplace=True)
 ticker_narrowed = tickers_narrowed.values.tolist()
 tickers = ' '.join(tickers_narrowed["symbol"].astype(str)).strip()
-
 # find last updated ticker (this is necessary if you lose internet connection, etc)
 last_ticker = pd.read_csv(os.path.join(cwd,input_folder,temp_folder,"prices_last_ticker.csv"),index_col=0)
 last_ticker_n = last_ticker.values[0]
@@ -32,11 +32,11 @@ last_ticker_nn = last_ticker_n[0]
 print("last ticker in prices was number", last_ticker_nn)
 
 # start importing
-index_max = pd.to_numeric(tickers_narrowed.index.values.max())
+index_max = pd.to_numeric(tickers_narrowed.index.values.max()) + 1
 for t in tickers.split(' '):
     try:
         n = pd.to_numeric(tickers_narrowed["symbol"][tickers_narrowed["symbol"] == t].index).values
-        if n > last_ticker_nn:
+        if n >= last_ticker_nn:
             final_url = url1 + t + csv + amp + apikey + token
             df = pd.read_csv(final_url)
             df['symbol'] = t
