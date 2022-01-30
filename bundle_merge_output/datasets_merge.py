@@ -200,12 +200,12 @@ df['rev_plus_booking_q'] = df['revenue_last_q'] + df['booking_q']
 df['rev_plus_booking_minus_one_q'] = df['revenue_minus_one_q'] + df['booking_minus_one_q']
 
 # growth
-df['ImplYoYRev'] = (df['revenue'] - df['revenue_minus_one_y']) / df['revenue_minus_one_y'] * 100
-df['ImplYoYncfo'] = (df['netCashProvidedByOperatingActivites'] - df['ncfo_minus_one_y']) / df['ncfo_minus_one_y'] * 100
-df['ImplYoYRevBooking'] = (df['rev_plus_booking_y'] - df['rev_plus_booking_minus_one_y']) / df['rev_plus_booking_minus_one_y'] * 100
-df['ImplQoQRev'] = (df['revenue_last_q'] - df['revenue_minus_one_q']) / df['revenue_minus_one_q'] * 100
-df['ImplQoQncfo'] = (df['netCashProvidedByOperatingActivites_last_q'] - df['ncfo_minus_one_q']) / df['ncfo_minus_one_q'] * 100
-df['ImplQoQRevBooking'] = (df['rev_plus_booking_q'] - df['rev_plus_booking_minus_one_q']) / df['rev_plus_booking_minus_one_q'] * 100
+df['ImplYoYRev'] = ((df['revenue'] - df['revenue_minus_one_y']) / df['revenue_minus_one_y'] - 1 )* 100
+df['ImplYoYncfo'] = ((df['netCashProvidedByOperatingActivites'] - df['ncfo_minus_one_y']) / df['ncfo_minus_one_y'] -1 )* 100
+df['ImplYoYRevBooking'] = ((df['rev_plus_booking_y'] - df['rev_plus_booking_minus_one_y']) / df['rev_plus_booking_minus_one_y'] - 1 )* 100
+df['ImplQoQRev'] = ((df['revenue_last_q'] - df['revenue_minus_one_q']) / df['revenue_minus_one_q'] - 1 )* 100
+df['ImplQoQncfo'] = ((df['netCashProvidedByOperatingActivites_last_q'] - df['ncfo_minus_one_q']) / df['ncfo_minus_one_q'] - 1 )* 100
+df['ImplQoQRevBooking'] = ((df['rev_plus_booking_q'] - df['rev_plus_booking_minus_one_q']) / df['rev_plus_booking_minus_one_q'] - 1 )* 100
 # growth fix
 df['ImplQoQRev'] = df['ImplQoQRev'].fillna(df['ImplYoYRev'] / 4)
 df['ImplQoQRevBooking'] = df['ImplQoQRevBooking'].fillna(df['ImplYoYRevBooking'] / 4)
