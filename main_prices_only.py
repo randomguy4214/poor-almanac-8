@@ -1,7 +1,7 @@
 #!/usr/bin/python
 bundle_process = "bundle_process"
 bundle_update = "bundle_update"
-bundle_merge_output = bundle_merge_output
+bundle_merge_output = "bundle_merge_output"
 
 from bundle_update import update_prices
 from bundle_process import process_prices
