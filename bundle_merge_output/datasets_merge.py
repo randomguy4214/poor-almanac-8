@@ -55,6 +55,7 @@ df_annual_current_mean_prices = df_merged
 financials_a_minus_one = financials_a.sort_values(['symbol','date']
                         , ascending=False).groupby('symbol').head(2).drop_duplicates(['symbol'], keep='last')
 financials_a_minus_one.rename(columns={'revenue': 'revenue_minus_one_y'
+                        , 'cashAndCashEquivalents': 'cashAndCashEquivalents_minus_one_y'
                         , 'deferredRevenue':'deferredRevenue_minus_one_y'
                         , 'operatingExpenses':'operatingExpenses_minus_one_y'
                         , 'totalStockholdersEquity' : 'totalStockholdersEquity_minus_one_y'
@@ -75,6 +76,7 @@ df_annual_current_mean_prices_minus_one = df_merged
 financials_a_minus_two = financials_a.sort_values(['symbol','date']
                         , ascending=False).groupby('symbol').head(3).drop_duplicates(['symbol'], keep='last')
 financials_a_minus_two.rename(columns={'revenue': 'revenue_minus_two_y'
+                        , 'cashAndCashEquivalents':'cashAndCashEquivalents_minus_two_y'
                         , 'deferredRevenue':'deferredRevenue_minus_two_y'
                         , 'operatingExpenses':'operatingExpenses_minus_two_y'
                         , 'totalStockholdersEquity' : 'totalStockholdersEquity_minus_two_y'
@@ -94,6 +96,7 @@ df_annual_current_mean_prices_minus_one_two = df_merged
 # prepare last quarter
 financials_q_last = financials_q.sort_values(['symbol','date'], ascending=False).groupby('symbol').head(1)
 financials_q_last.rename(columns={'revenue': 'revenue_last_q'
+                        , 'cashAndCashEquivalents':'cashAndCashEquivalents_last_q'
                         , 'deferredRevenue':'deferredRevenue_last_q'
                         , 'operatingExpenses':'operatingExpenses_last_q'
                         , 'totalStockholdersEquity' : 'totalStockholdersEquity_last_q'
@@ -109,6 +112,7 @@ financials_q_last.rename(columns={'revenue': 'revenue_last_q'
 financials_q_minus_one = financials_q.sort_values(['symbol','date']
                         , ascending=False).groupby('symbol').head(2).drop_duplicates(['symbol'], keep='last')
 financials_q_minus_one.rename(columns={'revenue': 'revenue_minus_one_q'
+                        , 'cashAndCashEquivalents':'cashAndCashEquivalents_minus_one_q'
                         , 'deferredRevenue':'deferredRevenue_minus_one_q'
                         , 'operatingExpenses':'operatingExpenses_minus_one_q'
                         , 'totalStockholdersEquity' : 'totalStockholdersEquity_minus_one_q'
@@ -239,7 +243,7 @@ df['Eq/D'] = df['totalStockholdersEquity_last_q'] / (df['totalStockholdersEquity
 df['Rev/S/p'] = df['revenue_TTM'] / df['sharesOutstanding'] / df['p']
 
 # EV
-df['EV_last_q'] = df['marketCap'] - df['totalDebt_last_q'] + df['cashAndCashEquivalents']
+df['EV_last_q'] = df['marketCap'] - df['totalDebt_last_q'] + df['cashAndCashEquivalents_last_q']
 df['EV_last_q'] = df['EV_last_q'].fillna(df['marketCap'] - df['totalDebt'])
 df['EV/S/p'] = df['EV_last_q'] / df['sharesOutstanding'] / df['p']
 
