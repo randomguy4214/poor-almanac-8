@@ -99,6 +99,7 @@ financials_q_last.rename(columns={'revenue': 'revenue_last_q'
                         , 'totalStockholdersEquity' : 'totalStockholdersEquity_last_q'
                         , 'totalCurrentAssets':'totalCurrentAssets_last_q'
                         , 'totalCurrentLiabilities':'totalCurrentLiabilities_last_q'
+                        , 'totalDebt':'totalDebt_last_q'
                         , 'netDebt':'netDebt_last_q'
                         , 'netCashProvidedByOperatingActivites': 'netCashProvidedByOperatingActivites_last_q'
                                   }
@@ -113,6 +114,7 @@ financials_q_minus_one.rename(columns={'revenue': 'revenue_minus_one_q'
                         , 'totalStockholdersEquity' : 'totalStockholdersEquity_minus_one_q'
                         , 'totalCurrentAssets':'totalCurrentAssets_minus_one_q'
                         , 'totalCurrentLiabilities':'totalCurrentLiabilities_minus_one_q'
+                        , 'totalDebt':'totalDebt_minus_one_q'
                         , 'netDebt':'netDebt_minus_one_q'
                         , 'netCashProvidedByOperatingActivites': 'ncfo_minus_one_q'}
                         , inplace=True)
@@ -200,6 +202,10 @@ df['ImplYoYRevBooking'] = (df['rev_plus_booking_y'] - df['rev_plus_booking_minus
 df['ImplQoQRev'] = (df['revenue_last_q'] - df['revenue_minus_one_q']) / df['revenue_minus_one_q'] * 100
 df['ImplQoQncfo'] = (df['netCashProvidedByOperatingActivites_last_q'] - df['ncfo_minus_one_q']) / df['ncfo_minus_one_q'] * 100
 df['ImplQoQRevBooking'] = (df['rev_plus_booking_q'] - df['rev_plus_booking_minus_one_q']) / df['rev_plus_booking_minus_one_q'] * 100
+# growth fix
+df['ImplQoQRev'] = df['ImplQoQRev'].fillna(df['ImplYoYRev'] / 4)
+df['ImplQoQRevBooking'] = df['ImplQoQRevBooking'].fillna(df['ImplYoYRevBooking'] / 4)
+df['ImplQoQncfo'] = df['ImplQoQncfo'].fillna(df['ImplYoYncfo'] / 4)
 
 # price
 df['from_low'] = (df_merged['p'] - df_merged['52l']) / df_merged['52l'] * 100
@@ -232,13 +238,14 @@ df['WC/D'] = df['WC'] / df['netDebt_last_q']
 df['Eq/D'] = df['totalStockholdersEquity_last_q'] / (df['totalStockholdersEquity_last_q'] + df['netDebt_last_q'])
 df['Rev/S/p'] = df['revenue_TTM'] / df['sharesOutstanding'] / df['p']
 
+# EV
+df['EV_last_q'] = df['marketCap'] - df['totalDebt_last_q']
+df['EV_last_q'] = df['EV_last_q'].fillna(df['marketCap'] - df['totalDebt'])
+df['EV/S/p'] = df['EV_last_q'] / df['sharesOutstanding'] / df['p']
+
 print('variables calculated')
 
 # fixing
-df['ImplQoQRev'] = df['ImplQoQRev'].fillna(df['ImplYoYRev'] / 4)
-df['ImplQoQRevBooking'] = df['ImplQoQRevBooking'].fillna(df['ImplYoYRevBooking'] / 4)
-df['ImplQoQncfo'] = df['ImplQoQncfo'].fillna(df['ImplYoYncfo'] / 4)
-
 cols_to_fillna = [i for i in df.columns]
 for col in cols_to_fillna:
     try:
@@ -263,7 +270,8 @@ for col in cols_to_format:
             'p', 'B/S/p', '52l', '52h'
             , 'Eq/D', 'WC/S/p'
             , 'ImplYoYRev', 'ImplQoQRev', 'ImplYoYncfo', 'ImplQoQncfo'
-            , 'ImplQoQRevBooking', 'ImplYoYRevBooking']:
+            , 'ImplQoQRevBooking', 'ImplYoYRevBooking'
+            , 'EV/S/p']:
             df[col]=df[col].round(2)
         else:
             df[col] = df[col].round(0)

@@ -34,6 +34,7 @@ cols_to_order = [
     , 'ImplYoYRevBooking'
     , 'ImplYoYncfo'
     , 'B/S/p'
+    , 'EV/S/p'
     , 'WC/D'
     , 'Eq/D'
     , 'cik'
