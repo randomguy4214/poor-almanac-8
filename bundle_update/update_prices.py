@@ -21,37 +21,38 @@ amp = "&"
 csv = "?datatype=csv"
 
 # prepare tickers list
-tickers_narrowed = pd.read_csv(os.path.join(cwd,"0_symbols.csv"))
-tickers_narrowed.drop_duplicates(inplace=True)
-ticker_narrowed = tickers_narrowed.values.tolist()
-tickers = ' '.join(tickers_narrowed["symbol"].astype(str)).strip()
+df_tickers = pd.read_csv(os.path.join(cwd,"0_symbols.csv"), index_col=0)
+df_tickers.drop_duplicates(inplace=True)
+
 # find last updated ticker (this is necessary if you lose internet connection, etc)
-last_ticker = pd.read_csv(os.path.join(cwd,input_folder,temp_folder,"prices_last_ticker.csv"),index_col=0)
-last_ticker_n = last_ticker.values[0]
-last_ticker_nn = last_ticker_n[0]
-print("last ticker in prices was number", last_ticker_nn)
+prices_last_ticker = pd.read_csv(os.path.join(cwd,input_folder,temp_folder,"prices_last_ticker.csv"),index_col=0)
+last_ticker = prices_last_ticker.values[0]
+last_ticker_n = last_ticker[0]
+print("last batch in prices was", last_ticker_n)
 
 # start importing
-index_max = pd.to_numeric(tickers_narrowed.index.values.max()) + 1
-for t in tickers.split(' '):
+index_max = pd.to_numeric(df_tickers.index.values.max())
+chunk_size = 50
+for i in range(last_ticker_n, len(df_tickers), chunk_size):
     try:
-        n = pd.to_numeric(tickers_narrowed["symbol"][tickers_narrowed["symbol"] == t].index).values
-        if n >= last_ticker_nn:
-            final_url = url1 + t + csv + amp + apikey + token
-            df = pd.read_csv(final_url)
-            df['symbol'] = t
-            name = t + ".csv"
-            df.to_csv(os.path.join(cwd, input_folder, temp_folder, prices_temp, name))
-            # print & export last_n
-            nn = n[0] # get number out of numpy.array
-            nnn = round(nn/index_max*100,1)
-            print("prices:", t, "/" ,nn, "from", index_max, "/", nnn, "%")
-            last_ticker = pd.DataFrame({'number':n})
-            last_ticker.to_csv(os.path.join(cwd, input_folder, temp_folder, "prices_last_ticker.csv"))
+        df_chunk = df_tickers[i:i + chunk_size]
+        index_last = pd.to_numeric(df_chunk.index.values.max())
+        tickers_narrowed = df_chunk.values.tolist()
+        tickers = ','.join(df_chunk["symbol"].astype(str)).strip()
+        final_url = url1 + tickers + csv + amp + apikey + token
+        df = pd.read_csv(final_url)
+        df.set_index('symbol', drop=True, inplace=True)
+        output_string = 'df_quotes_' + str(index_last) + '.csv'
+        df.to_csv(os.path.join(cwd,input_folder,temp_folder,prices_temp,output_string))
+        # print & export last_n
+        nnn = int(index_last/index_max*100)
+        print("prices:", index_last, "from", index_max, "/", nnn, "%")
+        last_ticker = pd.DataFrame([{'number':index_last}])
+        last_ticker.to_csv(os.path.join(cwd, input_folder, temp_folder, "prices_last_ticker.csv"))
+        time.sleep(5)
     except:
         pass
 
-prices_last_ticker = pd.DataFrame({'number': [0] })
-prices_last_ticker.to_csv(os.path.join(cwd,input_folder,temp_folder,"prices_last_ticker.csv"))
-
+last_ticker = pd.DataFrame({'number':[0]})
+last_ticker.to_csv(os.path.join(cwd,input_folder,temp_folder,"prices_last_ticker.csv"))
 print('update_prices - done')
