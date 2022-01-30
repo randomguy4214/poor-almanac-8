@@ -243,8 +243,8 @@ df['Eq/D'] = df['totalStockholdersEquity_last_q'] / (df['totalStockholdersEquity
 df['Rev/S/p'] = df['revenue_TTM'] / df['sharesOutstanding'] / df['p']
 
 # EV
-df['EV_last_q'] = df['marketCap'] - df['totalDebt_last_q'] + df['cashAndCashEquivalents_last_q']
-df['EV_last_q'] = df['EV_last_q'].fillna(df['marketCap'] - df['totalDebt'])
+df['EV_last_q'] = df['marketCap'] + df['totalDebt_last_q'] - df['cashAndCashEquivalents_last_q']
+df['EV_last_q'] = df['EV_last_q'].fillna(df['marketCap'] + df['totalDebt'] - df['cashAndCashEquivalents'])
 df['EV/S/p'] = df['EV_last_q'] / df['sharesOutstanding'] / df['p']
 
 print('variables calculated')
