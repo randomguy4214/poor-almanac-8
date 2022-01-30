@@ -63,6 +63,7 @@ financials_a_minus_one.rename(columns={'revenue': 'revenue_minus_one_y'
                         , 'totalCurrentLiabilities':'totalCurrentLiabilities_minus_one_y'
                         , 'netDebt':'netDebt_minus_one_y'
                         , 'netCashProvidedByOperatingActivites': 'ncfo_minus_one_y'
+                        , 'totalLiabilities': 'totalLiabilities_minus_one_y'
                                   }
                         , inplace=True)
 # merge annual minus one
@@ -83,7 +84,8 @@ financials_a_minus_two.rename(columns={'revenue': 'revenue_minus_two_y'
                         , 'totalCurrentAssets':'totalCurrentAssets_minus_two_y'
                         , 'totalCurrentLiabilities':'totalCurrentLiabilities_minus_two_y'
                         , 'netDebt':'netDebt_minus_one_y'
-                        , 'netCashProvidedByOperatingActivites': 'ncfo_minus_one_y'
+                        , 'netCashProvidedByOperatingActivites': 'ncfo_minus_two_y'
+                        , 'totalLiabilities': 'totalLiabilities_minus_two_y'
                                   }
                         , inplace=True)
 # merge annual minus two
@@ -105,6 +107,7 @@ financials_q_last.rename(columns={'revenue': 'revenue_last_q'
                         , 'totalDebt':'totalDebt_last_q'
                         , 'netDebt':'netDebt_last_q'
                         , 'netCashProvidedByOperatingActivites': 'netCashProvidedByOperatingActivites_last_q'
+                        , 'totalLiabilities': 'totalLiabilities_last_q'
                                   }
                         , inplace=True)
 
@@ -120,7 +123,9 @@ financials_q_minus_one.rename(columns={'revenue': 'revenue_minus_one_q'
                         , 'totalCurrentLiabilities':'totalCurrentLiabilities_minus_one_q'
                         , 'totalDebt':'totalDebt_minus_one_q'
                         , 'netDebt':'netDebt_minus_one_q'
-                        , 'netCashProvidedByOperatingActivites': 'ncfo_minus_one_q'}
+                        , 'netCashProvidedByOperatingActivites': 'ncfo_minus_one_q'
+                        , 'totalLiabilities': 'totalLiabilities_minus_one_q'
+                                       }
                         , inplace=True)
 
 # merg current quarter to previous quarter
@@ -140,7 +145,9 @@ financials_q_minus_two.rename(columns={'revenue': 'revenue_minus_two_q'
                         , 'totalCurrentAssets':'totalCurrentAssets_minus_two_q'
                         , 'totalCurrentLiabilities':'totalCurrentLiabilities_minus_two_q'
                         , 'netDebt':'netDebt_minus_two_q'
-                        , 'netCashProvidedByOperatingActivites': 'ncfo_minus_two_q'}
+                        , 'netCashProvidedByOperatingActivites': 'ncfo_minus_two_q'
+                        , 'totalLiabilities': 'totalLiabilities_minus_two_q'
+                                       }
                         , inplace=True)
 
 # merge current, previous, and minus two quarters
@@ -242,7 +249,11 @@ df['WC/D'] = df['WC'] / df['netDebt_last_q']
 df['Eq/D'] = df['totalStockholdersEquity_last_q'] / (df['totalStockholdersEquity_last_q'] + df['netDebt_last_q'])
 df['Rev/S/p'] = df['revenue_TTM'] / df['sharesOutstanding'] / df['p']
 
-# EV
+# Net Current Asset Value (NCAV) = Total Current Assets - Total Liabilities
+df['NCAV'] = df['totalCurrentAssets_last_q'] - df['totalLiabilities_last_q']
+df['NCAV/S/p'] = df['NCAV'] / df['sharesOutstanding'] / df['p']
+
+# Enterprise value
 df['EV_last_q'] = df['marketCap'] + df['totalDebt_last_q'] - df['cashAndCashEquivalents_last_q']
 df['EV_last_q'] = df['EV_last_q'].fillna(df['marketCap'] + df['totalDebt'] - df['cashAndCashEquivalents'])
 df['EV/S/p'] = df['EV_last_q'] / df['sharesOutstanding'] / df['p']
