@@ -8,4 +8,4 @@ And then i merge it into a large dataset.
 
 The output, essentially, shows some variables that may indicate that there is a hidden value in the company.
 
-work in progress essentially. 
+work in progress. 
