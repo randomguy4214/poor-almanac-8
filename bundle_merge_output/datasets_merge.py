@@ -286,7 +286,7 @@ for col in cols_to_format:
             , 'Eq/D', 'WC/S/p'
             , 'ImplYoYRev', 'ImplQoQRev', 'ImplYoYncfo', 'ImplQoQncfo'
             , 'ImplQoQRevBooking', 'ImplYoYRevBooking'
-            , 'EV/S/p']:
+            , 'EV/S/p', 'NCAV/S/p', 'OwnEa/S/p']:
             df[col]=df[col].round(2)
         else:
             df[col] = df[col].round(0)
