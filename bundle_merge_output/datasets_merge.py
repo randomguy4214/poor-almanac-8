@@ -259,6 +259,7 @@ df['NCAV/S/p'] = df['NCAV'] / df['sharesOutstanding'] / df['p']
 df['EV_last_q'] = df['marketCap'] + df['totalDebt_last_q'] - df['cashAndCashEquivalents_last_q'] + df['preferredStock_last_q'] + df['minorityInterest_last_q']
 df['EV_last_q'] = df['EV_last_q'].fillna(df['marketCap'] + df['totalDebt'] - df['cashAndCashEquivalents'])
 df['EV/S/p'] = df['EV_last_q'] / df['sharesOutstanding'] / df['p']
+df['EV/OwnEa'] = df['EV_last_q'] / df['OwnEa']
 
 print('variables calculated')
 
@@ -288,7 +289,8 @@ for col in cols_to_format:
             , 'Eq/D', 'WC/S/p'
             , 'ImplYoYRev', 'ImplQoQRev', 'ImplYoYncfo', 'ImplQoQncfo'
             , 'ImplQoQRevBooking', 'ImplYoYRevBooking'
-            , 'EV/S/p', 'NCAV/S/p', 'OwnEa/S/p']:
+            , 'EV/S/p', 'NCAV/S/p', 'OwnEa/S/p', 'EV/OwnEa'
+            ,]:
             df[col]=df[col].round(2)
         else:
             df[col] = df[col].round(0)
@@ -303,7 +305,6 @@ df_merged = df_merged[new_columns]
 print('reordering is done')
 
 #  export
-print('export')
 df_merged.to_csv(os.path.join(cwd,input_folder,"4_merged.csv"))
 #df_merged.to_excel(os.path.join(cwd,input_folder,"4_merged.xlsx"))
 # export tickers again. just to have more narrowed result

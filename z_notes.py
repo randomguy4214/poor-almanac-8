@@ -4,7 +4,7 @@ cwd = os.getcwd()
 input_folder = "0_input"
 notes = pd.read_excel(os.path.join(cwd, "z_notes.xlsx"), index_col="symbol")
 notes.reset_index(drop=False, inplace=True)
-symbols = notes['symbol']
+symbols = notes['symbol'].drop_duplicates()
 print(symbols)
 output_unfiltered = pd.read_excel(os.path.join(cwd,"5_df_output_unflitered.xlsx"))
 df_merged = pd.merge(symbols, output_unfiltered
