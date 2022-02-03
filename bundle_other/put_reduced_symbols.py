@@ -22,14 +22,13 @@ df_merged = pd.merge(other_filtered_by_country, financials_q_latest
 df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
 
 latest_dates = df_merged[['symbol', 'date']]
+latest_dates = latest_dates[(latest_dates['date'].str.len() > 0)]
 latest_dates['today'] = datetime.datetime.now()
 latest_dates['today'] = pd.to_datetime(latest_dates['today'], errors='coerce').dt.date
 latest_dates['date'] = pd.to_datetime(latest_dates['date'], errors='coerce').dt.date
 latest_dates['date_diff'] = (latest_dates['date'] - latest_dates['today']).dt.days *-1
-print(latest_dates)
 latest_dates['date_diff'] = latest_dates['date_diff'].astype(int).fillna(0)
 latest_dates = latest_dates[(latest_dates['date_diff'] > 40) & (latest_dates['date_diff'] < 366)]
-
 symbol_list = latest_dates['symbol']
-
+symbol_list.reset_index(drop=True, inplace=True)
 symbol_list.to_csv(os.path.join(cwd,"0_symbols.csv"))
