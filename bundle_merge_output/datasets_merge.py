@@ -260,6 +260,7 @@ df['EV_last_q'] = df['marketCap'] + df['totalDebt_last_q'] - df['cashAndCashEqui
 df['EV_last_q'] = df['EV_last_q'].fillna(df['marketCap'] + df['totalDebt'] - df['cashAndCashEquivalents'])
 df['EV/S/p'] = df['EV_last_q'] / df['sharesOutstanding'] / df['p']
 df['EV/OwnEa'] = df['EV_last_q'] / df['OwnEa']
+df['OwnEa/EV'] = df['OwnEa'] / df['EV_last_q']
 
 print('variables calculated')
 
@@ -289,7 +290,7 @@ for col in cols_to_format:
             , 'Eq/D', 'WC/S/p'
             , 'ImplYoYRev', 'ImplQoQRev', 'ImplYoYncfo', 'ImplQoQncfo'
             , 'ImplQoQRevBooking', 'ImplYoYRevBooking'
-            , 'EV/S/p', 'NCAV/S/p', 'OwnEa/S/p', 'EV/OwnEa'
+            , 'EV/S/p', 'NCAV/S/p', 'OwnEa/S/p', 'OwnEa/EV'
             ,]:
             df[col]=df[col].round(2)
         else:
