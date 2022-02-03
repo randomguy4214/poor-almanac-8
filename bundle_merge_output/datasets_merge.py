@@ -108,6 +108,8 @@ financials_q_last.rename(columns={'revenue': 'revenue_last_q'
                         , 'netDebt':'netDebt_last_q'
                         , 'netCashProvidedByOperatingActivites': 'netCashProvidedByOperatingActivites_last_q'
                         , 'totalLiabilities': 'totalLiabilities_last_q'
+                        , 'preferredStock': 'preferredStock_last_q'
+                        , 'minorityInterest' : 'minorityInterest_last_q'
                                   }
                         , inplace=True)
 
@@ -254,7 +256,7 @@ df['NCAV'] = df['totalCurrentAssets_last_q'] - df['totalLiabilities_last_q']
 df['NCAV/S/p'] = df['NCAV'] / df['sharesOutstanding'] / df['p']
 
 # Enterprise value
-df['EV_last_q'] = df['marketCap'] + df['totalDebt_last_q'] - df['cashAndCashEquivalents_last_q']
+df['EV_last_q'] = df['marketCap'] + df['totalDebt_last_q'] - df['cashAndCashEquivalents_last_q'] + df['preferredStock_last_q'] + df['minorityInterest_last_q']
 df['EV_last_q'] = df['EV_last_q'].fillna(df['marketCap'] + df['totalDebt'] - df['cashAndCashEquivalents'])
 df['EV/S/p'] = df['EV_last_q'] / df['sharesOutstanding'] / df['p']
 
