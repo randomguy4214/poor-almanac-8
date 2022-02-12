@@ -11,7 +11,6 @@ output_folder = "0_output"
 temp_folder = "temp"
 temp_other = "other"
 
-#https://fmpcloud.io/api/v3/profile/AAPL?datatype=csv&apikey=
 token_df = pd.read_csv(os.path.join(cwd,"0_api_token.csv"))
 token = token_df.iloc[0,1]
 url1 = "https://financialmodelingprep.com/api/v3/profile/"
