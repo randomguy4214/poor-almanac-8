@@ -3,7 +3,7 @@ print('update_prices - initiating.')
 
 import os
 import pandas as pd
-import datetime
+
 cwd = os.getcwd()
 input_folder = "0_input"
 prices_folder = "data"
@@ -11,17 +11,16 @@ output_folder = "0_output"
 temp_folder = "temp"
 prices_temp = "prices"
 
-#setting up fmpcloud
-#https://fmpcloud.io/api/v3/quote/AAPL?datatype=csv&timeseries=255&apikey=
+#https://financialmodelingprep.com/api/v3/quote/AAPL?datatype=csv&timeseries=255&apikey=
 token_df = pd.read_csv(os.path.join(cwd,"0_api_token.csv"))
 token = token_df.iloc[0,1]
-url1 = "https://fmpcloud.io/api/v3/quote/"
+url1 = "https://financialmodelingprep.com/api/v3/quote/"
 apikey = "apikey="
 amp = "&"
 csv = "?datatype=csv"
 
 # prepare tickers list
-df_tickers = pd.read_csv(os.path.join(cwd,"0_symbols.csv"), index_col=0)
+df_tickers = pd.read_csv(os.path.join(cwd,"0_symbols_original.csv"), index_col=0)
 df_tickers.drop_duplicates(inplace=True)
 
 # find last updated ticker (this is necessary if you lose internet connection, etc)
@@ -32,7 +31,7 @@ print("last batch in prices was", last_ticker_n)
 
 # start importing
 index_max = pd.to_numeric(df_tickers.index.values.max())
-chunk_size = 50
+chunk_size = 100
 for i in range(last_ticker_n, len(df_tickers), chunk_size):
     try:
         df_chunk = df_tickers[i:i + chunk_size]

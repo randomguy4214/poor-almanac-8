@@ -11,11 +11,10 @@ temp_folder = "temp"
 prices_temp = "prices"
 financials_temp = "financials_a"
 
-#setting up fmpcloud
-#https://fmpcloud.io/api/v3/balance-sheet-statement-shorten/AAPL?datatype=csv&apikey=
+#https://financialmodelingprep.com/api/v3/balance-sheet-statement-shorten/AAPL?datatype=csv&apikey=
 token_df = pd.read_csv(os.path.join(cwd,"0_api_token.csv"))
 token = token_df.iloc[0,1]
-url1 = "https://fmpcloud.io/api/v3/"
+url1 = "https://financialmodelingprep.com/api/v3/"
 inc_st = "income-statement-shorten/"
 bs_st = "balance-sheet-statement-shorten/"
 cf_st = "cash-flow-statement-shorten/"
