@@ -10,7 +10,7 @@ input_folder = "0_input"
 
 df_other = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_other.csv"), low_memory=False)
 other_country = df_other.sort_values(['symbol','country'])
-other_filtered_by_country = other_country[other_country['country'].str.contains("US|DE|FR|NL|GB|SK")]
+other_filtered_by_country = other_country[other_country['country'].str.contains("US|DE|FR|NL|GB|SK|CH")]
 
 financials_q = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_financials_q.csv"), low_memory=False)
 financials_q_latest = financials_q.sort_values(['symbol','date'], ascending=False).groupby('symbol').head(1)
