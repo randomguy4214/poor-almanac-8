@@ -10,12 +10,16 @@ input_folder = "0_input"
 
 df_other = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_other.csv"), low_memory=False)
 other_country = df_other.sort_values(['symbol','country'])
-other_filtered_by_country = other_country[other_country['country'].str.contains("US|DE|FR|NL|GB|SK|CH")]
+
+drop_list = pd.read_excel(os.path.join(cwd,"0_drop_list.xlsx"))
+drop_list_country = drop_list['country'].tolist()
+df_export = df_other[df_other['country'].isin(drop_list_country)] # drop some industries
+#other_filtered_by_country = other_country[other_country['country'].str.contains("US|DE|FR|NL|GB|SK|CH")]
 
 financials_q = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_financials_q.csv"), low_memory=False)
 financials_q_latest = financials_q.sort_values(['symbol','date'], ascending=False).groupby('symbol').head(1)
 
-df_merged = pd.merge(other_filtered_by_country, financials_q_latest
+df_merged = pd.merge(df_export, financials_q_latest
                      , how='left', left_on=['symbol']
                      , right_on=['symbol'], suffixes=('', '_drop'))
 
