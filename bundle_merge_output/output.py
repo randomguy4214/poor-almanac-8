@@ -36,6 +36,7 @@ cols_to_order = [
     , 'B/S/p'
     , 'EV/S/p'
     , 'OwnEa_TTM/EV'
+    , 'EV/OwnEa_TTM'
     , 'NCAV/S/p'
     , 'WC/D'
     , 'Eq/D'
