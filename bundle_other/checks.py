@@ -12,6 +12,7 @@ prices_temp = "prices"
 financials_a_temp = "financials_a"
 financials_q_temp = "financials_q"
 other_temp = "other"
+EV_temp = "EV"
 
 # check folder 0_input
 if not os.path.exists(os.path.join(cwd,input_folder)):
@@ -33,6 +34,7 @@ if not os.path.exists(os.path.join(cwd,input_folder,temp_folder, prices_temp)):
     os.mkdir(os.path.join(cwd, input_folder, temp_folder, financials_a_temp))
     os.mkdir(os.path.join(cwd, input_folder, temp_folder, financials_q_temp))
     os.mkdir(os.path.join(cwd, input_folder, temp_folder, other_temp))
+    os.mkdir(os.path.join(cwd, input_folder, temp_folder, EV_temp))
     print("temp subfolders created")
 else:
     print("temp subfolders exist")
@@ -74,6 +76,10 @@ if not os.path.exists(os.path.join(cwd,input_folder,temp_folder,"prices_last_tic
     financials_q_last_ticker = pd.DataFrame({'number': [0] })
     financials_q_last_ticker.to_csv(os.path.join(cwd,input_folder,temp_folder,"other_last_ticker.csv"))
     print("other_last_ticker created")
+
+    financials_q_last_ticker = pd.DataFrame({'number': [0] })
+    financials_q_last_ticker.to_csv(os.path.join(cwd,input_folder,temp_folder,"EV_last_ticker.csv"))
+    print("EV_last_ticker created")
 else:
     print("good! last_ticker already exists")
 
