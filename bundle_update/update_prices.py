@@ -31,7 +31,7 @@ print("last batch in prices was", last_ticker_n)
 
 # start importing
 index_max = pd.to_numeric(df_tickers.index.values.max())
-chunk_size = 100
+chunk_size = 30 # hope that works fine?
 for i in range(last_ticker_n, len(df_tickers), chunk_size):
     try:
         df_chunk = df_tickers[i:i + chunk_size]

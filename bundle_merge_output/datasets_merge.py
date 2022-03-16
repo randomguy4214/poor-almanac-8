@@ -232,18 +232,18 @@ df['marg_TTM'] = ((df['revenue_TTM'] - df['operatingExpenses_last_q']) / df['rev
 # capex
 df['Sales_absolute_increase'] = df['revenue_TTM'] - df['revenue']
 df['maint_capex_ratio'] = df['mean_PPEnet'] / df['mean_revenue']
-df['growth_capex'] = df['maint_capex_ratio'] * df['Sales_absolute_increase']
-df['capex_more_correct'] = df['capex_TTM'] - df['growth_capex']
-df['capex_more_correct'] = df['capex_more_correct'].fillna(df['capex_TTM'])
-df['capex_more_correct'] = df['capex_more_correct'].fillna(df['netCashUsedForInvestingActivites'])
+df['growth_capex_TTM'] = df['maint_capex_ratio'] * df['Sales_absolute_increase']
+df['capex_more_correct_TTM'] = df['capex_TTM'] - df['growth_capex_TTM']
+df['capex_more_correct_TTM'] = df['capex_more_correct_TTM'].fillna(df['capex_TTM'])
+df['capex_more_correct_TTM'] = df['capex_more_correct_TTM'].fillna(df['netCashUsedForInvestingActivites'])
 
-# NAV, B/S/p, OwnEa, WC
+# NAV, B/S/p, OwnEa_TTM, WC
 df['totalStockholdersEquity_last_q'] = df['totalStockholdersEquity_last_q'].fillna(df['totalStockholdersEquity'])
 df['NAV/S'] = df['totalStockholdersEquity_last_q'] / df['sharesOutstanding']
 df['B/S/p'] = df['NAV/S'] / df['p']
-df['OwnEa'] =  df['ncfo_TTM'] + df['capex_more_correct']
-df['OwnEa/S'] = df['OwnEa'] / df['sharesOutstanding']
-df['OwnEa/S/p'] = df['OwnEa/S'] / df['p']
+df['OwnEa_TTM'] =  df['ncfo_TTM'] + df['capex_more_correct_TTM']
+df['OwnEa_TTM/S'] = df['OwnEa_TTM'] / df['sharesOutstanding']
+df['OwnEa_TTM/S/p'] = df['OwnEa_TTM/S'] / df['p']
 df['WC'] =  df['totalCurrentAssets_last_q'] - df['totalCurrentLiabilities_last_q']
 df['WC/S'] = df['WC']/ df['sharesOutstanding']
 df['WC/S/p'] = df['WC/S'] / df['p']
@@ -259,8 +259,8 @@ df['NCAV/S/p'] = df['NCAV'] / df['sharesOutstanding'] / df['p']
 df['EV_last_q'] = df['marketCap'] + df['totalDebt_last_q'] - df['cashAndCashEquivalents_last_q'] + df['preferredStock_last_q'] + df['minorityInterest_last_q']
 df['EV_last_q'] = df['EV_last_q'].fillna(df['marketCap'] + df['totalDebt'] - df['cashAndCashEquivalents'])
 df['EV/S/p'] = df['EV_last_q'] / df['sharesOutstanding'] / df['p']
-df['EV/OwnEa'] = df['EV_last_q'] / df['OwnEa']
-df['OwnEa/EV'] = df['OwnEa'] / df['EV_last_q']
+df['EV/OwnEa_TTM'] = df['EV_last_q'] / df['OwnEa_TTM']
+df['OwnEa_TTM/EV'] = df['OwnEa_TTM'] / df['EV_last_q']
 
 print('variables calculated')
 
@@ -272,7 +272,7 @@ for col in cols_to_fillna:
         '''
         if col in ['p', 'from_low', 'from_high', 'OpMarg', 'B/S/p', 'marg', 'marCap'
             , 'B/S/p', '52l', '52h', 'ImplYoYRev', 'ImplQoQRev', 'ImplYoYncfo', 'ImplQoQncfo'
-            , 'marg_TTM', 'OwnEa/S/p', 'Rev/S/p', 'Eq/D'
+            , 'marg_TTM', 'OwnEa_TTM/S/p', 'Rev/S/p', 'Eq/D'
             , 'WC/D', 'Eq/D', 'cik']:
             df[col]=df[col].fillna(0)
         else:
@@ -290,7 +290,7 @@ for col in cols_to_format:
             , 'Eq/D', 'WC/S/p'
             , 'ImplYoYRev', 'ImplQoQRev', 'ImplYoYncfo', 'ImplQoQncfo'
             , 'ImplQoQRevBooking', 'ImplYoYRevBooking'
-            , 'EV/S/p', 'NCAV/S/p', 'OwnEa/S/p', 'OwnEa/EV'
+            , 'EV/S/p', 'NCAV/S/p', 'OwnEa_TTM/S/p', 'OwnEa_TTM/EV'
             ,]:
             df[col]=df[col].round(2)
         else:
