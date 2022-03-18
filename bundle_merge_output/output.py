@@ -9,74 +9,29 @@ cwd = os.getcwd()
 input_folder = "0_input"
 
 # import files
-drop_list = pd.read_excel(os.path.join(cwd,"0_drop_list.xlsx"))
-df = pd.read_csv(os.path.join(cwd,input_folder,"4_merged.csv"), low_memory=False)
+df_prices_EV = pd.read_csv(os.path.join(cwd,input_folder,"4_recent_EV_prices_diff.csv"), low_memory=False)
+df_OwnEa = pd.read_csv(os.path.join(cwd,input_folder,"4_recent_OwnEa.csv"), low_memory=False)
+df_other = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_other.csv"), low_memory=False)
 
-# reorder and select relevant columns
-cols_to_order = [
-    'industry'
-    , 'country'
-    , 'companyName'
-    , 'symbol'
-    , 'p'
-    , 'from_low'
-    , '52l'
-    , 'from_high'
-    , '52h'
-    , 'mean_OpMarg'
-    , 'marg_TTM'
-    , 'OwnEa_TTM/S/p'
-    , 'Rev/S/p'
-    , 'ImplQoQRev'
-    , 'ImplQoQRevBooking'
-    , 'ImplQoQncfo'
-    , 'ImplYoYRev'
-    , 'ImplYoYRevBooking'
-    , 'ImplYoYncfo'
-    , 'B/S/p'
-    , 'EV/S/p'
-    , 'OwnEa_TTM/EV'
-    , 'EV/OwnEa_TTM'
-    , 'NCAV/S/p'
-    , 'WC/D'
-    , 'Eq/D'
-    , 'cik'
-    , 'marketCap'
-    , 'isFund'
-    ]
-
-# reorder
-new_columns = cols_to_order + (df.columns.drop(cols_to_order).tolist())
-df_export = df[cols_to_order]
+df_merged = pd.merge(df_prices_EV, df_OwnEa
+                     , how='left', left_on=['symbol']
+                     , right_on=['symbol'], suffixes=('', '_drop'))
+df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
+df_to_merge = df_merged
+df_merged = pd.merge(df_to_merge, df_other
+                     , how='left', left_on=['symbol']
+                     , right_on=['symbol'], suffixes=('', '_drop'))
+df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
+df_merged.reset_index(inplace=True)
+#
+df = df_merged[['symbol','price','EV'
+    ,'from_low','from_high','OwnEa'
+    ,'maint_capex_ratio','name','industry','description'
+    ,'country','isFund','isEtf']]
+df['EV/OwnEa'] = df['EV'] / df['OwnEa']
 
 # sort and export unfiltered
-df_export.sort_values(by=['from_low'], ascending=[True], inplace=True, na_position ='last')
 output_raw = '5_df_output_unflitered.xlsx'
-df_export.to_excel(os.path.join(cwd,output_raw), index=False)
-
-# filter by drop list
-drop_list_ticker = drop_list['symbol'].tolist()
-#df_export = df_export[~df_export['symbol'].isin(drop_list_ticker)] # drop some tickers
-#drop_list_industry = drop_list['industry'].tolist()
-#df_export = df_export[~df_export['industry'].isin(drop_list_industry)] # drop some industries
-drop_list_country = drop_list['country'].tolist()
-df_export = df_export[df_export['country'].isin(drop_list_country)] # drop some industries
-
-# filter by variables
-df_export = df_export[(df_export['p'] > 0)] # impossible
-df_export = df_export[(df_export['marketCap'] >= 1)] # more than 1m marcap
-df_export = df_export[(df_export['from_low'] <= 15)]
-df_export = df_export[(df_export['ImplQoQRev'] <= 2000)]
-#df_export = df_export[(df_export['from_low'] < 30)] # less than x% increase from lowest point
-#df_export = df_export[(df_export['p'] < 5)] # less than 5 bucks
-df_export = df_export[df_export['B/S/p'] > 0.6] # Book to market
-
-# export
-output_filtered = '5_df_output_filtered.xlsx'
-df_export.to_excel(os.path.join(cwd,output_filtered), index=False)
-
-# export tickers again. just to have more narrowed result
-stocks = df_export[['symbol']].sort_values(by=['symbol'], ascending= True).drop_duplicates()
-stocks.to_csv(os.path.join(cwd,input_folder,"5_tickers_filtered.csv"), index = False)
+df.to_excel(os.path.join(cwd,output_raw), index=False)
 
 print('please check the results')

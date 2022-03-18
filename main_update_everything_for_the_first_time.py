@@ -18,5 +18,6 @@ from bundle_process import process_financials_q
 from bundle_process import process_other
 from bundle_process import process_EV
 
-from bundle_merge_output import datasets_merge
+from bundle_merge_output import a_recent_EV_prices_diff
+from bundle_merge_output import a_OwnEa_annually
 from bundle_merge_output import output
