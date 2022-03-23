@@ -20,4 +20,6 @@ from bundle_process import process_EV
 
 from bundle_merge_output import a_recent_EV_prices_diff
 from bundle_merge_output import a_OwnEa_annually
+from bundle_merge_output import a_OwnEa_quarterly
+from bundle_merge_output import a_OwnEa
 from bundle_merge_output import output

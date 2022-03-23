@@ -45,9 +45,9 @@ df_merged = pd.merge(df_OwnEa, df_maint_capex_ratio, how='left', left_on=['symbo
 
 # export
 df = df_merged
-df.to_csv(os.path.join(cwd,input_folder,"4_recent_OwnEa.csv"), index = False)
+df.to_csv(os.path.join(cwd,input_folder,"4_recent_OwnEa_a.csv"), index = False)
 
-print('4_recent_OwnEa created')
+print('4_recent_OwnEa_a created')
 
 
 
