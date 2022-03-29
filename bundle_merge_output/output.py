@@ -15,6 +15,7 @@ input_folder = "0_input"
 df_other = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_other.csv"), low_memory=False)
 df_prices_EV = pd.read_csv(os.path.join(cwd,input_folder,"4_recent_EV_prices_diff.csv"), low_memory=False)
 df_OwnEa = pd.read_csv(os.path.join(cwd,input_folder,"4_recent_OwnEa_all.csv"), low_memory=False)
+df_Net_Debt_To_Equity = pd.read_csv(os.path.join(cwd,input_folder,"4_net_debt_to_equity.csv"), low_memory=False)
 
 df_merged = pd.merge(df_prices_EV, df_OwnEa
                      , how='left', left_on=['symbol']
@@ -25,12 +26,17 @@ df_merged = pd.merge(df_to_merge, df_other
                      , how='left', left_on=['symbol']
                      , right_on=['symbol'], suffixes=('', '_drop'))
 df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
+df_to_merge = df_merged
+df_merged = pd.merge(df_to_merge, df_Net_Debt_To_Equity
+                     , how='left', left_on=['symbol']
+                     , right_on=['symbol'], suffixes=('', '_drop'))
+df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
 df_merged.reset_index(inplace=True)
 #
 df = df_merged[['symbol','price','EV'
     ,'from_low','from_high','OwnEa', 'OwnEa_eight_q'
     ,'name','industry','description'
-    ,'country','isFund','isEtf', 'marketCap']]
+    ,'country','isFund','isEtf', 'marketCap', 'netDebtToEquity']]
 df['SO'] = df['marketCap'] / df['price']
 df['EV/OwnEa_c'] = df['EV'] / df['OwnEa']
 #df.dropna(subset=['EV/OwnEa'], inplace=True)
