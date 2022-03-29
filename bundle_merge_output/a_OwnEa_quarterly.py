@@ -33,13 +33,12 @@ recent_q = df_merged[(df_merged['date']>df_merged['date_a'])]
 
 recent_q['maint_capex'] = recent_q['Sales_diff'] * recent_q['maint_capex_ratio'] * -1
 recent_q['Capex'] = recent_q.loc[recent_q['maint_capex'] < recent_q['capitalExpenditure'], 'maint_capex']
-recent_q['OwnEa'] = recent_q['netCashProvidedByOperatingActivites'] - recent_q['maint_capex']
+recent_q['OwnEa_q'] = recent_q['netCashProvidedByOperatingActivites'] - recent_q['maint_capex']
 
 # export maint_capex_ratio and OwnEa
-df_maint_capex_ratio = recent_q[['symbol', 'OwnEa']]
-df_maint_capex_ratio.to_csv(os.path.join(cwd,input_folder,"test.csv"), index = False)
+df_maint_capex_ratio = recent_q[['symbol', 'OwnEa_q']]
 df_OwnEa_temp = recent_q.groupby('symbol').sum().reset_index()
-df_OwnEa = df_OwnEa_temp[['symbol', 'OwnEa']]
+df_OwnEa = df_OwnEa_temp[['symbol', 'OwnEa_q']]
 df_OwnEa.to_csv(os.path.join(cwd,input_folder,"4_recent_OwnEa_q.csv"), index = False)
 
 print('4_recent_OwnEa_q created')

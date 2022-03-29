@@ -13,3 +13,7 @@ from bundle_process import process_financials_a
 from bundle_process import process_other
 from bundle_process import process_EV
 from bundle_other import put_original_symbols
+from bundle_merge_output import a_OwnEa_annually
+from bundle_merge_output import a_OwnEa_quarterly
+from bundle_merge_output import a_OwnEa_last_8_quarters
+from bundle_merge_output import a_OwnEa
