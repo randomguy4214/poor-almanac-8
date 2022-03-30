@@ -66,8 +66,8 @@ df.drop(['disc', '5y_g', 'FV_1', 'FV_2', 'FV_3', 'FV_4', 'FV_5', 'TV_g', 'TV'], 
 
 
 # diff to price
-df['marg_of_saf_perp'] = ((df['dcf_perp']-df['price']) / abs(df['price'])).round(2)
-df['marg_of_saf_5y_perp'] = ((df['dcf_5y_perp']-df['price']) / abs(df['price'])).round(2)
+df['marg_of_saf_perp'] = ((df['dcf_perp']-df['price']) / abs(df['price']) * 100).round(0)
+df['marg_of_saf_5y_perp'] = ((df['dcf_5y_perp']-df['price']) / abs(df['price']) * 100).round(0)
 
 # sort and export unfiltered
 
