@@ -18,7 +18,7 @@ temp_folder = "temp"
 # import
 recent_OwnEa_a = pd.read_csv(os.path.join(cwd,input_folder,"4_recent_OwnEa_a.csv"), usecols=['symbol','OwnEa_a'], low_memory=False)
 recent_OwnEa_q = pd.read_csv(os.path.join(cwd,input_folder,"4_recent_OwnEa_q.csv"), usecols=['symbol','OwnEa_q'], low_memory=False)
-recent_OwnEa_eight_q = pd.read_csv(os.path.join(cwd,input_folder,"4_recent_OwnEa_OwnEa_q_last_8.csv"), usecols=['symbol','OwnEa_eight_q'], low_memory=False)
+recent_OwnEa_eight_q = pd.read_csv(os.path.join(cwd,input_folder,"4_recent_OwnEa_OwnEa_q_last_8.csv"), usecols=['symbol','OwnEa_eight_q_avg'], low_memory=False)
 
 recent_OwnEa_a.rename(columns={'symbol': 'symbol', 'OwnEa_a': 'OwnEa'}, inplace=True)
 recent_OwnEa_q.rename(columns={'symbol': 'symbol', 'OwnEa_q': 'OwnEa'}, inplace=True)

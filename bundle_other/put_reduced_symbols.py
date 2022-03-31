@@ -32,7 +32,7 @@ latest_dates['today'] = pd.to_datetime(latest_dates['today'], errors='coerce').d
 latest_dates['date'] = pd.to_datetime(latest_dates['date'], errors='coerce').dt.date
 latest_dates['date_diff'] = (latest_dates['date'] - latest_dates['today']).dt.days *-1
 latest_dates['date_diff'] = latest_dates['date_diff'].astype(int).fillna(0)
-latest_dates = latest_dates[(latest_dates['date_diff'] > 90) & (latest_dates['date_diff'] < 390)]
+latest_dates = latest_dates[(latest_dates['date_diff'] > 85) & (latest_dates['date_diff'] < 390)]
 # financials update once per quarter, ie ca 90 days. to be on a safe side
 # and if company doesnt have any financials for one year, it is pretty much a dead company
 symbol_list = latest_dates['symbol']
