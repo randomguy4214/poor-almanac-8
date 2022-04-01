@@ -33,6 +33,8 @@ eight_q.loc[eight_q['OwnEa_eight_q'] < 0, 'OwnEa_eight_q'] = 0
 eight_q['OwnEa_eight_q_avg'] = (eight_q['OwnEa_eight_q'] / 8).round(0) # averaging out quarters
 
 eight_q_sum = eight_q.groupby('symbol').sum().reset_index()
+eight_q_sum = eight_q_sum.loc[~(eight_q_sum['revenue'] < 0),:] # drop where no revenues
+eight_q_sum.to_csv(os.path.join(cwd,input_folder,"test.csv"), index = False)
 
 # export maint_capex_ratio and OwnEa
 df_OwnEa = eight_q_sum[['symbol', 'OwnEa_eight_q', 'OwnEa_eight_q_avg']]
