@@ -25,13 +25,14 @@ recent_OwnEa_q.rename(columns={'symbol': 'symbol', 'OwnEa_q': 'OwnEa'}, inplace=
 
 # append annuals and unprocessed quarters
 recent_OwnEa = recent_OwnEa_a.append(recent_OwnEa_q)
-recent_OwnEa = recent_OwnEa.groupby('symbol').sum().reset_index()
+recent_OwnEa_sum = recent_OwnEa.groupby('symbol').sum().reset_index()
 
 # add as a separate column last 8 quarters
-df_merged = pd.merge(recent_OwnEa, recent_OwnEa_eight_q
+df_merged = pd.merge(recent_OwnEa_sum, recent_OwnEa_eight_q
                      , how='left', left_on=['symbol']
                      , right_on=['symbol'])
 
 recent_OwnEa_all = df_merged
+
 recent_OwnEa_all.to_csv(os.path.join(cwd,input_folder,"4_recent_OwnEa_all.csv"), index = False)
 print('4_recent_OwnEa_all created')

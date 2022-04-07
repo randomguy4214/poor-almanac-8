@@ -19,20 +19,24 @@ temp_folder = "temp"
 recent_OwnEa_a = pd.read_csv(os.path.join(cwd,input_folder,"4_recent_OwnEa_a.csv"), low_memory=False)
 
 financials_q = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_financials_q.csv"), low_memory=False)
-#financials_q = financials_q[(financials_q['symbol'].str.contains('AGRX'))] # for testing |
+#financials_q = financials_q[(financials_q['symbol'].str.contains('SANW'))] # for testing |
 financials_q = financials_q.sort_values(['symbol','date'], ascending=[False, False])
 df_merged = pd.merge(financials_q, recent_OwnEa_a, how='left', left_on=['symbol'], right_on=['symbol'], suffixes=('', '_a'))
 
 # take last 8 quarters ie last 2 years, find the difference in sales. calculate OwnEa.
 # we need 9 because we want to have 8 quarters of "sales growth" QoQ
-eight_q = df_merged.groupby('symbol').head(9).reset_index(drop=True)
-eight_q['Sales_diff'] = eight_q['revenue'] - eight_q['revenue'].shift(-1) #get diff in sales per quarter
-eight_q['maint_capex'] = eight_q['Sales_diff'] * eight_q['maint_capex_ratio'] * -1
-eight_q['OwnEa_eight_q'] = eight_q['netCashProvidedByOperatingActivites'] + eight_q['maint_capex']
-eight_q.loc[eight_q['OwnEa_eight_q'] < 0, 'OwnEa_eight_q'] = 0
-eight_q['OwnEa_eight_q_avg'] = (eight_q['OwnEa_eight_q'] / 8).round(0) # averaging out quarters
+nine_q = df_merged.groupby('symbol').head(9).reset_index(drop=True)
+nine_q['Sales_diff'] = nine_q['revenue'] - nine_q['revenue'].shift(-1) #get diff in sales per quarter
+nine_q['maint_capex'] = nine_q['Sales_diff'] * nine_q['maint_capex_ratio'] * -1
+nine_q['OwnEa_eight_q'] = nine_q['netCashProvidedByOperatingActivites'] + nine_q['maint_capex']
+nine_q.loc[nine_q['OwnEa_eight_q'] < 0, 'OwnEa_eight_q'] = 0
+nine_q['OwnEa_eight_q_avg'] = (nine_q['OwnEa_eight_q'] / 8).round(0) # averaging out quarters
+
+eight_q = nine_q.groupby('symbol').head(8).reset_index(drop=True) # selecting only 8 quarters to drop the last one
+#eight_q.to_csv(os.path.join(cwd,input_folder,"test.csv"), index = False)
 
 eight_q_sum = eight_q.groupby('symbol').sum().reset_index()
+#eight_q_sum.to_csv(os.path.join(cwd,input_folder,"test2.csv"), index = False)
 eight_q_sum = eight_q_sum.loc[~(eight_q_sum['revenue'] <= 0),:] # drop where no revenues
 #eight_q_sum.to_csv(os.path.join(cwd,input_folder,"test.csv"), index = False)
 
