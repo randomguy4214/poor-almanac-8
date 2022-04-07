@@ -33,7 +33,7 @@ df_roll5 = df_roll5.sort_values(['symbol','date'], ascending=[True, False])
 df_roll5['Sales_diff'] = df_roll5['revenue'] - df_roll5['revenue'].shift(-1) #get diff in sales p.a.
 df_roll5.loc[df_roll5.groupby('symbol').tail(1).index, 'Sales_diff'] = 0.0 #fix first year of every symbol
 df_roll5['maint_capex'] = df_roll5['Sales_diff'] * df_roll5['maint_capex_ratio'] * -1
-df_roll5.loc[df_roll5['maint_capex'] < df_roll5['Capex'], 'maint_capex'] = df_roll5['Capex']
+#df_roll5.loc[df_roll5['maint_capex'] < df_roll5['Capex'], 'maint_capex'] = df_roll5['Capex']
 df_roll5['OwnEa_a'] = df_roll5['netCashProvidedByOperatingActivites'] + df_roll5['maint_capex']
 
 # export maint_capex_ratio and OwnEa

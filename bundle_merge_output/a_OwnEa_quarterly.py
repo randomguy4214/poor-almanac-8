@@ -32,7 +32,7 @@ df_merged = pd.merge(financials_q, recent_OwnEa_a
 recent_q = df_merged[(df_merged['date']>df_merged['date_a'])]
 
 recent_q['maint_capex'] = recent_q['Sales_diff'] * recent_q['maint_capex_ratio'] * -1
-recent_q['Capex'] = recent_q.loc[recent_q['maint_capex'] < recent_q['capitalExpenditure'], 'maint_capex']
+#recent_q['Capex'] = recent_q.loc[recent_q['maint_capex'] < recent_q['capitalExpenditure'], 'maint_capex']
 recent_q['OwnEa_q'] = recent_q['netCashProvidedByOperatingActivites'] + recent_q['maint_capex']
 
 # export maint_capex_ratio and OwnEa

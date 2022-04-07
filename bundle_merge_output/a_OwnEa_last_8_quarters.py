@@ -23,10 +23,10 @@ financials_q = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_financials
 financials_q = financials_q.sort_values(['symbol','date'], ascending=[False, False])
 df_merged = pd.merge(financials_q, recent_OwnEa_a, how='left', left_on=['symbol'], right_on=['symbol'], suffixes=('', '_a'))
 
-# take last 8 quarters ie last 2 years, find the difference in sales on annual basis. calculate OwnEa.
+# take last 8 quarters ie last 2 years, find the difference in sales. calculate OwnEa.
 # we need 9 because we want to have 8 quarters of "sales growth" QoQ
 eight_q = df_merged.groupby('symbol').head(9).reset_index(drop=True)
-eight_q['Sales_diff'] = eight_q['revenue'] - eight_q['revenue'].shift(-1) #get diff in sales p.a.
+eight_q['Sales_diff'] = eight_q['revenue'] - eight_q['revenue'].shift(-1) #get diff in sales per quarter
 eight_q['maint_capex'] = eight_q['Sales_diff'] * eight_q['maint_capex_ratio'] * -1
 eight_q['OwnEa_eight_q'] = eight_q['netCashProvidedByOperatingActivites'] + eight_q['maint_capex']
 eight_q.loc[eight_q['OwnEa_eight_q'] < 0, 'OwnEa_eight_q'] = 0
