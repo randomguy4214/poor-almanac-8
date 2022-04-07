@@ -29,16 +29,17 @@ nine_q = df_merged.groupby('symbol').head(9).reset_index(drop=True)
 nine_q['Sales_diff'] = nine_q['revenue'] - nine_q['revenue'].shift(-1) #get diff in sales per quarter
 nine_q['maint_capex'] = nine_q['Sales_diff'] * nine_q['maint_capex_ratio'] * -1
 nine_q['OwnEa_eight_q'] = nine_q['netCashProvidedByOperatingActivites'] + nine_q['maint_capex']
-nine_q.loc[nine_q['OwnEa_eight_q'] < 0, 'OwnEa_eight_q'] = 0
-nine_q['OwnEa_eight_q_avg'] = (nine_q['OwnEa_eight_q'] / 8).round(0) # averaging out quarters
+#nine_q.loc[nine_q['OwnEa_eight_q'] < 0, 'OwnEa_eight_q'] = 0
+nine_q.loc[nine_q.groupby('symbol').tail(1).index, 'OwnEa_eight_q'] = 0 #set 9th quarter of every symbol to zero
 
 eight_q = nine_q.groupby('symbol').head(8).reset_index(drop=True) # selecting only 8 quarters to drop the last one
 #eight_q.to_csv(os.path.join(cwd,input_folder,"test.csv"), index = False)
 
 eight_q_sum = eight_q.groupby('symbol').sum().reset_index()
+eight_q_sum['OwnEa_eight_q_avg'] = (eight_q_sum['OwnEa_eight_q'] / 8).round(0) # averaging out quarters
 #eight_q_sum.to_csv(os.path.join(cwd,input_folder,"test2.csv"), index = False)
 eight_q_sum = eight_q_sum.loc[~(eight_q_sum['revenue'] <= 0),:] # drop where no revenues
-#eight_q_sum.to_csv(os.path.join(cwd,input_folder,"test.csv"), index = False)
+#eight_q_sum.to_csv(os.path.join(cwd,input_folder,"test3.csv"), index = False)
 
 # export maint_capex_ratio and OwnEa
 df_OwnEa = eight_q_sum[['symbol', 'OwnEa_eight_q', 'OwnEa_eight_q_avg']]
