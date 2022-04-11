@@ -41,6 +41,8 @@ df['SO'] = df['marketCap'] / df['price']
 df['EV/OwnEa_c'] = df['EV'] / df['OwnEa']
 #df.dropna(subset=['EV/OwnEa'], inplace=True)
 #df = df[(df['symbol'].str.contains('AGRX'))] # for testing |
+df['marketCap_quantile'] = pd.qcut(df['marketCap'], 50, labels=False)
+df['marketCap_q'] = 50 - df['marketCap_quantile']
 
 # simple model
 df['dcf_perp'] = df['OwnEa_eight_q_avg'] * 4 / 0.1 / df['SO']
@@ -67,7 +69,7 @@ df['marg_of_saf_perp'] = ((df['dcf_perp']- df['price']) / df['price'] * 100).rou
 df['marg_of_saf_5y_perp'] = ((df['dcf_5y_perp'] - df['price']) / df['price'] * 100).round(0)
 
 # clean
-df.drop(['disc', '5y_g', 'FV_1', 'FV_2', 'FV_3', 'FV_4', 'FV_5', 'TV_g', 'TV'], axis=1, inplace=True)
+df.drop(['disc', '5y_g', 'FV_1', 'FV_2', 'FV_3', 'FV_4', 'FV_5', 'TV_g', 'TV', 'marketCap_quantile'], axis=1, inplace=True)
 
 # sort and export unfiltered
 output_raw = '5_df_output_unflitered.xlsx'
