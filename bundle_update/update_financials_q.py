@@ -44,7 +44,7 @@ for t in tickers.split(' '):
             inc = url1 + inc_st + t + csv + amp + period_q + amp + apikey + token
             bs = url1 + bs_st + t + csv + amp + period_q + amp + apikey + token
             cf = url1 + cf_st + t + csv + amp + period_q + amp + apikey + token
-
+            #print(inc)
             df_inc = pd.read_csv(inc)
             df_bs = pd.read_csv(bs)
             df_cf = pd.read_csv(cf)
