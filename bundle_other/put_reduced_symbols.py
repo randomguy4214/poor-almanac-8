@@ -12,7 +12,7 @@ token = token_df.iloc[0,1]
 url1 = "https://financialmodelingprep.com/api/v4/"
 earn_cal = "earning-calendar-confirmed?"
 earn_from = "from="
-first_date = (datetime.datetime.now() - pd.DateOffset(weeks=1)).date().strftime("%Y-%m-%d")
+first_date = (datetime.datetime.now() - pd.DateOffset(weeks=4)).date().strftime("%Y-%m-%d")
 earn_to = "to="
 today_date = datetime.datetime.now().date().strftime("%Y-%m-%d")
 apikey = "apikey="
@@ -26,4 +26,4 @@ symbol_list = df_earn['symbol']
 symbol_list.reset_index(drop=True, inplace=True)
 symbol_list.to_csv(os.path.join(cwd,"0_symbols.csv"))
 
-print('only tickers with earnings for the last 7 days are updated')
+print('only tickers with earnings for the last 30 days are updated')
