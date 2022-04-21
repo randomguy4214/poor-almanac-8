@@ -26,4 +26,4 @@ symbol_list = df_earn['symbol']
 symbol_list.reset_index(drop=True, inplace=True)
 symbol_list.to_csv(os.path.join(cwd,"0_symbols.csv"))
 
-print('only symbols with earnings for the last 7 days are updated')
+print('only tickers with earnings for the last 7 days are updated')

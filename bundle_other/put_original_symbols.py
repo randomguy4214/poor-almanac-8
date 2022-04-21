@@ -5,3 +5,5 @@ import os
 cwd = os.getcwd()
 df_tickers = pd.read_csv(os.path.join(cwd,"0_symbols_original.csv"), index_col=0)
 df_tickers.to_csv(os.path.join(cwd,"0_symbols.csv"))
+
+print('all tickers restored')
