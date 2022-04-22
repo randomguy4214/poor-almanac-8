@@ -1,10 +1,8 @@
 # poor-almanac-8
 
 financialmodelingprep.com subscription is required.
-this code downloads all data from financialmodelingprep.com. 
-Both prices and fundamentals. 
-Later it is all merged into one dataset.
 
-The output, essentially, shows some variables that may indicate that there is a hidden value in the company.
+The idea is to find ratio of current price, and discounted Owners Earnings. 
+The code is doing exactly that. 
+The output is a scatterplot of price change from lowest point in 52 weeks, to target price. 
 
-WIP.
