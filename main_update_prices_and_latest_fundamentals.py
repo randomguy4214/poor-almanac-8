@@ -29,6 +29,5 @@ from bundle_merge_output import a_recent_EV_prices_diff
 from bundle_merge_output import output
 from bundle_other import put_original_symbols
 
-
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
