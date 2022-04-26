@@ -70,6 +70,8 @@ df['marg_of_saf_5y_perp'] = ((df['dcf_5y_perp'] - df['price']) / df['price'] * 1
 
 # clean
 df.drop(['disc', '5y_g', 'FV_1', 'FV_2', 'FV_3', 'FV_4', 'FV_5', 'TV_g', 'TV', 'marketCap_quantile'], axis=1, inplace=True)
+cols = ['symbol','from_low','marg_of_saf_perp']
+df = df[cols + [c for c in df.columns if c not in cols]]
 df = df.sort_values(['marg_of_saf_perp'], ascending=[False])
 
 # sort and export unfiltered
