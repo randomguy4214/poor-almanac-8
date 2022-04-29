@@ -41,8 +41,8 @@ df['SO'] = df['marketCap'] / df['price']
 df['EV/OwnEa_c'] = df['EV'] / df['OwnEa']
 #df.dropna(subset=['EV/OwnEa'], inplace=True)
 #df = df[(df['symbol'].str.contains('AGRX'))] # for testing |
-df['marketCap_quantile'] = pd.qcut(df['marketCap'], 50, labels=False)
-df['marketCap_q'] = 50 - df['marketCap_quantile']
+df['marketCap_quantile'] = pd.qcut(df['marketCap'], 20, labels=False)
+df['marketCap_q'] = 20 - df['marketCap_quantile']
 
 # simple model
 df['dcf_perp'] = df['OwnEa_eight_q_avg'] * 4 / 0.1 / df['SO']

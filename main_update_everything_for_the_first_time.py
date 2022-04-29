@@ -25,3 +25,6 @@ from bundle_merge_output import a_OwnEa_last_8_quarters
 from bundle_merge_output import a_OwnEa
 from bundle_merge_output import a_net_debt_to_equity
 from bundle_merge_output import output
+from bundle_merge_output import plot_scatterplot_marg_of_safety
+from bundle_merge_output import plot_op_cash
+from bundle_merge_output import plots_to_pdf

@@ -2,6 +2,7 @@
 print('process_EV - initiating.')
 import os
 import pandas as pd
+from pathlib import Path
 
 # set directories and files
 cwd = os.getcwd()
@@ -11,7 +12,6 @@ output_folder = "0_output"
 temp_folder = "temp"
 EV = "EV"
 
-from pathlib import Path
 paths = Path(os.path.join(cwd,input_folder,temp_folder,EV)).glob('**/*.csv')
 table = []
 for path in paths:

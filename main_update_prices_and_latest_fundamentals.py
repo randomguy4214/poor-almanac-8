@@ -31,5 +31,9 @@ from bundle_merge_output import a_recent_EV_prices_diff
 from bundle_merge_output import output
 from bundle_other import put_original_symbols
 
+from bundle_merge_output import plot_scatterplot_marg_of_safety
+from bundle_merge_output import plot_op_cash
+from bundle_merge_output import plots_to_pdf
+
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
