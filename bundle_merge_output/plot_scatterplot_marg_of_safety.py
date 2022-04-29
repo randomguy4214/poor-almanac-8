@@ -35,10 +35,10 @@ df['marg_of_saf_perp_q'] = 50 - df['marg_of_saf_perp_quantile']
 df['marg_of_saf_5y_perp_quantile'] = pd.qcut(df['marg_of_saf_5y_perp'], 50, labels=False, duplicates='drop')
 df['marg_of_saf_5y_perp_q'] = 50 - df['marg_of_saf_5y_perp_quantile']
 
-#filter on quantile
+# filter on quantile
 df = df[df['marg_of_saf_perp_q'] >= 2] # exclude outliers
 
-#export symbols
+# export symbols
 df_exp = df[['symbol','marg_of_saf_perp']]
 df_exp.to_csv(os.path.join(cwd,input_folder,"5_symbols_marg_of_safety.csv"), index = False)
 

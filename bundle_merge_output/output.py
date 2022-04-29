@@ -73,6 +73,8 @@ df.drop(['disc', '5y_g', 'FV_1', 'FV_2', 'FV_3', 'FV_4', 'FV_5', 'TV_g', 'TV', '
 cols = ['symbol','from_low','marg_of_saf_perp']
 df = df[cols + [c for c in df.columns if c not in cols]]
 df = df.sort_values(['marg_of_saf_perp'], ascending=[False])
+df['country'] = df['country'].fillna('IDK')
+df = df[df['country'].isin(['DE', 'US', 'IDK'])]
 
 # sort and export unfiltered
 output_raw = '5_df_output_unflitered.xlsx'

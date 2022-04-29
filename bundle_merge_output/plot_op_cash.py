@@ -97,7 +97,7 @@ for i in range(0, len(df_symbols), chunk_size):
 
     # save plots as pdf
     output_raw = '1_OpCash_' + str(i+chunk_size) + '.pdf'
-    print('OpCash ' + output_raw)
+    print(output_raw)
     plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=300)
     plt.close()
 
