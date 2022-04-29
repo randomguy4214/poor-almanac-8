@@ -7,7 +7,6 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
-import matplotlib.backends.backend_pdf
 import sys
 
 # figure size in inches
@@ -31,9 +30,9 @@ df_merged = pd.merge(df_5_symbols_marg_of_safety, df_q
                      , how='left', left_on=['symbol']
                      , right_on=['symbol'], suffixes=('', '_drop'))
 df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
-df = df_merged
+#df = df_merged
 #df = df_merged.head(3000)
-#df = df_merged.groupby('symbol').head(40).reset_index(drop=True) # selecting only 10 years per symbol
+df = df_merged.groupby('symbol').head(80).reset_index(drop=True) # selecting only 20 years per symbol
 
 #df = df_merged[(df_merged['symbol'].str.contains('SKM|SPWH|RBB'))]
 df = df[df['operatingCashFlow'].notna()]

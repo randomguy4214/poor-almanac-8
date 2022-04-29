@@ -28,7 +28,7 @@ for path in paths:
         pdf_read_object = PyPDF2.PdfFileReader(open(path, 'rb'))
         for page in range(pdf_read_object.numPages):
             pdf_write_object.addPage(pdf_read_object.getPage(page))
-            print('processing file : ' + 'number of pages : ' + str(pdf_read_object.numPages))
+            #print('processing file : ' + 'number of pages : ' + str(pdf_read_object.numPages))
     except:
         pass
 
