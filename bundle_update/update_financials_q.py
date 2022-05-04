@@ -3,6 +3,8 @@ print('financials_q - initiating')
 
 import os
 import pandas as pd
+import sys
+
 cwd = os.getcwd()
 input_folder = "0_input"
 prices_folder = "data"
@@ -40,22 +42,26 @@ index_max = pd.to_numeric(tickers_narrowed.index.values.max())
 for t in tickers.split(' '):
     try:
         n = pd.to_numeric(tickers_narrowed["symbol"][tickers_narrowed["symbol"] == t].index).values
+
         if n >= last_ticker_n:
             inc = url1 + inc_st + t + csv + amp + period_q + amp + apikey + token
             bs = url1 + bs_st + t + csv + amp + period_q + amp + apikey + token
             cf = url1 + cf_st + t + csv + amp + period_q + amp + apikey + token
             #print(inc)
+            #print(bs)
+            #print(cf)
+            #sys.exit()
             df_inc = pd.read_csv(inc)
             df_bs = pd.read_csv(bs)
             df_cf = pd.read_csv(cf)
 
-            df_merged = pd.merge(df_inc, df_bs, how='left', left_on=['calendarYear', 'period']
-                                 , right_on=['calendarYear', 'period'],
+            df_merged = pd.merge(df_inc, df_bs, how='left', left_on=['fillingDate']
+                                 , right_on=['fillingDate'],
                                  suffixes=('', '_drop'))
             df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
             df_to_merge = df_merged
-            df_merged = pd.merge(df_to_merge, df_cf, how='left', left_on=['calendarYear', 'period']
-                                 , right_on=['calendarYear', 'period'],
+            df_merged = pd.merge(df_to_merge, df_cf, how='left', left_on=['fillingDate']
+                                 , right_on=['fillingDate'],
                                  suffixes=('', '_drop'))
             df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
             df = df_merged

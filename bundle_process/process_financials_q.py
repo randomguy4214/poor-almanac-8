@@ -1,5 +1,5 @@
 #!/usr/bin/python
-print('financials_q - initiating.')
+print('process_financials_q - initiating.')
 import os
 import pandas as pd
 cwd = os.getcwd()
