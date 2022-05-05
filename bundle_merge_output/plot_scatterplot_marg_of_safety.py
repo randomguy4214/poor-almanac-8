@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+import shutil
 
 pd.options.mode.chained_assignment = None  # default='warn'
 pd.options.mode.use_inf_as_na = True
@@ -16,6 +17,13 @@ cwd = os.getcwd()
 input_folder = "0_input"
 output_folder = "0_output"
 charts_folder = "5_charts"
+
+# check charts_folder
+if not os.path.exists(os.path.join(cwd,input_folder, charts_folder)):
+    os.mkdir(os.path.join(cwd,input_folder, charts_folder))
+else:
+    shutil.rmtree(os.path.join(cwd,input_folder, charts_folder))
+    os.mkdir(os.path.join(cwd,input_folder, charts_folder))
 
 # import files
 df_import = pd.read_excel(os.path.join(cwd,"5_df_output_unflitered.xlsx"))
@@ -69,4 +77,5 @@ plt.ylabel('from low')
 
 output_raw = '0_scatterplot.pdf'
 plt.savefig(os.path.join(cwd,input_folder,charts_folder,output_raw), dpi=300)
+plt.close('all')
 #plt.show()
