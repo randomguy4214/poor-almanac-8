@@ -5,6 +5,8 @@ import os
 import pandas as pd
 import numpy as np
 import seaborn as sns
+sns.set_theme(style='darkgrid')
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import shutil
 
@@ -51,7 +53,7 @@ df_exp = df[['symbol','marg_of_saf_perp']]
 df_exp.to_csv(os.path.join(cwd,input_folder,"5_symbols_marg_of_safety.csv"), index = False)
 
 # plot
-sns.set(style='darkgrid', color_codes=True,rc = {'figure.figsize':(15,8)})
+sns.set(style='darkgrid', color_codes=True,rc = {'figure.figsize':(14, 8.5)})
 splot_func = sns.scatterplot(data = df, x = df['marg_of_saf_perp'], y = df['from_low'] \
                 , size = df['marketCap_q'] \
                 , hue = "industry" \
@@ -78,4 +80,6 @@ plt.ylabel('from low')
 output_raw = '0_scatterplot.pdf'
 plt.savefig(os.path.join(cwd,input_folder,charts_folder,output_raw), dpi=300)
 plt.close('all')
+#sns.set(style='white')
+mpl.rc_file_defaults()
 #plt.show()

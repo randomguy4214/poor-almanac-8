@@ -8,13 +8,10 @@ import numpy as np
 import seaborn as sns
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from matplotlib import rcParams
 import sys
 from datetime import date
 from matplotlib.gridspec import GridSpec
 
-# figure size in inches
-rcParams['figure.figsize'] = 11.7,8.27
 
 pd.options.mode.chained_assignment = None  # default='warn'
 pd.options.mode.use_inf_as_na = True
@@ -116,24 +113,24 @@ for i in range(0, df_symbols.index[-1]):
         ############################################################################################
         # START PLOTTING ###########################################################################
         # make overall template for subplots
-        fig, gs = plt.subplots(
+        fig, (grid) = plt.subplots(
             figsize=(14, 8.5)                       # pdf dimensions
             , sharey=False, sharex=False            # do not sync axes
             , constrained_layout=True
+            , facecolor='white'
+            , linewidth=0
             );
 
         # create a grid for plots
         # https://matplotlib.org/3.5.0/gallery/userdemo/demo_gridspec03.html#sphx-glr-gallery-userdemo-demo-gridspec03-py
-        gs = GridSpec(2,3
+        grid = GridSpec(2,3
                       , width_ratios=[2, 1, 1]
                       , height_ratios=[1, 1])
-
-        # plots within grid
-        ax1 = fig.add_subplot(gs[0])
-        ax2 = fig.add_subplot(gs[1])
-        ax3 = fig.add_subplot(gs[2])
-        ax4 = fig.add_subplot(gs[3])
-        ax5 = fig.add_subplot(gs[4])
+        ax1 = fig.add_subplot(grid[0])
+        ax2 = fig.add_subplot(grid[1])
+        ax3 = fig.add_subplot(grid[2])
+        ax4 = fig.add_subplot(grid[3])
+        ax5 = fig.add_subplot(grid[4])
 
         # plot Cash Op quarterly
         g_OpCash_q = sns.barplot(
@@ -287,13 +284,14 @@ for i in range(0, df_symbols.index[-1]):
         fig.suptitle(ticker_and_date_str, fontsize=10, color='gray',  y=0.95, x=0.8)
         print(ticker_and_date_str, i)
         # save plots as pdf
-        sns.despine()                                        # remove some lines from plots
+        sns.despine()                                       # remove some lines from plots
         #fig.delaxes(charts_grid[0,1])                       # delete unnecessary plots
         output_raw = df_temp_q['symbol'][0] + '.pdf'
         #print(output_raw)
         plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=300)
         #plt.box(on=None)    #removes grid around
         #plt.show()
+        mpl.rc_file_defaults()
         plt.close('all')
         #sys.exit()
     except:
