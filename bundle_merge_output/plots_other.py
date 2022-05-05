@@ -35,7 +35,8 @@ df_merged = pd.merge(df_5_symbols_marg_of_safety, df_q
                      , how='left', left_on=['symbol']
                      , right_on=['symbol'], suffixes=('', '_drop'))
 df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
-df_q = df_merged #.head(150)
+#df_q = df_merged #.head(150)
+df_q = df_merged.groupby('symbol').head(80).reset_index(drop=True) # selecting only 20 years per symbol
 ########## annual
 df_a = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_financials_a.csv")
                    , usecols = ['symbol','date', 'grossProfitRatio', 'operatingCashFlow', 'calendarYear'
@@ -49,7 +50,6 @@ df_other = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_other.csv")
 ########## own_ea
 df_own_ea = pd.read_csv(os.path.join(cwd,input_folder,"4_recent_OwnEa_a.csv")
                         , usecols = ['symbol', 'maint_capex_ratio'], low_memory=False)
-#df = df_merged.groupby('symbol').head(80).reset_index(drop=True) # selecting only 20 years per symbol
 
     # QUARTERLY DATAFRAME with margin of safety
 #df = df_merged[(df_merged['symbol'].str.contains('SKM|SPWH|RBB'))]
