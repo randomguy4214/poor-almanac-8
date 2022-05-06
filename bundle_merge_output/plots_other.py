@@ -113,12 +113,13 @@ for i in range(0, df_symbols.index[-1]):
         ############################################################################################
         # START PLOTTING ###########################################################################
         # make overall template for subplots
-        fig, (grid) = plt.subplots(
+        fig, grid = plt.subplots(
             figsize=(14, 8.5)                       # pdf dimensions
             , sharey=False, sharex=False            # do not sync axes
             , constrained_layout=True
-            , facecolor='white'
-            , linewidth=0
+            #, facecolor='white'
+            #, linewidth=0
+            #, linestyle='-'
             );
 
         # create a grid for plots
@@ -126,11 +127,12 @@ for i in range(0, df_symbols.index[-1]):
         grid = GridSpec(2,3
                       , width_ratios=[2, 1, 1]
                       , height_ratios=[1, 1])
-        ax1 = fig.add_subplot(grid[0])
-        ax2 = fig.add_subplot(grid[1])
-        ax3 = fig.add_subplot(grid[2])
-        ax4 = fig.add_subplot(grid[3])
-        ax5 = fig.add_subplot(grid[4])
+        ax0 = fig.add_subplot(grid[0])
+        ax1 = fig.add_subplot(grid[1])
+        ax2 = fig.add_subplot(grid[2])
+        ax3 = fig.add_subplot(grid[3])
+        ax4 = fig.add_subplot(grid[4])
+
 
         # plot Cash Op quarterly
         g_OpCash_q = sns.barplot(
@@ -141,7 +143,7 @@ for i in range(0, df_symbols.index[-1]):
             , alpha=.7
             , color = 'blue'
             , ci=None # error bars
-            , ax=ax1                                # location on global grid
+            , ax=ax0                                # location on global grid
             )
         # formatting
         #g_OpCash_q.set_ylabel('Operating CF in M, quarterly', fontsize=8, color='gray')
@@ -168,7 +170,7 @@ for i in range(0, df_symbols.index[-1]):
             , alpha=.7
             , color = 'blue'
             , ci = None                               # error bars switched off
-            , ax = ax2
+            , ax = ax1
             )
 
         # formatting
@@ -205,7 +207,7 @@ for i in range(0, df_symbols.index[-1]):
         g_EqD = g_EqD_pivot.plot.bar(stacked=True
             , alpha=.5
             , colormap='tab20b'
-            , ax=ax3
+            , ax = ax2
             )
         # formatting
         #g_EqD.set_ylabel('Equity, LT Debt, ST Debt in M, quarterly', fontsize=8, color='gray')
@@ -232,7 +234,7 @@ for i in range(0, df_symbols.index[-1]):
             , palette = sns.color_palette('GnBu_d', 4)
             , alpha=.7
             , ci=None # error bars
-            , ax=ax4 # location on global chart
+            , ax = ax3
             )
 
         # formatting
@@ -258,7 +260,7 @@ for i in range(0, df_symbols.index[-1]):
             , alpha=.7
             , color = 'blue'
             , ci = None
-            , ax = ax5
+            , ax = ax4
             )
 
         # formatting
@@ -276,23 +278,31 @@ for i in range(0, df_symbols.index[-1]):
         g_OwnEa_a.tick_params(axis='x', colors='gray')
         g_OwnEa_a.tick_params(axis='y', colors='gray')
 
+        #ax5.flat[-1].set_visible(False)
+
     #######################
         # label the chart with date and ticker
         today_d_str = d4 = date.today().strftime("%b-%d-%Y")
         ticker_str = df_temp_q['symbol_marg_of_saf'][0]
         ticker_and_date_str = ticker_str + ' / ' + today_d_str
         fig.suptitle(ticker_and_date_str, fontsize=10, color='gray',  y=0.95, x=0.8)
-        print(ticker_and_date_str, i)
+        print(ticker_and_date_str, i, ' / ',df_symbols.index[-1])
+
         # save plots as pdf
         sns.despine()                                       # remove some lines from plots
-        #fig.delaxes(charts_grid[0,1])                       # delete unnecessary plots
+        plt.tick_params(axis='both', which='both', left=False, right=False, bottom=False, top=False, labelbottom=False)
+        #fig.tight_layout()
         output_raw = df_temp_q['symbol'][0] + '.pdf'
         #print(output_raw)
+
+        #plt.spines['bottom'].set_color('gray')
+
         plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=300)
-        #plt.box(on=None)    #removes grid around
         #plt.show()
+
+        # reset
         mpl.rc_file_defaults()
         plt.close('all')
-        #sys.exit()
+        sys.exit()
     except:
         pass

@@ -6,7 +6,7 @@ setup(
     install_requires=['pandas', 'openpyxl', 'requests_html', 'numpy', 'seaborn', 'matplotlib', 'PyPDF2', 'shutil'],
     url='',
     license='',
-    author='https://old.reddit.com/user/randomguy53124/',
+    author='https://linkedin.com/in/kirsmir/',
     author_email='',
     description=''
 )
