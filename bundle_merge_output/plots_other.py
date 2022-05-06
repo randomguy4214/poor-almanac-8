@@ -182,7 +182,7 @@ for i in range(0, df_symbols.index[-1]):
         g_OpCash_a.minorticks_off()
         g_OpCash_a.axes.get_xaxis().set_visible(False)
         g_OpCash_a.set_xticklabels(g_OpCash_a.get_xticklabels(), rotation=90, fontsize=5, color='gray')
-        g_OpCash_a.xaxis.label.set_visible(False)
+        g_OpCash_a.xaxis.label.set_visible(True)
         g_OpCash_a.spines['left'].set_color('gray')
         g_OpCash_a.spines['bottom'].set_color('gray')
         g_OpCash_a.tick_params(axis='x', colors='gray')
@@ -286,7 +286,7 @@ for i in range(0, df_symbols.index[-1]):
         ticker_str = df_temp_q['symbol_marg_of_saf'][0]
         ticker_and_date_str = ticker_str + ' / ' + today_d_str
         fig.suptitle(ticker_and_date_str, fontsize=10, color='gray',  y=0.95, x=0.8)
-        print(ticker_and_date_str, i, ' / ',df_symbols.index[-1])
+        print(ticker_and_date_str,' / ',  i, ' out of ',df_symbols.index[-1])
 
         # save plots as pdf
         sns.despine()                                       # remove some lines from plots
