@@ -112,15 +112,13 @@ for i in range(0, df_symbols.index[-1]):
 
         ############################################################################################
         # START PLOTTING ###########################################################################
-        # make overall template for subplots
+        ### overall template for subplots
         fig, grid = plt.subplots(
             figsize=(14, 8.5)                       # pdf dimensions
             , sharey=False, sharex=False            # do not sync axes
             , tight_layout=True
             , subplot_kw=dict(frameon=False         # switch off spines
-                              #, axes=False
                               , visible = False
-                              #, xticklabels = None
                               )
 
             );
@@ -135,8 +133,9 @@ for i in range(0, df_symbols.index[-1]):
         ax2 = fig.add_subplot(grid[2])
         ax3 = fig.add_subplot(grid[3])
         ax4 = fig.add_subplot(grid[4])
+        #ax5 = fig.add_subplot(grid[5])
 
-        # plot Cash Op quarterly
+        ### Cash Op quarterly
         g_OpCash_q = sns.barplot(
             x = 'yearQ'
             , y = 'operatingCashFlow'
@@ -162,7 +161,7 @@ for i in range(0, df_symbols.index[-1]):
         g_OpCash_q.tick_params(axis='x', colors='gray')
         g_OpCash_q.tick_params(axis='y', colors='gray')
 
-        # plot Cash Op annually
+        ### Cash Op annually
         g_OpCash_a = sns.barplot(
             x = df_temp_a['calendarYear'].astype(int)
             , y = 'operatingCashFlow'
@@ -189,6 +188,15 @@ for i in range(0, df_symbols.index[-1]):
         g_OpCash_a.tick_params(axis='y', colors='gray')
 
         ### EQUITY DEBT CHARTS
+
+
+        # ticker / marg of safety and date as plot label
+        today_d_str = d4 = date.today().strftime("%b-%d-%Y")
+        ticker_str = df_temp_q['symbol_marg_of_saf'][0]
+        ticker_and_date_str = ticker_str + ' / ' + today_d_str
+        #fig.suptitle(ticker_and_date_str, fontsize=10, color='gray',  y=0.95, x=0.8)
+        print(ticker_and_date_str,' / ',  i+1, ' out of ',df_symbols.index[-1])
+
         # reshape q data to create stacked bar chart
         # https://stackoverflow.com/questions/49046317/pandas-pivot-merge-multiple-columns-into-single-using-column-headers-as-values
         df_temp_q_Eq_D = df_temp_q[['symbol', 'yearQ', 'totalStockholdersEquity'
@@ -210,6 +218,7 @@ for i in range(0, df_symbols.index[-1]):
             )
         # formatting
         g_EqD.yaxis.label.set_visible(False)
+        g_EqD.set_title(ticker_and_date_str, fontsize=8, color='gray')
         ylabels = ['{:,}'.format(y) + ' M' for y in (g_EqD.get_yticks() / 1000000).astype('int64')]
         g_EqD.set_yticklabels(ylabels, size=5, color='gray')
         g_EqD.minorticks_off()
@@ -273,27 +282,31 @@ for i in range(0, df_symbols.index[-1]):
         g_OwnEa_a.tick_params(axis='x', colors='gray')
         g_OwnEa_a.tick_params(axis='y', colors='gray')
 
+        ### Description
+        descr_str = df_temp_a['description'][0]
+        #print(descr_str)
+        #ax5 = plt.text(0,1, descr_str, wrap=True, color='gray', fontsize=8)
+        plt.figtext(0.77, 0.5
+                    , descr_str
+                    , verticalalignment='top'
+                    , horizontalalignment='left'
+                    , fontsize=8
+                    , color='gray'
+                    , fontstyle='italic'
+                    , wrap = True)
+        #ax5._get_wrap_line_width = lambda : 50.  #  wrap to x screen pixels
 
     #######################
-        # label the chart with date and ticker
-        today_d_str = d4 = date.today().strftime("%b-%d-%Y")
-        ticker_str = df_temp_q['symbol_marg_of_saf'][0]
-        ticker_and_date_str = ticker_str + ' / ' + today_d_str
-        fig.suptitle(ticker_and_date_str, fontsize=10, color='gray',  y=0.95, x=0.8)
-        print(ticker_and_date_str,' / ',  i+1, ' out of ',df_symbols.index[-1])
 
         # save plots as pdf
-        sns.despine()                                       # remove some lines from plots
+        sns.despine()                                       # remove some lines from seaborn plots
         plt.tick_params(axis='both', which='both', left=False, right=False, bottom=False, top=False, labelbottom=False)
-        #fig.tight_layout()
         output_raw = df_temp_q['symbol'][0] + '.pdf'
         #print(output_raw)
 
-        #plt.spines['bottom'].set_color('gray')
-
         plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=300)
-        plt.show()
-        sys.exit()
+        #plt.show()
+        #sys.exit()
 
         # reset
         mpl.rc_file_defaults()
