@@ -47,6 +47,7 @@ df_a = df_a.groupby('symbol').head(20).reset_index(drop=True) # selecting only 2
 ########## other
 df_other = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_other.csv")
                    , usecols = ['symbol','description', 'country', 'industry'], low_memory=False)
+df_other.fillna('N/A')
 ########## own_ea
 df_own_ea = pd.read_csv(os.path.join(cwd,input_folder,"4_recent_OwnEa_a.csv")
                         , usecols = ['symbol', 'maint_capex_ratio'], low_memory=False)
@@ -58,7 +59,7 @@ df_q = df_q[df_q['date'].notna()]
 df_q = df_q[df_q['calendarYear'].notna()]
 df_q['calendarYear'] = df_q['calendarYear'].astype(int)
 df_q['marg_of_saf_perp'] = df_q['marg_of_saf_perp'].round(0)
-df_q['yearQ'] = df_q['calendarYear'].astype(str) + ' ' + df_q['period'].astype(str)
+df_q['yearQ_str'] = df_q['calendarYear'].astype(str) + ' ' + df_q['period'].astype(str)
 df_q['symbol_marg_of_saf'] = df_q['symbol'].astype(str) + ' / ' + df_q['marg_of_saf_perp'].astype(str) + ' %'
 df_q = df_q.sort_values(['symbol','date'], ascending=[True, True])
     # ANNUAL DATAFRAME with Other and OwnEa
@@ -74,7 +75,7 @@ df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inpl
 df_a = df_merged.fillna(0)
 df_a['OwnEa'] = df_a['operatingCashFlow'] + (((-1 * df_a['revenue'])) * (df_a['maint_capex_ratio']/100))
 df_a['OwnEa'] = df_a['OwnEa'].round(0)
-df_a['CalendarYear_str'] = df_a['calendarYear'].astype(int)
+df_a['calendarYear_str'] = df_a['calendarYear'].astype(int).astype(str) + ' ' + df_a['period'].astype(str)
 
 #df_a['OwnEa'] = df_a['OwnEa'].astype(int)
 
@@ -118,9 +119,8 @@ for i in range(0, df_symbols.index[-1]):
             , sharey=False, sharex=False            # do not sync axes
             , tight_layout=True
             , subplot_kw=dict(frameon=False         # switch off spines
-                              , visible = False
+                              , visible = False     # fuck you stupid cunt. literally one week wasted for this shit.
                               )
-
             );
         plt.style.use('seaborn-paper')
         # create a grid for plots
@@ -137,7 +137,7 @@ for i in range(0, df_symbols.index[-1]):
 
         ### Cash Op quarterly
         g_OpCash_q = sns.barplot(
-            x = 'yearQ'
+            x = 'yearQ_str'
             , y = 'operatingCashFlow'
             , data = df_temp_q
             , palette = sns.color_palette('GnBu_d', 4)
@@ -163,7 +163,7 @@ for i in range(0, df_symbols.index[-1]):
 
         ### Cash Op annually
         g_OpCash_a = sns.barplot(
-            x = df_temp_a['calendarYear'].astype(int)
+            x = 'calendarYear_str'
             , y = 'operatingCashFlow'
             , data = df_temp_a
             , palette = sns.color_palette('GnBu_d', 4)
@@ -188,19 +188,18 @@ for i in range(0, df_symbols.index[-1]):
         g_OpCash_a.tick_params(axis='y', colors='gray')
 
         ### EQUITY DEBT CHARTS
-
         # ticker / marg of safety and date as plot label
         today_d_str = d4 = date.today().strftime("%b-%d-%Y")
         ticker_str = df_temp_q['symbol_marg_of_saf'][0]
         ticker_and_date_str = ticker_str + ' / ' + today_d_str
         #fig.suptitle(ticker_and_date_str, fontsize=10, color='gray',  y=0.95, x=0.8)
-        print(ticker_and_date_str,' / ',  i+1, ' out of ',df_symbols.index[-1])
+        print(ticker_str,' / ',  i+1, ' out of ',df_symbols.index[-1])
 
         # reshape q data to create stacked bar chart
         # https://stackoverflow.com/questions/49046317/pandas-pivot-merge-multiple-columns-into-single-using-column-headers-as-values
-        df_temp_q_Eq_D = df_temp_q[['symbol', 'yearQ', 'totalStockholdersEquity'
+        df_temp_q_Eq_D = df_temp_q[['symbol', 'yearQ_str', 'totalStockholdersEquity'
                                     , 'longTermDebt', 'shortTermDebt']]
-        df_temp_q_Eq_D_stacked = (df_temp_q_Eq_D.set_index(['symbol', 'yearQ'])
+        df_temp_q_Eq_D_stacked = (df_temp_q_Eq_D.set_index(['symbol', 'yearQ_str'])
                                   .stack()
                                   .reorder_levels([2,0,1])
                                   .reset_index(name='values')    # after reshaping, name a column AND set index
@@ -210,19 +209,16 @@ for i in range(0, df_symbols.index[-1]):
         # plot equity, long term and short term debt in a stacked-bar chart (matplotlib, not seaborn)
         # https://stackoverflow.com/questions/67320415/stacked-barplot-in-seaborn-using-numeric-data-as-hue
         g_EqD_pivot = pd.pivot_table(df_temp_q_Eq_D_stacked
-                                     , index='yearQ', columns='type', values='values', aggfunc='sum')
+                                     , index='yearQ_str', columns='type', values='values', aggfunc='sum')
         g_EqD = g_EqD_pivot.plot.bar(stacked=True
-            , alpha=.5
-            , color='kmw'
-            #, color='type'
-            #, color={'type':[["#002856", "#005487", "#0091B3"]]}
-            ,  edgecolor='black'
-            , width=1
+            #, alpha=.7
+            , color=['#798e95','#94c3cf', '#b0d3cf']
+            , edgecolor='#798e95'
+            , width=1               # no gap between columns
             , ax = ax2
             )
         # formatting
-        g_EqD.yaxis.label.set_visible(False)
-        g_EqD.set_title(ticker_and_date_str, fontsize=8, color='gray')
+        g_EqD.set_title(ticker_str, fontsize=8, color='gray')
         ylabels = ['{:,}'.format(y) + ' M' for y in (g_EqD.get_yticks() / 1000000).astype('int64')]
         g_EqD.set_yticklabels(ylabels, size=5, color='gray')
         g_EqD.minorticks_off()
@@ -237,7 +233,7 @@ for i in range(0, df_symbols.index[-1]):
 
         # INVENTORY CF quarterly
         g_Inv_q = sns.barplot(
-            x = 'yearQ'
+            x = 'yearQ_str'
             , y = 'inventory_cf'
             , data = df_temp_q
             , palette = sns.color_palette('GnBu_d', 4)
@@ -245,13 +241,12 @@ for i in range(0, df_symbols.index[-1]):
             , ci=None # error bars
             , ax = ax3
             )
-
+        #print(g_Inv_q.get_xticklabels())
         # formatting
-        #g_Inv_q.set_ylabel('Inventory CF in M, quarterly', fontsize=8, color='gray')
         g_Inv_q.yaxis.label.set_visible(False)
         g_Inv_q.set_title('Inventory CF in M, quarterly', fontsize=8, color='gray')
-        ylabels = ['{:,}'.format(y) + ' M' for y in (g_Inv_q.get_yticks() / 1000000).astype('int64')]
-        g_Inv_q.set_yticklabels(ylabels, size=5, color='gray')
+        g_Inv_q_ylabels = ['{:,}'.format(y) + ' M' for y in (g_Inv_q.get_yticks() / 1000000).astype('int64')]
+        g_Inv_q.set_yticklabels(g_Inv_q_ylabels, size=5, color='gray')
         g_Inv_q.minorticks_off()
         g_Inv_q.set_xticklabels(g_Inv_q.get_xticklabels(), rotation=90, fontsize=5, color='gray')
         g_Inv_q.xaxis.label.set_visible(False)
@@ -259,28 +254,31 @@ for i in range(0, df_symbols.index[-1]):
         g_Inv_q.spines['bottom'].set_color('gray')
         g_Inv_q.tick_params(axis='x', colors='gray')
         g_Inv_q.tick_params(axis='y', colors='gray')
+        #df_temp_a.to_csv(os.path.join(cwd, input_folder, "test.csv"), index=False)
 
         # OwnEa annually
         g_OwnEa_a = sns.barplot(
-            x = 'CalendarYear_str'
-            , y = 'OwnEa'
-            , data = df_temp_a
-            , palette = sns.color_palette('GnBu_d', 4)
+            x='calendarYear'
+            , y='OwnEa'
+            , data=df_temp_a
+            , palette=sns.color_palette('GnBu_d', 4)
             , alpha=.7
-            , color = 'blue'
-            , ci = None
-            , ax = ax4
+            , color='blue'
+            , ci=None
+            , ax=ax4
             )
 
         # formatting
-        g_OwnEa_a.minorticks_off()
+        g_OwnEa_a.set_title('Owners Earnings, annually', fontsize=8, color='gray')
         g_OwnEa_a.yaxis.label.set_visible(False)
-        g_OwnEa_a.set_title('Owners Earnings in M, annually', fontsize=8, color='gray')
-        ylabels = ['{:,}'.format(y) + ' M' for y in (g_OwnEa_a.get_yticks() / 1000000).astype('int64')]
-        g_OwnEa_a.set_yticklabels(ylabels, size=5, color='gray')
+        g_OwnEa_a_ylabels = ['{:,}'.format(y) + ' M' for y in (g_OwnEa_a.get_yticks() / 1000000).astype('int64')]
+        g_OwnEa_a.set_yticklabels(g_OwnEa_a_ylabels, size=5, color='gray')
+        g_OwnEa_a.set_xticklabels(g_OwnEa_a.get_xticklabels(), rotation=90, fontsize=5, color='gray'
+                                #, visible=True # what the fuck again
+                                #, verticalalignment='bottom'
+                                )
+        g_OwnEa_a.minorticks_off()
         g_OwnEa_a.xaxis.label.set_visible(False)
-        #g_OwnEa_a.axes.get_xaxis().set_visible(False)
-        g_OwnEa_a.set_xticklabels(g_OwnEa_a.get_xticklabels(), rotation=90, fontsize=5, color='gray')
         g_OwnEa_a.spines['left'].set_color('gray')
         g_OwnEa_a.spines['bottom'].set_color('gray')
         g_OwnEa_a.tick_params(axis='x', colors='gray')
@@ -288,9 +286,7 @@ for i in range(0, df_symbols.index[-1]):
 
         ### Description
         descr_str = df_temp_a['description'][0]
-        #print(descr_str)
-        #ax5 = plt.text(0,1, descr_str, wrap=True, color='gray', fontsize=8)
-        plt.figtext(0.77, 0.5
+        plt.figtext(0.76, 0.5
                     , descr_str
                     , verticalalignment='top'
                     , horizontalalignment='left'
@@ -298,7 +294,6 @@ for i in range(0, df_symbols.index[-1]):
                     , color='gray'
                     , fontstyle='italic'
                     , wrap = True)
-        #ax5._get_wrap_line_width = lambda : 50.  #  wrap to x screen pixels
 
     #######################
 
@@ -309,6 +304,7 @@ for i in range(0, df_symbols.index[-1]):
         #print(output_raw)
 
         plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=300)
+        plt.tight_layout()
         #plt.show()
         #sys.exit()
 
