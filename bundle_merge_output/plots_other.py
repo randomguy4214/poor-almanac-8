@@ -80,7 +80,7 @@ df_a['CalendarYear_str'] = df_a['calendarYear'].astype(int)
 
 # create symbols from margin of safety file
 df_symbols = df_5_symbols_marg_of_safety['symbol'].drop_duplicates().reset_index(drop=False).drop(columns='index')
-df_symbols = df_symbols #.head(5)
+#df_symbols = df_symbols #.head(5)
 #df_symbols = df_symbols.iloc[2: , :]
 # loop through each ticker, create charts, and save pdfs
 index_max = pd.to_numeric(df_symbols.index.values.max())
@@ -116,12 +116,15 @@ for i in range(0, df_symbols.index[-1]):
         fig, grid = plt.subplots(
             figsize=(14, 8.5)                       # pdf dimensions
             , sharey=False, sharex=False            # do not sync axes
-            , constrained_layout=True
-            #, facecolor='white'
-            #, linewidth=0
-            #, linestyle='-'
-            );
+            , tight_layout=True
+            , subplot_kw=dict(frameon=False         # switch off spines
+                              #, axes=False
+                              , visible = False
+                              #, xticklabels = None
+                              )
 
+            );
+        plt.style.use('seaborn-paper')
         # create a grid for plots
         # https://matplotlib.org/3.5.0/gallery/userdemo/demo_gridspec03.html#sphx-glr-gallery-userdemo-demo-gridspec03-py
         grid = GridSpec(2,3
@@ -133,7 +136,6 @@ for i in range(0, df_symbols.index[-1]):
         ax3 = fig.add_subplot(grid[3])
         ax4 = fig.add_subplot(grid[4])
 
-
         # plot Cash Op quarterly
         g_OpCash_q = sns.barplot(
             x = 'yearQ'
@@ -141,10 +143,10 @@ for i in range(0, df_symbols.index[-1]):
             , data = df_temp_q
             , palette = sns.color_palette('GnBu_d', 4)
             , alpha=.7
-            , color = 'blue'
             , ci=None # error bars
             , ax=ax0                                # location on global grid
             )
+
         # formatting
         #g_OpCash_q.set_ylabel('Operating CF in M, quarterly', fontsize=8, color='gray')
         g_OpCash_q.tick_params(axis='y', which='major', labelsize=5, color='gray')
@@ -153,9 +155,8 @@ for i in range(0, df_symbols.index[-1]):
         ylabels = ['{:,}'.format(y) + ' M' for y in (g_OpCash_q.get_yticks() / 1000000).astype('int64')]
         g_OpCash_q.set_yticklabels(ylabels, size=5, color='gray')
         g_OpCash_q.minorticks_off()
-        g_OpCash_q.axes.get_xaxis().set_visible(False)
         g_OpCash_q.set_xticklabels(g_OpCash_q.get_xticklabels(), rotation=90, fontsize=5, color='gray')
-        g_OpCash_q.xaxis.label.set_visible(False)
+        g_OpCash_q.axes.get_xaxis().set_visible(False)
         g_OpCash_q.spines['left'].set_color('gray')
         g_OpCash_q.spines['bottom'].set_color('gray')
         g_OpCash_q.tick_params(axis='x', colors='gray')
@@ -168,7 +169,6 @@ for i in range(0, df_symbols.index[-1]):
             , data = df_temp_a
             , palette = sns.color_palette('GnBu_d', 4)
             , alpha=.7
-            , color = 'blue'
             , ci = None                               # error bars switched off
             , ax = ax1
             )
@@ -206,17 +206,13 @@ for i in range(0, df_symbols.index[-1]):
                                      , index='yearQ', columns='type', values='values', aggfunc='sum')
         g_EqD = g_EqD_pivot.plot.bar(stacked=True
             , alpha=.5
-            , colormap='tab20b'
             , ax = ax2
             )
         # formatting
-        #g_EqD.set_ylabel('Equity, LT Debt, ST Debt in M, quarterly', fontsize=8, color='gray')
         g_EqD.yaxis.label.set_visible(False)
-        #g_EqD.set_title('Equity, LT Debt, ST Debt in M, quarterly', fontsize=8, color='gray')
         ylabels = ['{:,}'.format(y) + ' M' for y in (g_EqD.get_yticks() / 1000000).astype('int64')]
         g_EqD.set_yticklabels(ylabels, size=5, color='gray')
         g_EqD.minorticks_off()
-        #g_EqD.set_xticklabels(g_EqD.get_xticklabels(), rotation=45, fontsize=5, color='gray')
         g_EqD.axes.get_xaxis().set_visible(False)
         g_EqD.xaxis.label.set_visible(False)
         g_EqD.yaxis.label.set_visible(False)
@@ -251,9 +247,9 @@ for i in range(0, df_symbols.index[-1]):
         g_Inv_q.tick_params(axis='x', colors='gray')
         g_Inv_q.tick_params(axis='y', colors='gray')
 
-        # plot OwnEa annually
+        # OwnEa annually
         g_OwnEa_a = sns.barplot(
-            x = df_temp_a['calendarYear'].astype(int)
+            x = 'CalendarYear_str'
             , y = 'OwnEa'
             , data = df_temp_a
             , palette = sns.color_palette('GnBu_d', 4)
@@ -264,21 +260,19 @@ for i in range(0, df_symbols.index[-1]):
             )
 
         # formatting
-        #g_OwnEa_a.set_ylabel('Operating CF in M, annually', fontsize=8, color='gray')
+        g_OwnEa_a.minorticks_off()
         g_OwnEa_a.yaxis.label.set_visible(False)
         g_OwnEa_a.set_title('Owners Earnings in M, annually', fontsize=8, color='gray')
         ylabels = ['{:,}'.format(y) + ' M' for y in (g_OwnEa_a.get_yticks() / 1000000).astype('int64')]
         g_OwnEa_a.set_yticklabels(ylabels, size=5, color='gray')
-        g_OwnEa_a.minorticks_off()
-        #g_OwnEa_a.axes.get_xaxis().set_visible(False)
         g_OwnEa_a.xaxis.label.set_visible(False)
+        #g_OwnEa_a.axes.get_xaxis().set_visible(False)
         g_OwnEa_a.set_xticklabels(g_OwnEa_a.get_xticklabels(), rotation=90, fontsize=5, color='gray')
         g_OwnEa_a.spines['left'].set_color('gray')
         g_OwnEa_a.spines['bottom'].set_color('gray')
         g_OwnEa_a.tick_params(axis='x', colors='gray')
         g_OwnEa_a.tick_params(axis='y', colors='gray')
 
-        #ax5.flat[-1].set_visible(False)
 
     #######################
         # label the chart with date and ticker
@@ -286,7 +280,7 @@ for i in range(0, df_symbols.index[-1]):
         ticker_str = df_temp_q['symbol_marg_of_saf'][0]
         ticker_and_date_str = ticker_str + ' / ' + today_d_str
         fig.suptitle(ticker_and_date_str, fontsize=10, color='gray',  y=0.95, x=0.8)
-        print(ticker_and_date_str,' / ',  i, ' out of ',df_symbols.index[-1])
+        print(ticker_and_date_str,' / ',  i+1, ' out of ',df_symbols.index[-1])
 
         # save plots as pdf
         sns.despine()                                       # remove some lines from plots
@@ -298,11 +292,11 @@ for i in range(0, df_symbols.index[-1]):
         #plt.spines['bottom'].set_color('gray')
 
         plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=300)
-        #plt.show()
+        plt.show()
+        sys.exit()
 
         # reset
         mpl.rc_file_defaults()
         plt.close('all')
-        sys.exit()
     except:
         pass
