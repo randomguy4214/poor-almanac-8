@@ -189,7 +189,6 @@ for i in range(0, df_symbols.index[-1]):
 
         ### EQUITY DEBT CHARTS
 
-
         # ticker / marg of safety and date as plot label
         today_d_str = d4 = date.today().strftime("%b-%d-%Y")
         ticker_str = df_temp_q['symbol_marg_of_saf'][0]
@@ -214,6 +213,11 @@ for i in range(0, df_symbols.index[-1]):
                                      , index='yearQ', columns='type', values='values', aggfunc='sum')
         g_EqD = g_EqD_pivot.plot.bar(stacked=True
             , alpha=.5
+            , color='kmw'
+            #, color='type'
+            #, color={'type':[["#002856", "#005487", "#0091B3"]]}
+            ,  edgecolor='black'
+            , width=1
             , ax = ax2
             )
         # formatting
