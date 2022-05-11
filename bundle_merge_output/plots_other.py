@@ -228,7 +228,7 @@ for i in range(0, df_symbols.index[-1]):
             )
         # formatting
         g_Marg_a.yaxis.label.set_visible(False)
-        g_Marg_a_ylabels = ['{:,}'.format(y) + ' %' for y in (g_Marg_a.get_yticks() * 1).astype('int64')]
+        g_Marg_a_ylabels = ['{:,}'.format(y) + ' %' for y in (g_Marg_a.get_yticks() * 100).astype('int64')]
         g_Marg_a.set_yticklabels(g_Marg_a_ylabels, size=5, color='gray')
         g_Marg_a.minorticks_off()
         g_Marg_a.axes.get_xaxis().set_visible(False)
