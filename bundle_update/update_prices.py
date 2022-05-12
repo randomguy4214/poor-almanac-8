@@ -3,6 +3,7 @@ print('update_prices - initiating.')
 
 import os
 import pandas as pd
+import shutil
 
 cwd = os.getcwd()
 input_folder = "0_input"
@@ -10,6 +11,13 @@ prices_folder = "data"
 output_folder = "0_output"
 temp_folder = "temp"
 prices_temp = "prices"
+
+# check prices_temp folder
+if not os.path.exists(os.path.join(cwd,input_folder, temp_folder, prices_temp)):
+    os.mkdir(os.path.join(cwd,input_folder, temp_folder, prices_temp))
+else:
+    shutil.rmtree(os.path.join(cwd,input_folder, temp_folder, prices_temp))
+    os.mkdir(os.path.join(cwd,input_folder, temp_folder, prices_temp))
 
 #https://financialmodelingprep.com/api/v3/quote/AAPL?datatype=csv&timeseries=255&apikey=
 token_df = pd.read_csv(os.path.join(cwd,"0_api_token.csv"))
@@ -24,10 +32,11 @@ df_tickers = pd.read_csv(os.path.join(cwd,"0_symbols_original.csv"), index_col=0
 df_tickers.drop_duplicates(inplace=True)
 
 # find last updated ticker (this is necessary if you lose internet connection, etc)
-prices_last_ticker = pd.read_csv(os.path.join(cwd,input_folder,temp_folder,"prices_last_ticker.csv"),index_col=0)
-last_ticker = prices_last_ticker.values[0]
-last_ticker_n = last_ticker[0]
-print("last batch in prices was", last_ticker_n)
+#prices_last_ticker = pd.read_csv(os.path.join(cwd,input_folder,temp_folder,"prices_last_ticker.csv"),index_col=0)
+#last_ticker = prices_last_ticker.values[0]
+#last_ticker_n = last_ticker[0]
+# print("last batch in prices was", last_ticker_n)
+last_ticker_n = 0
 
 # start importing
 index_max = pd.to_numeric(df_tickers.index.values.max())
@@ -47,11 +56,11 @@ for i in range(last_ticker_n, len(df_tickers), chunk_size):
         nnn = int(index_last/index_max*100)
         print("prices:", index_last, "from", index_max, "/", nnn, "%")
         last_ticker = pd.DataFrame([{'number':index_last}])
-        last_ticker.to_csv(os.path.join(cwd, input_folder, temp_folder, "prices_last_ticker.csv"))
+        #last_ticker.to_csv(os.path.join(cwd, input_folder, temp_folder, "prices_last_ticker.csv"))
         time.sleep(5)
     except:
         pass
 
-last_ticker = pd.DataFrame({'number':[0]})
-last_ticker.to_csv(os.path.join(cwd,input_folder,temp_folder,"prices_last_ticker.csv"))
+#last_ticker = pd.DataFrame({'number':[0]})
+#last_ticker.to_csv(os.path.join(cwd,input_folder,temp_folder,"prices_last_ticker.csv"))
 print('update_prices - done')

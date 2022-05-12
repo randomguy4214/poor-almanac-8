@@ -1,6 +1,8 @@
 #!/usr/bin/python
 print('drawing scatter plot')
 
+import warnings
+warnings.filterwarnings("ignore")
 import os
 import pandas as pd
 import numpy as np
@@ -35,7 +37,7 @@ df = df_import[['symbol', 'from_low', 'marg_of_saf_perp', 'marg_of_saf_5y_perp',
 df = df[df['marg_of_saf_perp'].notna()]
 df = df[df['from_low'].notna()]
 df = df[df['symbol'].notna()]
-df = df[df['marg_of_saf_perp'] >= 100]
+df = df[df['marg_of_saf_perp'] >= 20]
 df = df[df['from_low'] <= 10]
 df = df[df['from_low'] >= 0]
 
@@ -54,31 +56,35 @@ df_exp.to_csv(os.path.join(cwd,input_folder,"5_symbols_marg_of_safety.csv"), ind
 
 # plot
 sns.set(style='darkgrid', color_codes=True,rc = {'figure.figsize':(14, 8.5)})
-splot_func = sns.scatterplot(data = df, x = df['marg_of_saf_perp'], y = df['from_low'] \
-                , size = df['marketCap_q'] \
-                , hue = "industry" \
+splot_func = sns.scatterplot(data = df, x = df['marg_of_saf_perp'], y = df['from_low']
+                , size = df['marketCap_q']
+                , hue = "industry"
                 , alpha = 0.4 # transparency
                 , legend=False
+                #, colorfont = 'gray'
                 ) # make scatterplot as variable
 splot_func.set(xscale='log')
+splot_func.set_yticklabels(splot_func.get_yticks().astype('int64'), size=5, color='gray')
+splot_func.set_xticklabels(splot_func.get_xticks().astype('int64'), size=5, color='gray')
 
 # Label data points with a loop
 for i in range(df.shape[0]):
         #print(df['symbol'].iloc[i])
-        plt.text(x = df['marg_of_saf_perp'].iloc[i]+0.3, y = df['from_low'].iloc[i]+0.3, s = df['symbol'].iloc[i]
-                , fontdict=dict(size=5))
+        plt.text(x = df['marg_of_saf_perp'].iloc[i]+0.3
+                 , y = df['from_low'].iloc[i]+0.3
+                 , s = df['symbol'].iloc[i]
+                 , fontdict=dict(size=5, color='gray'))
         #fck me that took too long to figure out. iloc is important.
 
 # limits
 #plt.xlim(100, )
 #plt.ylim(0, 10)
 # axes
-plt.xlabel('margin of safety')
-plt.ylabel('from low')
-# size
+plt.xlabel('margin of safety', fontsize=8, color='gray')
+plt.ylabel('from low', fontsize=8, color='gray')
 
 output_raw = '0_scatterplot.pdf'
-plt.savefig(os.path.join(cwd,input_folder,charts_folder,output_raw), dpi=300)
+plt.savefig(os.path.join(cwd,input_folder,charts_folder,output_raw), dpi=100, facecolor='#3e3e42')
 plt.close('all')
 #sns.set(style='white')
 mpl.rc_file_defaults()
