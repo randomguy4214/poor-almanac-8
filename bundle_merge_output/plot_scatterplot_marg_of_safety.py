@@ -83,6 +83,7 @@ for i in range(df.shape[0]):
 plt.xlabel('margin of safety', fontsize=8, color='gray')
 plt.ylabel('from low', fontsize=8, color='gray')
 
+plt.tight_layout()
 output_raw = '0_scatterplot.pdf'
 plt.savefig(os.path.join(cwd,input_folder,charts_folder,output_raw), dpi=100, facecolor='#3e3e42')
 plt.close('all')

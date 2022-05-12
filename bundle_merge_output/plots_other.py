@@ -101,7 +101,7 @@ for i in range(0, df_symbols.index[-1]):
         #print(df_temp_q)
         df_temp_q['inventory_cf'].fillna(0)
         df_temp_q = df_temp_q.sort_values(['symbol', 'date'], ascending=[False, True])
-        df_temp_q.to_csv(os.path.join(cwd, input_folder, "test.csv"), index=False)
+        #df_temp_q.to_csv(os.path.join(cwd, input_folder, "test.csv"), index=False)
         #sys.exit()
 
         # prepare annual statements
@@ -111,7 +111,7 @@ for i in range(0, df_symbols.index[-1]):
         df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
         df_temp_a = df_merged
         df_temp_a = df_temp_a.sort_values(['symbol', 'calendarYear'], ascending=[False, True])
-        df_temp_a.to_csv(os.path.join(cwd, input_folder, "test.csv"), index=False)
+        #df_temp_a.to_csv(os.path.join(cwd, input_folder, "test.csv"), index=False)
 
         ############################################################################################
         # START PLOTTING ###########################################################################
@@ -125,7 +125,7 @@ for i in range(0, df_symbols.index[-1]):
                               )
             );
         #plt.style.use('seaborn-paper')
-        sns.set(style="darkgrid", palette="muted", color_codes=True)
+        sns.set(style="darkgrid", palette="bright", color_codes=True)
         # create a grid for plots
         # https://matplotlib.org/3.5.0/gallery/userdemo/demo_gridspec03.html#sphx-glr-gallery-userdemo-demo-gridspec03-py
         grid = GridSpec(2 # rows
@@ -159,7 +159,7 @@ for i in range(0, df_symbols.index[-1]):
         #g_OpCash_q.set_ylabel('Operating CF in M, quarterly', fontsize=8, color='gray')
         g_OpCash_q.tick_params(axis='y', which='major', labelsize=5, color='white')
         g_OpCash_q.yaxis.label.set_visible(False)
-        g_OpCash_q.set_title('Operating CF in M, quarterly', fontsize=8, color='white')
+        g_OpCash_q.set_title('Operating CF, quarterly', fontsize=8, color='white')
         ylabels = ['{:,}'.format(y) + ' M' for y in (g_OpCash_q.get_yticks() / 1000000).astype('int64')]
         g_OpCash_q.set_yticklabels(ylabels, size=5, color='white')
         g_OpCash_q.minorticks_off()
@@ -182,7 +182,7 @@ for i in range(0, df_symbols.index[-1]):
             )
         # formatting
         g_OpCash_a.yaxis.label.set_visible(False)
-        g_OpCash_a.set_title('Operating CF in M, annually', fontsize=8, color='white')
+        g_OpCash_a.set_title('Operating CF, annually', fontsize=8, color='white')
         g_OpCash_a_ylabels = ['{:,}'.format(y) + ' M' for y in (g_OpCash_a.get_yticks() / 1000000).astype('int64')]
         g_OpCash_a.set_yticklabels(g_OpCash_a_ylabels, size=5, color='gray')
         g_OpCash_a.minorticks_off()
@@ -280,7 +280,7 @@ for i in range(0, df_symbols.index[-1]):
         g_EqD.axes.get_xaxis().set_visible(False)
         g_EqD.xaxis.label.set_visible(False)
         g_EqD.yaxis.label.set_visible(False)
-        g_EqD.legend(loc='upper left', frameon=False, ncol=3, fontsize=5)
+        g_EqD.legend(loc='upper left', frameon=False, ncol=1, fontsize=5)
         g_EqD.spines['left'].set_color('none')
         g_EqD.spines['bottom'].set_color('none')
         g_EqD.tick_params(axis='x', colors='white')
@@ -298,7 +298,7 @@ for i in range(0, df_symbols.index[-1]):
             )
         # formatting
         g_Inv_q.yaxis.label.set_visible(False)
-        g_Inv_q.set_title('Inventory CF in M, quarterly', fontsize=8, color='white')
+        g_Inv_q.set_title('Inventory CF, quarterly', fontsize=8, color='white')
         g_Inv_q_ylabels = ['{:,}'.format(y) + ' M' for y in (g_Inv_q.get_yticks() / 1000000).astype('int64')]
         g_Inv_q.set_yticklabels(g_Inv_q_ylabels, size=5, color='gray')
         g_Inv_q.minorticks_off()
@@ -334,22 +334,47 @@ for i in range(0, df_symbols.index[-1]):
         g_OwnEa_a.tick_params(axis='x', colors='white')
         g_OwnEa_a.tick_params(axis='y', colors='white')
 
-        # Accounts Receivables, Accounts Payable, quarterly
-        g_AR = sns.lineplot(
+        # Accounts Receivable, quarterly
+        g_AR_q = sns.lineplot(
             x = 'yearQ_str'
             , y = 'CF_AccReceiv'
-            , data = df_temp_q
+            , color='gray'
+            , data=df_temp_q
             , linewidth=1
-            , alpha=.9
-            , color='#798e95'
+            , alpha=.5
+            , ci=None
             , ax=ax7
             )
-        g_AR.grid(False)
+        # formatting
+        g_AR_q.set_title('AR/AP CF, quarterly (gray/red)', fontsize=8, color='white')
+        g_AR_q.yaxis.label.set_visible(False)
+        g_AR_q_ylabels = ['{:,}'.format(y) + ' M' for y in (g_AR_q.get_yticks() / 1000000).astype('int64')]
+        g_AR_q.set_yticklabels(g_AR_q_ylabels, size=5, color='white')
+        g_AR_q.set_xticklabels(g_AR_q.get_xticklabels(), rotation=90, fontsize=5, color='white')
+        g_AR_q.minorticks_off()
+        g_AR_q.xaxis.label.set_visible(False)
+        g_AR_q.spines['left'].set_color('none')
+        g_AR_q.spines['bottom'].set_color('none')
+        g_AR_q.tick_params(axis='x', colors='white')
+        g_AR_q.tick_params(axis='y', colors='white')
+
+        # Accounts Payable, quarterly
+        g_AP_q = sns.lineplot(
+            x = 'yearQ_str'
+            , y = 'CF_AccPayab'
+            , color='maroon'
+            , data=df_temp_q
+            , linewidth=0.7
+            , alpha=.5
+            , ci=None
+            , ax=ax7
+            )
+        g_AP_q.axes.xaxis.grid(False, which='both')
 
 
         ### Description
         descr_str = df_temp_a['description'][0]
-        plt.figtext(0.81, 0.51
+        plt.figtext(0.8, 0.51
                     , descr_str
                     , verticalalignment='top'
                     , horizontalalignment='left'
@@ -367,8 +392,8 @@ for i in range(0, df_symbols.index[-1]):
 
         plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=100, facecolor='#3e3e42')
         plt.tight_layout()
-        plt.show()
-        sys.exit()
+        #plt.show()
+        #sys.exit()
 
         # reset
         mpl.rc_file_defaults()
