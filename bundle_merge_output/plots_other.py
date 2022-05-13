@@ -387,7 +387,11 @@ for i in range(0, df_symbols.index[-1]):
         # save plots as pdf
         sns.despine()                                       # remove some frame lines from seaborn plots
         plt.tick_params(axis='both', which='both', left=False, right=False, bottom=False, top=False, labelbottom=False)
-        output_raw = df_temp_q['symbol'][0] + '.pdf'
+        num_in_list = i+1
+        num_in_list_str = str(num_in_list)
+        underscore = '_'
+        symbol_marg_pdf = df_temp_q['symbol'][0] + '.pdf'
+        output_raw = num_in_list_str + underscore + symbol_marg_pdf
         #print(output_raw)
 
         plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=100, facecolor='#3e3e42')
