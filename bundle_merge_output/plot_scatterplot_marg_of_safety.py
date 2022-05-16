@@ -29,6 +29,14 @@ else:
     shutil.rmtree(os.path.join(cwd,input_folder, charts_folder))
     os.mkdir(os.path.join(cwd,input_folder, charts_folder))
 
+# copy 00_Research_Description.pdf
+try:
+    research_pdf = '00_Research_description.pdf'
+    shutil.copy(os.path.join(cwd,research_pdf),os.path.join(cwd,input_folder,charts_folder))
+except:
+    pass
+
+
 # import files
 df_import = pd.read_excel(os.path.join(cwd,"5_df_output_unflitered.xlsx"))
 df = df_import[['symbol', 'from_low', 'marg_of_saf_perp', 'marg_of_saf_5y_perp','marketCap_q', 'industry']]
