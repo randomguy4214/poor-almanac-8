@@ -247,9 +247,11 @@ for i in range(0, df_symbols.index[-1]):
 
         # CF INVENTORY, AccReceiv, AccPayab  quarterly
         df_temp_q_Inv_q_AR_q_AP_q = df_temp_q[['yearQ_str', 'inventory_cf', 'CF_AccReceiv', 'CF_AccPayab']]
+        Inv_q_custom_colors = ['#304390','#ee2a41','#eeeff1']
         g_Inv_q = df_temp_q_Inv_q_AR_q_AP_q.plot(
-           # color = ''
-            ax = ax5
+            color = Inv_q_custom_colors
+            , alpha=0.7
+            , ax = ax5
             )
         # formatting
         g_Inv_q.legend(fontsize=8, frameon=False)
