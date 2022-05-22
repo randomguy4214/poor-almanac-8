@@ -297,6 +297,8 @@ for i in range(0, df_symbols.index[-1]):
         df_temp_q_Eq_D = df_temp_q[['symbol', 'yearQ_str', 'totalStockholdersEquity'
                                     , 'longTermDebt', 'shortTermDebt']]
         df_temp_q_Eq_D['totalStockholdersEquity'][df_temp_q_Eq_D['totalStockholdersEquity'] < 0] = 0
+        df_temp_q_Eq_D['longTermDebt'][df_temp_q_Eq_D['longTermDebt'] < 0] = 0
+        df_temp_q_Eq_D['shortTermDebt'][df_temp_q_Eq_D['shortTermDebt'] < 0] = 0
         df_temp_q_Eq_D_stacked = (df_temp_q_Eq_D.set_index(['symbol', 'yearQ_str'])
                                   .stack()
                                   .reorder_levels([2,0,1])
