@@ -74,6 +74,7 @@ splot_func = sns.scatterplot(data = df, x = df['marg_of_saf_perp'], y = df['from
 splot_func.set(xscale='log')
 splot_func.set_yticklabels(splot_func.get_yticks().astype('int64'), size=5, color='gray')
 splot_func.set_xticklabels(splot_func.get_xticks().astype('int64'), size=5, color='gray')
+splot_func.set_facecolor('black')
 
 # Label data points with a loop
 for i in range(df.shape[0]):
@@ -93,7 +94,7 @@ plt.ylabel('from low', fontsize=8, color='gray')
 
 plt.tight_layout()
 output_raw = '0_scatterplot.pdf'
-plt.savefig(os.path.join(cwd,input_folder,charts_folder,output_raw), dpi=100, facecolor='#3e3e42')
+plt.savefig(os.path.join(cwd,input_folder,charts_folder,output_raw), dpi=100, facecolor='black')
 plt.close('all')
 #sns.set(style='white')
 mpl.rc_file_defaults()
