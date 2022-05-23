@@ -126,7 +126,7 @@ for i in range(0, df_symbols.index[-1]):
         df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
         df_temp_EV = df_merged.fillna(0)
         df_temp_EV = df_temp_EV.sort_values(['symbol', 'date'], ascending=[False, True])
-        # df_temp_EV.to_csv(os.path.join(cwd, input_folder, charts_folder, test_df_EV_ticker_csv), index=False)
+        #df_temp_EV.to_csv(os.path.join(cwd, input_folder, charts_folder, test_df_EV_ticker_csv), index=False)
 
         ############################################################################################
         # START PLOTTING ###########################################################################
@@ -165,9 +165,10 @@ for i in range(0, df_symbols.index[-1]):
         #df_temp_q_opcash_q.to_csv(os.path.join(cwd, input_folder, "test.csv"), index=False)
         g_OpCash_q = df_temp_q_opcash_q.plot(
             'yearQ_str'
-            , color='white'
-            , alpha=0.8
-            , kind='area'
+            , color='#ae30bc'
+            , alpha=1
+            , kind='bar'
+            , width=1
             , stacked=False
             , ax=ax1 # location on global grid
             )
@@ -193,9 +194,10 @@ for i in range(0, df_symbols.index[-1]):
         g_OpCash_a = df_temp_a_opcash_a.plot(
             'calendarYear_str'
             , alpha=0.8
-            , kind='area'
+            , kind='bar'
+            , width=1
             , stacked=False
-            , color=['#304390', 'white']
+            , color=['#ae30bc', 'white']
             , ax=ax2
             )
         # formatting
@@ -222,7 +224,7 @@ for i in range(0, df_symbols.index[-1]):
             'calendarYear_str'
             , color = '#12b8ff'
             , kind='line'
-            , alpha=0.3
+            , alpha=0.5
             , linestyle='--'
             , ax=ax2_secondy
             )
@@ -246,7 +248,7 @@ for i in range(0, df_symbols.index[-1]):
         #df_temp_price.to_csv(os.path.join(cwd, input_folder, charts_folder, test_df_EV_ticker_csv))
         g_Price_q = df_temp_price.plot(
             'date'
-            , color='white'
+            , color='#2c547c'
             , kind='area'
             , stacked=False
             , alpha=0.8
@@ -261,6 +263,7 @@ for i in range(0, df_symbols.index[-1]):
         g_Price_q.yaxis.label.set_visible(False)
         g_Price_q_ylabels = ['{0:.2f}'.format(y) for y in ((g_Price_q.get_yticks()*100).astype('int64')/100)]
         g_Price_q.set_yticklabels(g_Price_q_ylabels, size=5, color='gray')
+        g_Price_q.set_ylim(0, max(g_Price_q.get_yticks()))
         g_Price_q.set_yticklabels(g_Price_q.get_yticks(), size=5, color='white')
         g_Price_q.set_facecolor('black')
 
@@ -270,7 +273,7 @@ for i in range(0, df_symbols.index[-1]):
             'date'
             , color = '#12b8ff'
             , kind='line'
-            , alpha=0.3
+            , alpha=0.4
             , linestyle='--'
             , ax=ax3_secondy
             )
@@ -281,6 +284,7 @@ for i in range(0, df_symbols.index[-1]):
         g_SO_q.yaxis.label.set_visible(False)
         g_SO_q_ylabels = ['{:,}'.format(y) + ' M' for y in (g_SO_q.get_yticks() / 1000000).astype('int64')]
         g_SO_q.set_yticklabels(g_SO_q_ylabels, size=5, color='#12b8ff')
+        g_SO_q.set_ylim(0, max(g_SO_q.get_yticks()))
         g_SO_q.axes.get_xaxis().set_visible(False)
         g_SO_q.xaxis.label.set_visible(False)
         g_SO_q.spines['left'].set_color('none')
@@ -324,10 +328,11 @@ for i in range(0, df_symbols.index[-1]):
         g_EqD.set_title(ticker_str, fontsize=8, color='white')
         ylabels = ['{:,}'.format(y) + ' M' for y in (g_EqD.get_yticks() / 1000000).astype('int64')]
         g_EqD.set_yticklabels(ylabels, size=5, color='white')
+        g_EqD.set_ylim(0, max(g_EqD.get_yticks()))
         g_EqD.axes.get_xaxis().set_visible(False)
         g_EqD.xaxis.label.set_visible(False)
         g_EqD.yaxis.label.set_visible(False)
-        g_EqD.legend(loc='upper left', frameon=False, ncol=1, fontsize=5)
+        g_EqD.legend(loc='upper left', frameon=False, ncol=1, fontsize=5, labelcolor='white')
         g_EqD.spines['left'].set_color('none')
         g_EqD.spines['bottom'].set_color('none')
         g_EqD.tick_params(axis='x', colors='white')
@@ -346,7 +351,7 @@ for i in range(0, df_symbols.index[-1]):
             )
         # formatting
         g_Inv_q.set_title('Inventory CF, quarterly', fontsize=8, color='white')
-        g_Inv_q.legend(fontsize=8, frameon=False)
+        g_Inv_q.legend(loc='upper left', frameon=False, ncol=1, fontsize=5, labelcolor='white')
         g_Inv_q.set_xticks(df_temp_q_Inv_q_AR_q_AP_q.index, labels = df_temp_q_Inv_q_AR_q_AP_q['yearQ_str'])
         g_Inv_q.set_xticklabels(g_Inv_q.get_xticklabels(), rotation=90, fontsize=5, color='gray')
         g_Inv_q.xaxis.label.set_visible(False)
@@ -369,7 +374,7 @@ for i in range(0, df_symbols.index[-1]):
             kind='area'
             , stacked=False
             , alpha=0.7
-            , color='white'
+            , color='#5b5a9e'
             , legend=None
             , ax=ax6
             )
