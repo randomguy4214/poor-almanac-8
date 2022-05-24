@@ -7,6 +7,7 @@ bundle_process = "bundle_process"
 bundle_update = "bundle_update"
 bundle_merge_output = "bundle_merge_output"
 bundle_other = "bundle_other"
+bundle_charts = "bundle_charts"
 
 from bundle_other import put_reduced_symbols
 from bundle_update import update_financials_q
@@ -31,9 +32,10 @@ from bundle_process import process_prices
 from bundle_merge_output import a_recent_EV_prices_diff
 from bundle_merge_output import output
 
-from bundle_merge_output import plot_scatterplot_marg_of_safety
-from bundle_merge_output import plots_other
-from bundle_merge_output import plots_to_pdf
+from bundle_charts import plot_folder_setup
+from bundle_charts import plot_scatterplot_marg_of_safety
+from bundle_charts import plots_other
+from bundle_charts import plots_to_pdf
 
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))

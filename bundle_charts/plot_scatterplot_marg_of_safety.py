@@ -10,7 +10,6 @@ import seaborn as sns
 sns.set_theme(style='darkgrid')
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import shutil
 
 pd.options.mode.chained_assignment = None  # default='warn'
 pd.options.mode.use_inf_as_na = True
@@ -21,20 +20,6 @@ cwd = os.getcwd()
 input_folder = "0_input"
 output_folder = "0_output"
 charts_folder = "5_charts"
-
-# check charts_folder
-if not os.path.exists(os.path.join(cwd,input_folder, charts_folder)):
-    os.mkdir(os.path.join(cwd,input_folder, charts_folder))
-else:
-    shutil.rmtree(os.path.join(cwd,input_folder, charts_folder))
-    os.mkdir(os.path.join(cwd,input_folder, charts_folder))
-
-# copy 00_Research_Description.pdf
-try:
-    research_pdf = '00_Research_description.pdf'
-    shutil.copy(os.path.join(cwd,research_pdf),os.path.join(cwd,input_folder,charts_folder))
-except:
-    pass
 
 
 # import files
