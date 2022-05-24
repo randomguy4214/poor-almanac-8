@@ -20,8 +20,8 @@ else:
     os.mkdir(os.path.join(cwd,input_folder, charts_folder))
 
 # copy 00_Research_Description.pdf
-try:
-    research_pdf = '00_Research_description.pdf'
-    shutil.copy(os.path.join(cwd,research_pdf),os.path.join(cwd,input_folder,charts_folder))
-except:
-    pass
+#try:
+#    research_pdf = '00_Research_description.pdf'
+#    shutil.copy(os.path.join(cwd,research_pdf),os.path.join(cwd,input_folder,charts_folder))
+#except:
+#    pass
