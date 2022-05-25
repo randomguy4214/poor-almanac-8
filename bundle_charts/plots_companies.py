@@ -161,11 +161,11 @@ for i in range(0, df_symbols.index[-1]):
         #plt.style.use('dark_background')
 
         ### Cash Op quarterly
-        df_temp_q_opcash_q = df_temp_q[['yearQ_str', 'operatingCashFlow']]
+        df_temp_q_opcash_q = df_temp_q[['yearQ_str', 'operatingCashFlow', 'netIncome']]
         #df_temp_q_opcash_q.to_csv(os.path.join(cwd, input_folder, "test.csv"), index=False)
         g_OpCash_q = df_temp_q_opcash_q.plot(
             'yearQ_str'
-            , color='#ae30bc'
+            , color=['#ae30bc', 'white']
             , alpha=1
             , kind='bar'
             , width=1
@@ -178,7 +178,7 @@ for i in range(0, df_symbols.index[-1]):
         g_OpCash_q.get_legend().set_visible(False)
         g_OpCash_q.tick_params(axis='y', which='major', labelsize=5, color='white')
         g_OpCash_q.yaxis.label.set_visible(False)
-        g_OpCash_q.set_title('Operating CF, quarterly', fontsize=8, color='white')
+        g_OpCash_q.set_title('Operating CF and Income, quarterly', fontsize=8, color='white')
         ylabels = ['{:,}'.format(y) + ' M' for y in (g_OpCash_q.get_yticks() / 1000000).astype('int64')]
         g_OpCash_q.set_yticklabels(ylabels, size=5, color='white')
         g_OpCash_q.minorticks_off()

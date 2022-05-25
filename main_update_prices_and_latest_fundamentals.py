@@ -36,7 +36,7 @@ from bundle_merge_output import output
 
 from bundle_charts import plot_folder_setup
 from bundle_charts import plot_scatterplot_marg_of_safety
-from bundle_charts import plots_other
+from bundle_charts import plots_companies
 from bundle_charts import plots_to_pdf
 
 end_time = datetime.now()
