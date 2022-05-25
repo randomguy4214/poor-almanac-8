@@ -354,6 +354,11 @@ for i in range(0, df_symbols.index[-1]):
         g_Inv_q.legend(loc='upper left', frameon=False, ncol=1, fontsize=5, labelcolor='white')
         g_Inv_q.set_xticks(df_temp_q_Inv_q_AR_q_AP_q.index, labels = df_temp_q_Inv_q_AR_q_AP_q['yearQ_str'])
         g_Inv_q.set_xticklabels(g_Inv_q.get_xticklabels(), rotation=90, fontsize=5, color='gray')
+
+        for n, label in enumerate(g_Inv_q.xaxis.get_ticklabels()):
+            if n % every_nth != 0:
+                label.set_visible(False)
+
         g_Inv_q.xaxis.label.set_visible(False)
         g_Inv_q.yaxis.label.set_visible(False)
         g_Inv_q.set_yticks(g_Inv_q.get_yticks())

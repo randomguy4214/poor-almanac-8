@@ -49,31 +49,36 @@ for df_name in alldfs:
     if df_name != 'commodities_df':
         print(df_name)
         comm_df = eval(df_name) # searches for name of dataframe and activates it
+        comm_df.reset_index(drop=False, inplace=True)
+        #df_name_csv = df_name + '.csv'
+        #comm_df.to_csv(os.path.join(cwd, input_folder, charts_folder, df_name_csv))
         #print(comm_df)
 
         #### start plotting
         g = comm_df.plot(
-            use_index=True
-            , alpha=1
+            alpha=1
             , linewidth=0.6
             , kind='line'
         )
         g.set_facecolor('black')
-        g.set_xticks(range(0, len(comm_df.index)), labels=comm_df.index)
-        g.set_xticklabels(g.get_xticklabels(), rotation=90, fontsize=5, color='white')
-        g.set_xticks(g.get_xticks())
+        g.set_xticks(range(0, len(comm_df.index)), comm_df['Date'])
+        g.set_xticklabels(comm_df['Date'], rotation=90, fontsize=3, color='white')
+        every_nth = 4
+        for n, label in enumerate(g.xaxis.get_ticklabels()):
+            if n % every_nth != 0:
+                label.set_visible(False)
+
+
         g.set_yticks(g.get_yticks())
         g.set_yticklabels(g.get_yticks(), size=5, color='white')
-        g.set_xticklabels('')
         g.legend(loc='upper left', frameon=False, ncol=1, fontsize=5, labelcolor='white')
-        g.axes.get_xaxis().set_visible(False)
 
         ###############################
-        plt.tight_layout()
+        #plt.tight_layout()
         zeros_commod = '000_commodity_'
         output_raw = zeros_commod + df_name + '.pdf'
         plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=100, facecolor='black')
-        plt.show()
-        sys.exit()
+        #plt.show()
+        #sys.exit()
     else:
         pass
