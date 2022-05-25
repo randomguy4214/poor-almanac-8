@@ -43,7 +43,8 @@ f_wood = commodities_df.iloc[:,[48,49,50,51,52]]
 f_materials_one = commodities_df.iloc[:,[53,54,55]]
 e_fertilizers = commodities_df.iloc[:,[56,57,58,59,60]]
 g_metals_1 = commodities_df.iloc[:,[63,65,66,67]]
-g_metals_2 = commodities_df.iloc[:,[61,62,64,68,69,70]]
+g_metals_2 = commodities_df.iloc[:,[61,64,68,69,70]]
+g_metals_3 = commodities_df.iloc[:,[62,70]]
 
 # create a list of dataframes and loop through them to create separate charts
 alldfs = [var for var in dir() if isinstance(eval(var), pd.core.frame.DataFrame)]
@@ -82,6 +83,7 @@ for df_name in alldfs:
         zeros_commod = '000_commodity_'
         output_raw = zeros_commod + df_name + '.pdf'
         plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=100, facecolor='black')
+        plt.close('all')
         #plt.show()
         #sys.exit()
     else:
