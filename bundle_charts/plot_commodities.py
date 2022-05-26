@@ -61,7 +61,7 @@ for df_name in alldfs:
         plt.rcParams["figure.figsize"] = (14, 8.5)
         g = comm_df.plot(
             alpha=1
-            , linewidth=0.6
+            , linewidth=1
             , kind='line'
         )
         g.set_facecolor('black')
