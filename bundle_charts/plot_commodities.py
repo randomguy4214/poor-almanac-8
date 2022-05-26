@@ -66,7 +66,7 @@ for df_name in alldfs:
         )
         g.set_facecolor('black')
         g.set_xticks(range(0, len(comm_df.index)), comm_df['Date'])
-        g.set_xticklabels(comm_df['Date'], rotation=90, fontsize=3, color='gray')
+        g.set_xticklabels(comm_df['Date'], rotation=90, fontsize=5, color='white')
         every_nth = 4
         for n, label in enumerate(g.xaxis.get_ticklabels()):
             if n % every_nth != 0:
@@ -75,9 +75,9 @@ for df_name in alldfs:
 
         g.set_yticks(g.get_yticks())
         g_ylabels = ['{:,}'.format(y) for y in (g.get_yticks()).round(2)]
-        g.set_yticklabels(g_ylabels, size=5, color='gray')
+        g.set_yticklabels(g_ylabels, size=5, color='white')
         g.set_ylim(0, max(g.get_yticks()))
-        g.legend(loc='upper left', frameon=False, ncol=1, fontsize=5, labelcolor='gray')
+        g.legend(loc='upper left', frameon=False, ncol=1, fontsize=10, labelcolor='white')
 
         ###############################
         #plt.tight_layout()
