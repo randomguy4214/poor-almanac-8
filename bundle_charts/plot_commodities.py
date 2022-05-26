@@ -58,6 +58,7 @@ for df_name in alldfs:
         #print(comm_df)
 
         #### start plotting
+        plt.rcParams["figure.figsize"] = (14, 8.5)
         g = comm_df.plot(
             alpha=1
             , linewidth=0.6
@@ -77,12 +78,6 @@ for df_name in alldfs:
         g.set_yticklabels(g_ylabels, size=5, color='gray')
         g.set_ylim(0, max(g.get_yticks()))
         g.legend(loc='upper left', frameon=False, ncol=1, fontsize=5, labelcolor='gray')
-
-        #set aspect ratio to wide A4 size
-        ratio = 8.5 / 14
-        x_left, x_right = g.get_xlim()
-        y_low, y_high = g.get_ylim()
-        g.set_aspect(abs((x_right-x_left)/(y_low-y_high))*ratio)
 
         ###############################
         #plt.tight_layout()

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-print('drawing charts')
+print('drawing companies')
 #import warnings
 #warnings.filterwarnings("ignore")
 import os
@@ -89,10 +89,11 @@ df_symbols = df_5_symbols_marg_of_safety['symbol'].drop_duplicates().reset_index
 index_max = pd.to_numeric(df_symbols.index.values.max())
 for i in range(0, df_symbols.index[-1]):
     try:
-        ticker_str = '_' + df_symbols['symbol'][i]
-        test_df_q_ticker_csv = 'test_df_q' + ticker_str + '.csv'
-        test_df_a_ticker_csv = 'test_df_a' + ticker_str + '.csv'
-        test_df_EV_ticker_csv = 'test_df_EV' + ticker_str + '.csv'
+        ticker_str = df_symbols['symbol'][i]
+        undersc = '_'
+        test_df_q_ticker_csv = 'test_df_q' + undersc + ticker_str + '.csv'
+        test_df_a_ticker_csv = 'test_df_a' + undersc + ticker_str + '.csv'
+        test_df_EV_ticker_csv = 'test_df_EV' + undersc + ticker_str + '.csv'
         df_narrow = pd.DataFrame(df_symbols.iloc[i]).T              #whythefuck selecting a row is series and not DF???
         df_narrow.reset_index(inplace=True, drop=True)
         # prepare quarterly statements
@@ -169,6 +170,7 @@ for i in range(0, df_symbols.index[-1]):
             , alpha=0.7
             , kind='area'
             , ax=ax1 # location on global grid
+            , stacked=False
             )
         # formatting
         g_OpCash_q.set_xticks(g_OpCash_q.get_xticks())
@@ -191,9 +193,8 @@ for i in range(0, df_symbols.index[-1]):
         df_temp_a_opcash_a = df_temp_a[['calendarYear_str', 'operatingCashFlow', 'revenue']].copy()
         g_OpCash_a = df_temp_a_opcash_a.plot(
             'calendarYear_str'
-            , alpha=0.8
-            , kind='bar'
-            , width=1
+            , alpha=0.7
+            , kind='area'
             , stacked=False
             , color=['#ae30bc', 'white']
             , ax=ax2

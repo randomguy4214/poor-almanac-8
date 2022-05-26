@@ -1,5 +1,5 @@
 #!/usr/bin/python
-print('FED balance sheet 1000 weeks- plotting')
+print('FED balance sheet 1000 weeks - plotting')
 
 import os
 import pandas as pd
@@ -59,6 +59,7 @@ color_palette = [
 
 
 #### start plotting
+plt.rcParams["figure.figsize"] = (14, 8.5)
 g = df_BS_FED.plot(
     alpha=1
     , stacked=True
@@ -67,7 +68,7 @@ g = df_BS_FED.plot(
 )
 g.set_facecolor('black')
 g.set_xticks(range(0, len(df_BS_FED.index)), df_BS_FED.index.values)
-g.set_xticklabels(df_BS_FED.index.values, rotation=90, fontsize=3, color='gray')
+g.set_xticklabels(df_BS_FED.index.values, rotation=90, fontsize=5, color='gray')
 every_nth = 16
 for n, label in enumerate(g.xaxis.get_ticklabels()):
     if n % every_nth != 0:
@@ -75,7 +76,7 @@ for n, label in enumerate(g.xaxis.get_ticklabels()):
 g.set_yticks(g.get_yticks())
 g_ylabels = ['{:,}'.format(y) for y in (g.get_yticks()).round(2)]
 g.set_yticklabels(g_ylabels, size=5, color='gray')
-g.legend(loc='upper left', frameon=False, ncol=1, fontsize=4, labelcolor='gray')
+g.legend(loc='upper left', frameon=False, ncol=1, fontsize=5, labelcolor='gray')
 g.set_title('Weekly FED balance sheet by type, last 1000 weeks', fontsize=8, color='white', loc='center')
 
 
