@@ -29,7 +29,8 @@ df_5_symbols_marg_of_safety = pd.read_csv(os.path.join(cwd,input_folder,"5_symbo
 df_q = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_financials_q.csv")
                    , usecols = ['symbol','date', 'grossProfitRatio', 'operatingCashFlow', 'calendarYear'
                                     , 'period', 'shortTermDebt', 'longTermDebt', 'totalStockholdersEquity'
-                                , 'inventory', 'accountsReceivables', 'accountsPayables', 'netIncome']
+                                , 'inventory', 'accountsReceivables', 'accountsPayables', 'netIncome'
+                                , 'revenue']
                    , low_memory=False)
 df_merged = pd.merge(df_5_symbols_marg_of_safety, df_q
                      , how='left', left_on=['symbol']
@@ -41,7 +42,7 @@ df_q = df_merged.groupby('symbol').head(80).reset_index(drop=True) # selecting o
 df_a = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_financials_a.csv")
                    , usecols = ['symbol','date', 'grossProfitRatio', 'operatingCashFlow', 'calendarYear'
                                     , 'period', 'shortTermDebt', 'longTermDebt', 'totalStockholdersEquity'
-                                , 'inventory', 'revenue']
+                                , 'inventory', 'revenue', 'netIncome']
                    , low_memory=False)
 df_a = df_a.groupby('symbol').head(20).reset_index(drop=True) # selecting only 20 years per symbol
 ########## other
@@ -162,11 +163,11 @@ for i in range(0, df_symbols.index[-1]):
         #plt.style.use('dark_background')
 
         ### Cash Op quarterly
-        df_temp_q_opcash_q = df_temp_q[['yearQ_str', 'operatingCashFlow', 'netIncome']]
+        df_temp_q_opcash_q = df_temp_q[['yearQ_str', 'operatingCashFlow', 'netIncome', 'revenue']]
         #df_temp_q_opcash_q.to_csv(os.path.join(cwd, input_folder, "test.csv"), index=False)
         g_OpCash_q = df_temp_q_opcash_q.plot(
             'yearQ_str'
-            , color=['#ae30bc', 'white']
+            , color=['#5b5a9e', '#ae30bc', 'white']
             , alpha=0.7
             , kind='area'
             , ax=ax1 # location on global grid
@@ -190,13 +191,13 @@ for i in range(0, df_symbols.index[-1]):
         g_OpCash_q.set_facecolor('black')
 
         ### Cash Op & Sales annually
-        df_temp_a_opcash_a = df_temp_a[['calendarYear_str', 'operatingCashFlow', 'revenue']].copy()
+        df_temp_a_opcash_a = df_temp_a[['calendarYear_str', 'operatingCashFlow', 'netIncome', 'revenue']].copy()
         g_OpCash_a = df_temp_a_opcash_a.plot(
             'calendarYear_str'
             , alpha=0.7
             , kind='area'
             , stacked=False
-            , color=['#ae30bc', 'white']
+            , color=['#5b5a9e', '#ae30bc', 'white']
             , ax=ax2
             )
         # formatting
