@@ -1,5 +1,5 @@
 #!/usr/bin/python
-print('drawing scatter plot')
+print('creating folder for plots')
 
 import warnings
 warnings.filterwarnings("ignore")

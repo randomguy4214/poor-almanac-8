@@ -13,6 +13,7 @@ from bundle_update import update_financials_q
 from bundle_update import update_other
 from bundle_update import update_EV
 from bundle_update import update_commodities
+from bundle_update import update_FED_balance_sheet
 from bundle_other import put_latest_updated_date
 
 from bundle_process import process_prices
@@ -31,5 +32,8 @@ from bundle_merge_output import output
 
 from bundle_charts import plot_folder_setup
 from bundle_charts import plot_scatterplot_marg_of_safety
-from bundle_charts import plots_companies
+from bundle_charts import plot_commodities
+from bundle_charts import plot_BS_FED
+from bundle_charts import plot_BS_FED_b
+from bundle_charts import plot_companies
 from bundle_charts import plots_to_pdf
