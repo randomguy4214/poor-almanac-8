@@ -1,5 +1,5 @@
 #!/usr/bin/python
-print('FED balance sheet - plotting')
+print('FED balance sheet 1000 weeks- plotting')
 
 import os
 import pandas as pd
@@ -24,7 +24,7 @@ df_BS_FED = pd.read_csv(os.path.join(cwd,input_folder,"2_processed_BS_FED.csv")
                              , index_col='Date')
 
 color_palette = [
-    '#a02dbc'
+'#a02dbc'
 , '#9940af'
 , '#9252a2'
 , '#8e5b9b'
@@ -36,8 +36,8 @@ color_palette = [
 , '#0fc2e0'
 , '#14add6'
 , '#1a99cc'
-, '#295cad'
-, '#2e47a3'
+, '#F0FF00' # reverse repo
+, '#c0cc00' # reverse repo
 , '#244a92'
 , '#1a5a8d'
 , '#0f6988'
@@ -86,7 +86,7 @@ y_low, y_high = g.get_ylim()
 g.set_aspect(abs((x_right-x_left)/(y_low-y_high))*ratio)
 
 ###############################
-#plt.tight_layout()
+plt.tight_layout()
 BS_FED = '001_BS_FED'
 output_raw = BS_FED + '.pdf'
 
