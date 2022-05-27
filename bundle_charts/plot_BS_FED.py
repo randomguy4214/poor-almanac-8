@@ -68,7 +68,7 @@ g = df_BS_FED.plot(
 )
 g.set_facecolor('black')
 g.set_xticks(range(0, len(df_BS_FED.index)), df_BS_FED.index.values)
-g.set_xticklabels(df_BS_FED.index.values, rotation=90, fontsize=5, color='gray')
+g.set_xticklabels(df_BS_FED.index.values, rotation=90, fontsize=5, color='white')
 every_nth = 16
 for n, label in enumerate(g.xaxis.get_ticklabels()):
     if n % every_nth != 0:
@@ -76,16 +76,11 @@ for n, label in enumerate(g.xaxis.get_ticklabels()):
 g.set_yticks(g.get_yticks())
 Trillion = 1000000000000 / 1000000 # the data is in millions
 g_ylabels = ['{:,}'.format(y) + ' T' for y in ((g.get_yticks()) / Trillion).astype('int64')]
-g.set_yticklabels(g_ylabels, size=5, color='gray')
+g.set_yticklabels(g_ylabels, size=8, color='white')
 g.legend(loc='upper left', frameon=False, ncol=1, fontsize=5, labelcolor='gray')
 g.set_title('Weekly FED balance sheet by type, last 1000 weeks', fontsize=8, color='white', loc='center')
 
 
-#set aspect ratio to wide A4 size
-ratio = 8.5 / 14
-x_left, x_right = g.get_xlim()
-y_low, y_high = g.get_ylim()
-g.set_aspect(abs((x_right-x_left)/(y_low-y_high))*ratio)
 
 ###############################
 plt.tight_layout()
