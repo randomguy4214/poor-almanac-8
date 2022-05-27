@@ -81,13 +81,6 @@ g.set_yticklabels(g_ylabels, size=8, color='white')
 g.legend(loc='upper left', frameon=False, ncol=1, fontsize=5, labelcolor='gray')
 g.set_title('Weekly FED balance sheet by type, last 100 weeks', fontsize=8, color='white', loc='center')
 
-
-#set aspect ratio to wide A4 size
-ratio = 8.5 / 14
-x_left, x_right = g.get_xlim()
-y_low, y_high = g.get_ylim()
-g.set_aspect(abs((x_right-x_left)/(y_low-y_high))*ratio)
-
 ###############################
 plt.tight_layout()
 BS_FED = '001_BS_FED_b'
