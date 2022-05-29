@@ -241,6 +241,13 @@ for i in range(0, df_symbols.index[-1]):
         g_Price_q.set_title('Price vs shares outstanding, quarterly', fontsize=8, color='white')
         g_Price_q.get_legend().set_visible(False)
         g_Price_q.set_xticks(g_Price_q.get_xticks())
+        g_Price_q.set_xticks(df_temp_price.index, labels = df_temp_price['date'])
+        g_Price_q.set_xticklabels(g_Price_q.get_xticklabels(), rotation=90, fontsize=5, color='white')
+        every_nth = 4
+        for n, label in enumerate(g_Price_q.xaxis.get_ticklabels()):
+            if n % every_nth != 0:
+                label.set_visible(False)
+
         g_Price_q.set_yticks(g_Price_q.get_yticks())
         g_Price_q.yaxis.label.set_visible(False)
         g_Price_q_ylabels = ['{0:.2f}'.format(y) for y in ((g_Price_q.get_yticks()*100).astype('int64')/100)]
