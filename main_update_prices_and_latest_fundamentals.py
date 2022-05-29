@@ -36,11 +36,11 @@ from bundle_merge_output import a_recent_EV_prices_diff
 from bundle_merge_output import output
 
 from bundle_plots import plot_folder_setup
-from bundle_plots import plot_scatterplot_marg_of_safety
 from bundle_plots import plot_commodities
-from bundle_plots import plot_freight
 from bundle_plots import plot_BS_FED
 from bundle_plots import plot_BS_FED_b
+from bundle_plots import plot_freight
+from bundle_plots import plot_scatterplot_marg_of_safety
 from bundle_plots import plot_companies
 from bundle_plots import plots_to_pdf
 

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-print('Freight - plotting')
+print('freight - plotting')
 
 import os
 import pandas as pd
@@ -51,6 +51,6 @@ plt.box(False)
 plt.tight_layout()
 pdf = '002_SCFI.pdf'
 path_pdf = os.path.join(cwd,input_folder,charts_folder,pdf)
-plt.savefig(path_pdf, dpi=100, facecolor='black')
+plt.savefig(path_pdf, dpi=30, facecolor='black')
 mpl.rc_file_defaults()
 plt.close('all')

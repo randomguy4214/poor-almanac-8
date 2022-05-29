@@ -83,7 +83,7 @@ for df_name in alldfs:
         #plt.tight_layout()
         zeros_commod = '000_commodity_'
         output_raw = zeros_commod + df_name + '.pdf'
-        plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=100, facecolor='black')
+        plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=30, facecolor='black')
         plt.close('all')
         #plt.show()
         #sys.exit()

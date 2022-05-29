@@ -86,7 +86,7 @@ plt.tight_layout()
 BS_FED = '001_BS_FED_b'
 output_raw = BS_FED + '.pdf'
 
-plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=100, facecolor='black')
+plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=30, facecolor='black')
 #plt.show()
 plt.close('all')
 #sys.exit()

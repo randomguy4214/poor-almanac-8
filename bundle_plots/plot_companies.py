@@ -24,7 +24,8 @@ charts_folder = "5_charts"
 
 # import files
 ########## margin of safety
-df_5_symbols_marg_of_safety = pd.read_csv(os.path.join(cwd,input_folder,"5_symbols_marg_of_safety.csv"), low_memory=False)
+df_5_symbols_marg_of_safety = pd.read_csv(os.path.join(cwd,input_folder,"5_symbols_marg_of_safety.csv")
+                                          , low_memory=False)
 ########## quarterly
 df_q = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_financials_q.csv")
                    , usecols = ['symbol','date', 'grossProfitRatio', 'operatingCashFlow', 'calendarYear'
@@ -119,6 +120,7 @@ for i in range(0, df_symbols.index[-1]):
         df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
         df_temp_a = df_merged.fillna(0)
         df_temp_a = df_temp_a.sort_values(['symbol', 'calendarYear'], ascending=[False, True])
+        df_temp_a['industry'] = df_temp_a['industry'].astype('str')
         #df_temp_a.to_csv(os.path.join(cwd, input_folder, charts_folder, test_df_a_ticker_csv), index=False)
 
         # prepare ticker price and shares outstanding
@@ -325,7 +327,9 @@ for i in range(0, df_symbols.index[-1]):
         # formatting
         g_EqD.set_xticks(g_EqD.get_xticks())
         g_EqD.set_yticks(g_EqD.get_yticks())
-        g_EqD.set_title(ticker_str, fontsize=8, color='white')
+        industry = df_temp_a['industry'][0]
+        ticker_industr = ticker_str + ' / ' + industry
+        g_EqD.set_title(ticker_industr, fontsize=8, color='white')
         ylabels = ['{:,}'.format(y) + ' M' for y in (g_EqD.get_yticks() / 1000000).astype('int64')]
         g_EqD.set_yticklabels(ylabels, size=5, color='white')
         g_EqD.set_ylim(0, max(g_EqD.get_yticks()))
@@ -421,7 +425,7 @@ for i in range(0, df_symbols.index[-1]):
         output_raw = num_in_list_str + underscore + symbol_marg_pdf
         #print(output_raw)
 
-        plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=100, facecolor='black')
+        plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=30, facecolor='black')
         plt.tight_layout()
         #plt.show()
         #sys.exit()

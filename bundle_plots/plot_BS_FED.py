@@ -76,7 +76,7 @@ for n, label in enumerate(g.xaxis.get_ticklabels()):
 g.set_yticks(g.get_yticks())
 Trillion = 1000000000000 / 1000000 # the data is in millions
 g_ylabels = ['{:,}'.format(y) + ' T' for y in ((g.get_yticks()) / Trillion).astype('int64')]
-g.set_yticklabels(g_ylabels, size=8, color='white')
+g.set_yticklabels(g_ylabels, size=12, color='white')
 g.legend(loc='upper left', frameon=False, ncol=1, fontsize=5, labelcolor='gray')
 g.set_title('Weekly FED balance sheet by type, last 1000 weeks', fontsize=8, color='white', loc='center')
 
@@ -87,7 +87,7 @@ plt.tight_layout()
 BS_FED = '001_BS_FED'
 output_raw = BS_FED + '.pdf'
 
-plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=100, facecolor='black')
+plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=30, facecolor='black')
 #plt.show()
 plt.close('all')
 #sys.exit()

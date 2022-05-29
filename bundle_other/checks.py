@@ -42,14 +42,9 @@ else:
 # check drop list tickers
 if not os.path.exists(os.path.join(cwd,"0_drop_list.xlsx")):
     drop_list = pd.DataFrame({
-        'symbol': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        'industry': ['Biotechnology', 'Shell Companies', 'Banks—Regional', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        'country': ['US', 'DE', 'GB', 'FR', 0, 0
-            , 0, 'CH', 'TW', 'AT', 'NL', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                             })
+        'symbol': [0],
+        'industry': [0],
+        'country': [0]})
     drop_list.to_excel(os.path.join(cwd,"0_drop_list.xlsx"))
     print("drop_list created")
 else:
