@@ -307,7 +307,7 @@ for i in range(0, df_symbols.index[-1]):
         # https://stackoverflow.com/questions/67320415/stacked-barplot-in-seaborn-using-numeric-data-as-hue
         g_EqD_pivot_temp = pd.pivot_table(df_temp_q_Eq_D_stacked
                                      , index='yearQ_str', columns='type', values='values', aggfunc='sum')
-        g_EqD_pivot = g_EqD_pivot_temp[['totalStockholdersEquity','longTermDebt','shortTermDebt', 'cashAndCashEquivalents']]
+        g_EqD_pivot = g_EqD_pivot_temp[['longTermDebt','shortTermDebt', 'cashAndCashEquivalents','totalStockholdersEquity']]
         #df_g_EqD_pivot.to_csv(os.path.join(cwd, input_folder, "test_g_EqD_pivot.csv"))
         #sys.exit()
         g_EqD = g_EqD_pivot.plot(kind='area', alpha=.7, color=['#05445E', '#189AB4', '#304390', '#C76280'], ax=ax4)
