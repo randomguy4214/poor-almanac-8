@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import sys
 from datetime import date
 from matplotlib.gridspec import GridSpec
-
+import datetime
 
 pd.options.mode.chained_assignment = None  # default='warn'
 pd.options.mode.use_inf_as_na = True
@@ -57,6 +57,9 @@ df_EV.fillna(0, inplace=True)
 ########## own_ea
 df_own_ea = pd.read_csv(os.path.join(cwd,input_folder,"4_recent_OwnEa_a.csv")
                         , usecols = ['symbol', 'maint_capex_ratio'], low_memory=False)
+########## latest price
+df_price = pd.read_csv(os.path.join(cwd,input_folder,'2_processed_prices.csv')
+                       , usecols=['symbol', 'price'], low_memory=False)
 
     # QUARTERLY DATAFRAME with margin of safety
 #df = df_merged[(df_merged['symbol'].str.contains('SKM|SPWH|RBB'))]
@@ -169,7 +172,7 @@ for i in range(0, df_symbols.index[-1]):
         g_Rev_q = df_temp_q_Rev_q.plot('yearQ_str', color='#05445E', alpha=1, width=1, kind='bar', ax=ax1, stacked=False)
         df_temp_q_ni_q = df_temp_q[['yearQ_str', 'netIncome']]
         g_NI_q = df_temp_q_ni_q.plot('yearQ_str', color='#189AB4', alpha=1, width = 1, kind='bar', ax=ax1, stacked=False)
-        df_temp_q_opcash_q = df_temp_q[['yearQ_str', 'operatingCashFlow']] #, 'netIncome', 'revenue'
+        df_temp_q_opcash_q = df_temp_q[['yearQ_str', 'operatingCashFlow']]
         g_OpCash_q = df_temp_q_opcash_q.plot('yearQ_str', color='#C76280', alpha=1, width=1, kind='bar', ax=ax1, stacked=False)
 
         # formatting
@@ -235,6 +238,13 @@ for i in range(0, df_symbols.index[-1]):
         ### Price
         df_temp_price = df_temp_EV[['date', 'stockPrice']].reset_index(drop=True)
         df_temp_price['stockPrice'] = df_temp_price['stockPrice'].round(2)
+        df_temp_price_to_append = df_price[df_price['symbol'] == df_symbols['symbol'][i]]
+        df_temp_price_to_append['date'] = datetime.datetime.now().date().strftime("%Y-%m-%d")
+        df_temp_price_to_append_two = df_temp_price_to_append[['date','price']]
+        df_temp_price_to_append_two.rename(columns={'price': 'stockPrice'}, inplace=True)
+        df_temp_price = pd.concat([df_temp_price, df_temp_price_to_append_two])
+        df_temp_price.reset_index(drop=True, inplace=True)
+        #print(df_temp_price)
         #df_temp_price.to_csv(os.path.join(cwd, input_folder, charts_folder, test_df_EV_ticker_csv))
         g_Price_q = df_temp_price.plot('date', color='#05445E', kind='area', stacked=False, alpha=1, ax=ax3)
         # formatting
