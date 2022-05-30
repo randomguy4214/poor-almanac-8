@@ -31,7 +31,7 @@ df_q = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_financials_q.csv")
                    , usecols = ['symbol','date', 'grossProfitRatio', 'operatingCashFlow', 'calendarYear'
                                     , 'period', 'shortTermDebt', 'longTermDebt', 'totalStockholdersEquity'
                                 , 'inventory', 'accountsReceivables', 'accountsPayables', 'netIncome'
-                                , 'revenue']
+                                , 'revenue', 'cashAndCashEquivalents']
                    , low_memory=False)
 df_merged = pd.merge(df_5_symbols_marg_of_safety, df_q
                      , how='left', left_on=['symbol']
@@ -244,18 +244,19 @@ for i in range(0, df_symbols.index[-1]):
         df_temp_price_to_append_two.rename(columns={'price': 'stockPrice'}, inplace=True)
         df_temp_price = pd.concat([df_temp_price, df_temp_price_to_append_two])
         df_temp_price.reset_index(drop=True, inplace=True)
+        df_temp_price_max_index = len(df_temp_price) - 1
         #print(df_temp_price)
         #df_temp_price.to_csv(os.path.join(cwd, input_folder, charts_folder, test_df_EV_ticker_csv))
         g_Price_q = df_temp_price.plot('date', color='#05445E', kind='area', stacked=False, alpha=1, ax=ax3)
-        # formatting
         g_Price_q.set_title('Price vs shares outstanding, quarterly', fontsize=8, color='white')
         g_Price_q.get_legend().set_visible(False)
         g_Price_q.set_xticks(g_Price_q.get_xticks())
         g_Price_q.set_xticks(df_temp_price.index, labels = df_temp_price['date'])
         g_Price_q.set_xticklabels(g_Price_q.get_xticklabels(), rotation=90, fontsize=5, color='white')
+
         every_nth = 4
         for n, label in enumerate(g_Price_q.xaxis.get_ticklabels()):
-            if n % every_nth != 0:
+            if n % every_nth != 0 and n != df_temp_price_max_index:
                 label.set_visible(False)
 
         g_Price_q.set_yticks(g_Price_q.get_yticks())
@@ -277,8 +278,8 @@ for i in range(0, df_symbols.index[-1]):
         g_SO_q_ylabels = ['{:,}'.format(y) + ' M' for y in (g_SO_q.get_yticks() / 1000000).astype('int64')]
         g_SO_q.set_yticklabels(g_SO_q_ylabels, size=5, color='#12b8ff')
         g_SO_q.set_ylim(0, max(g_SO_q.get_yticks()))
-        g_SO_q.axes.get_xaxis().set_visible(False)
-        g_SO_q.xaxis.label.set_visible(False)
+        #g_SO_q.axes.get_xaxis().set_visible(False)
+        #g_SO_q.xaxis.label.set_visible(False)
         g_SO_q.spines['left'].set_color('none')
         g_SO_q.tick_params(axis='y', colors = '#BF5757')
         g_SO_q.spines['bottom'].set_color('none')
@@ -291,10 +292,11 @@ for i in range(0, df_symbols.index[-1]):
         # reshape q data to create stacked bar chart
         # https://stackoverflow.com/questions/49046317/pandas-pivot-merge-multiple-columns-into-single-using-column-headers-as-values
         df_temp_q_Eq_D = df_temp_q[['symbol', 'yearQ_str', 'totalStockholdersEquity'
-                                    , 'longTermDebt', 'shortTermDebt']]
+                                    , 'longTermDebt', 'shortTermDebt', 'cashAndCashEquivalents']]
         df_temp_q_Eq_D['totalStockholdersEquity'][df_temp_q_Eq_D['totalStockholdersEquity'] < 0] = 0
         df_temp_q_Eq_D['longTermDebt'][df_temp_q_Eq_D['longTermDebt'] < 0] = 0
         df_temp_q_Eq_D['shortTermDebt'][df_temp_q_Eq_D['shortTermDebt'] < 0] = 0
+        df_temp_q_Eq_D['cashAndCashEquivalents'][df_temp_q_Eq_D['cashAndCashEquivalents'] < 0] = 0
         df_temp_q_Eq_D_stacked = (df_temp_q_Eq_D.set_index(['symbol', 'yearQ_str'])
                                   .stack()
                                   .reorder_levels([2,0,1])
@@ -305,10 +307,10 @@ for i in range(0, df_symbols.index[-1]):
         # https://stackoverflow.com/questions/67320415/stacked-barplot-in-seaborn-using-numeric-data-as-hue
         g_EqD_pivot_temp = pd.pivot_table(df_temp_q_Eq_D_stacked
                                      , index='yearQ_str', columns='type', values='values', aggfunc='sum')
-        g_EqD_pivot = g_EqD_pivot_temp[['totalStockholdersEquity','longTermDebt','shortTermDebt']].copy()
-        #g_EqD_pivot.to_csv(os.path.join(cwd, input_folder, "test.csv"))
+        g_EqD_pivot = g_EqD_pivot_temp[['totalStockholdersEquity','longTermDebt','shortTermDebt', 'cashAndCashEquivalents']]
+        #df_g_EqD_pivot.to_csv(os.path.join(cwd, input_folder, "test_g_EqD_pivot.csv"))
         #sys.exit()
-        g_EqD = g_EqD_pivot.plot(kind='area', alpha=.7, color=['#05445E', '#189AB4', '#304390'], ax=ax4)
+        g_EqD = g_EqD_pivot.plot(kind='area', alpha=.7, color=['#05445E', '#189AB4', '#304390', '#C76280'], ax=ax4)
         # formatting
         g_EqD.set_xticks(g_EqD.get_xticks())
         g_EqD.set_yticks(g_EqD.get_yticks())
