@@ -21,7 +21,6 @@ input_folder = "0_input"
 output_folder = "0_output"
 charts_folder = "5_charts"
 
-
 # import files
 df_import = pd.read_excel(os.path.join(cwd,"5_df_output_unflitered.xlsx"))
 df = df_import[['symbol', 'from_low', 'marg_of_saf_perp', 'marg_of_saf_5y_perp','marketCap_q', 'industry', 'country']]
