@@ -38,6 +38,7 @@ df = df[df['symbol'].notna()]
 #df = df[df['marg_of_saf_perp'] >= 20]
 #df = df[df['marg_of_saf_perp'] <= 1000]
 #df = df[df['from_low'] <= 50]
+df = df[df['from_low'] <= 100]
 #df = df[df['from_low'] >= 0]
 
 # quantiles
