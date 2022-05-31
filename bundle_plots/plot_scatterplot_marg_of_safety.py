@@ -1,5 +1,5 @@
 #!/usr/bin/python
-print('drawing scatterplot')
+print('scatterplot - plotting')
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -36,10 +36,10 @@ df = df[df['symbol'].str.contains('.TW')==False]
 df = df[df['marg_of_saf_perp'].notna()]
 df = df[df['from_low'].notna()]
 df = df[df['symbol'].notna()]
-df = df[df['marg_of_saf_perp'] >= 20]
-df = df[df['marg_of_saf_perp'] <= 1000]
-df = df[df['from_low'] <= 50]
-df = df[df['from_low'] >= 0]
+#df = df[df['marg_of_saf_perp'] >= 20]
+#df = df[df['marg_of_saf_perp'] <= 1000]
+#df = df[df['from_low'] <= 50]
+#df = df[df['from_low'] >= 0]
 
 # quantiles
 df['marg_of_saf_perp_quantile'] = pd.qcut(df['marg_of_saf_perp'], 50, labels=False, duplicates='drop')
@@ -48,10 +48,10 @@ df['marg_of_saf_5y_perp_quantile'] = pd.qcut(df['marg_of_saf_5y_perp'], 50, labe
 df['marg_of_saf_5y_perp_q'] = 50 - df['marg_of_saf_5y_perp_quantile']
 
 # filter on quantile
-df = df[df['marg_of_saf_perp_q'] >= 2] # exclude outliers
+#df = df[df['marg_of_saf_perp_q'] >= 2] # exclude outliers
 
 # sort data
-df = df.sort_values(['industry','marg_of_saf_perp'], ascending=[True, False])
+df = df.sort_values(['country','industry','marg_of_saf_perp'], ascending=[True, True, False])
 
 # export symbols
 df_exp = df[['symbol','marg_of_saf_perp']]

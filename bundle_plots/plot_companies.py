@@ -4,12 +4,8 @@ print('drawing companies')
 #warnings.filterwarnings("ignore")
 import os
 import pandas as pd
-import numpy as np
-import seaborn as sns
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import sys
-from datetime import date
 from matplotlib.gridspec import GridSpec
 import datetime
 
@@ -285,50 +281,53 @@ for i in range(0, df_symbols.index[-1]):
         g_SO_q.spines['bottom'].set_color('none')
         g_SO_q.grid(False)
 
-        ### EQUITY DEBT CHARTS
-        # ticker / marg of safety and date as plot label
-        print(ticker_str,' / ',  i+1, ' out of ',df_symbols.index[-1])
+        try:
+            ### EQUITY DEBT CHARTS
+            # ticker / marg of safety and date as plot label
+            print(ticker_str,' / ',  i+1, ' out of ',df_symbols.index[-1])
 
-        # reshape q data to create stacked bar chart
-        # https://stackoverflow.com/questions/49046317/pandas-pivot-merge-multiple-columns-into-single-using-column-headers-as-values
-        df_temp_q_Eq_D = df_temp_q[['symbol', 'yearQ_str', 'totalStockholdersEquity'
-                                    , 'longTermDebt', 'shortTermDebt', 'cashAndCashEquivalents']]
-        df_temp_q_Eq_D['totalStockholdersEquity'][df_temp_q_Eq_D['totalStockholdersEquity'] < 0] = 0
-        df_temp_q_Eq_D['longTermDebt'][df_temp_q_Eq_D['longTermDebt'] < 0] = 0
-        df_temp_q_Eq_D['shortTermDebt'][df_temp_q_Eq_D['shortTermDebt'] < 0] = 0
-        df_temp_q_Eq_D['cashAndCashEquivalents'][df_temp_q_Eq_D['cashAndCashEquivalents'] < 0] = 0
-        df_temp_q_Eq_D_stacked = (df_temp_q_Eq_D.set_index(['symbol', 'yearQ_str'])
-                                  .stack()
-                                  .reorder_levels([2,0,1])
-                                  .reset_index(name='values')    # after reshaping, name a column AND set index
-                                  .rename(columns={'level_0':'type'})
-                                  .drop_duplicates(keep=False, inplace=False))
-        # plot equity, long term and short term debt in a stacked-bar chart (matplotlib, not seaborn)
-        # https://stackoverflow.com/questions/67320415/stacked-barplot-in-seaborn-using-numeric-data-as-hue
-        g_EqD_pivot_temp = pd.pivot_table(df_temp_q_Eq_D_stacked
-                                     , index='yearQ_str', columns='type', values='values', aggfunc='sum')
-        g_EqD_pivot = g_EqD_pivot_temp[['longTermDebt','shortTermDebt', 'cashAndCashEquivalents','totalStockholdersEquity']]
-        #df_g_EqD_pivot.to_csv(os.path.join(cwd, input_folder, "test_g_EqD_pivot.csv"))
-        #sys.exit()
-        g_EqD = g_EqD_pivot.plot(kind='area', alpha=.7, color=['#05445E', '#189AB4', '#C76280', '#304390'], ax=ax4)
-        # formatting
-        g_EqD.set_xticks(g_EqD.get_xticks())
-        g_EqD.set_yticks(g_EqD.get_yticks())
-        industry = df_temp_a['industry'][0]
-        ticker_industr = ticker_str + ' / ' + industry
-        g_EqD.set_title(ticker_industr, fontsize=8, color='white')
-        ylabels = ['{:,}'.format(y) + ' M' for y in (g_EqD.get_yticks() / 1000000).astype('int64')]
-        g_EqD.set_yticklabels(ylabels, size=5, color='white')
-        g_EqD.set_ylim(0, max(g_EqD.get_yticks()))
-        g_EqD.axes.get_xaxis().set_visible(False)
-        g_EqD.xaxis.label.set_visible(False)
-        g_EqD.yaxis.label.set_visible(False)
-        g_EqD.legend(loc='upper left', frameon=False, ncol=1, fontsize=5, labelcolor='white')
-        g_EqD.spines['left'].set_color('none')
-        g_EqD.spines['bottom'].set_color('none')
-        g_EqD.tick_params(axis='x', colors='white')
-        g_EqD.tick_params(axis='y', colors='white')
-        g_EqD.set_facecolor('black')
+            # reshape q data to create stacked bar chart
+            # https://stackoverflow.com/questions/49046317/pandas-pivot-merge-multiple-columns-into-single-using-column-headers-as-values
+            df_temp_q_Eq_D = df_temp_q[['symbol', 'yearQ_str', 'totalStockholdersEquity'
+                                        , 'longTermDebt', 'shortTermDebt', 'cashAndCashEquivalents']]
+            df_temp_q_Eq_D['totalStockholdersEquity'][df_temp_q_Eq_D['totalStockholdersEquity'] < 0] = 0
+            df_temp_q_Eq_D['longTermDebt'][df_temp_q_Eq_D['longTermDebt'] < 0] = 0
+            df_temp_q_Eq_D['shortTermDebt'][df_temp_q_Eq_D['shortTermDebt'] < 0] = 0
+            df_temp_q_Eq_D['cashAndCashEquivalents'][df_temp_q_Eq_D['cashAndCashEquivalents'] < 0] = 0
+            df_temp_q_Eq_D_stacked = (df_temp_q_Eq_D.set_index(['symbol', 'yearQ_str'])
+                                      .stack()
+                                      .reorder_levels([2,0,1])
+                                      .reset_index(name='values')    # after reshaping, name a column AND set index
+                                      .rename(columns={'level_0':'type'})
+                                      .drop_duplicates(keep=False, inplace=False))
+            # plot equity, long term and short term debt in a stacked-bar chart (matplotlib, not seaborn)
+            # https://stackoverflow.com/questions/67320415/stacked-barplot-in-seaborn-using-numeric-data-as-hue
+            g_EqD_pivot_temp = pd.pivot_table(df_temp_q_Eq_D_stacked
+                                         , index='yearQ_str', columns='type', values='values', aggfunc='sum')
+            g_EqD_pivot = g_EqD_pivot_temp[['longTermDebt','shortTermDebt', 'cashAndCashEquivalents','totalStockholdersEquity']]
+            #df_g_EqD_pivot.to_csv(os.path.join(cwd, input_folder, "test_g_EqD_pivot.csv"))
+            #sys.exit()
+            g_EqD = g_EqD_pivot.plot(kind='area', alpha=.7, color=['#05445E', '#189AB4', '#C76280', '#304390'], ax=ax4)
+            # formatting
+            g_EqD.set_xticks(g_EqD.get_xticks())
+            g_EqD.set_yticks(g_EqD.get_yticks())
+            industry = df_temp_a['industry'][0]
+            ticker_industr = ticker_str + ' / ' + industry
+            g_EqD.set_title(ticker_industr, fontsize=8, color='white')
+            ylabels = ['{:,}'.format(y) + ' M' for y in (g_EqD.get_yticks() / 1000000).astype('int64')]
+            g_EqD.set_yticklabels(ylabels, size=5, color='white')
+            g_EqD.set_ylim(0, max(g_EqD.get_yticks()))
+            g_EqD.axes.get_xaxis().set_visible(False)
+            g_EqD.xaxis.label.set_visible(False)
+            g_EqD.yaxis.label.set_visible(False)
+            g_EqD.legend(loc='upper left', frameon=False, ncol=1, fontsize=5, labelcolor='white')
+            g_EqD.spines['left'].set_color('none')
+            g_EqD.spines['bottom'].set_color('none')
+            g_EqD.tick_params(axis='x', colors='white')
+            g_EqD.tick_params(axis='y', colors='white')
+            g_EqD.set_facecolor('black')
+        except:
+            pass
 
         # CF INVENTORY, AccReceiv, AccPayab  quarterly
         df_temp_q_Inv_q_AR_q_AP_q = df_temp_q[['yearQ_str', 'CF_AccReceiv', 'CF_AccPayab', 'inventory_cf']]
@@ -395,7 +394,6 @@ for i in range(0, df_symbols.index[-1]):
 
     #######################
         # save plots as pdf
-        #sns.despine()                                       # remove some frame lines from seaborn plots
         plt.tick_params(axis='both', which='both', left=False, right=False, bottom=False, top=False, labelbottom=False)
         num_in_list = i+1
         num_in_list_str = str(num_in_list)
