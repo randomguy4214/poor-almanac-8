@@ -3,8 +3,8 @@ print('merging pdfs')
 
 import os
 import pandas as pd
-import PyPDF2
 import sys
+from PyPDF2 import PdfFileMerger, PdfFileReader
 from pathlib import Path
 
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -17,25 +17,20 @@ output_folder = "0_output"
 charts_folder = "5_charts"
 
 # Create a new PdfFileWriter object which represents a blank PDF document
-pdf_write_object = PyPDF2.PdfFileWriter()
+merger = PdfFileMerger()
 
-#https://stackoverflow.com/questions/48732680/merge-multiple-pdfs-using-pypdf2-module-using-for-loop
-# Loop-open pdfs
+# https://stackoverflow.com/questions/17104926/pypdf-merging-multiple-pdf-files-into-one-pdf
+# Loop through pdfs and append them to each other
 paths = Path(os.path.join(cwd,input_folder,charts_folder)).glob('**/*.pdf')
 for path in paths:
-    path_in_str = str(path)
     try:
-        pdf_read_object = PyPDF2.PdfFileReader(open(path, 'rb'))
-        for page in range(pdf_read_object.numPages):
-            pdf_write_object.addPage(pdf_read_object.getPage(page))
-            #print('processing file : ' + 'number of pages : ' + str(pdf_read_object.numPages))
+        path_in_str = str(path)
+        merger.append(PdfFileReader(open(path_in_str, 'rb')))
+        print(path_in_str)
     except:
         pass
 
-#sys.exit()
 
-# Now that you have copied all the pages in both the documents, write them into a new document
+#save to one large pdf
 Charts = '5_Charts.pdf'
-pdfOutputFile = open(os.path.join(cwd,Charts), 'wb')
-pdf_write_object.write(pdfOutputFile)
-pdfOutputFile.close()
+merger.write(os.path.join(cwd,Charts))
