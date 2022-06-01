@@ -40,9 +40,14 @@ from bundle_plots import plot_commodities
 from bundle_plots import plot_BS_FED
 from bundle_plots import plot_BS_FED_b
 from bundle_plots import plot_freight
+from bundle_plots import plot_folder_all_setup
+
 from bundle_plots import plot_scatterplot_marg_of_safety
 from bundle_plots import plot_companies
 from bundle_plots import plots_to_pdf
+
+#from bundle_plots import plot_companies_all
+#from bundle_plots import plots_to_pdf_all
 
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
