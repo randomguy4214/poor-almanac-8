@@ -1,16 +1,14 @@
 #!/usr/bin/python
 print('scatterplot - plotting')
 
-import warnings
-warnings.filterwarnings("ignore")
+#import warnings
+#warnings.filterwarnings("ignore")
 import os
 import pandas as pd
-import numpy as np
 import seaborn as sns
 sns.set_theme(style='darkgrid')
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import sys
 
 pd.options.mode.chained_assignment = None  # default='warn'
 pd.options.mode.use_inf_as_na = True
@@ -33,12 +31,12 @@ df = df[~df['symbol'].isin(df_drop_list['symbol'])]
 df = df[df['symbol'].str.contains('.TW')==False]
 
 df = df[df['marg_of_saf_perp'].notna()]
-df = df[df['from_low'].notna()]
 df = df[df['symbol'].notna()]
-#df = df[df['marg_of_saf_perp'] >= 20]
-#df = df[df['marg_of_saf_perp'] <= 1000]
+df = df[df['from_low'].notna()]
+df = df[df['marg_of_saf_perp'] >= 20]
+df = df[df['marg_of_saf_perp'] <= 1000]
 #df = df[df['from_low'] <= 50]
-df = df[df['from_low'] <= 100]
+df = df[df['from_low'] <= 10]
 #df = df[df['from_low'] >= 0]
 
 # quantiles

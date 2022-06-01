@@ -1,8 +1,6 @@
 #!/usr/bin/python
 print('creating folder for plots')
 
-import warnings
-warnings.filterwarnings("ignore")
 import os
 import shutil
 

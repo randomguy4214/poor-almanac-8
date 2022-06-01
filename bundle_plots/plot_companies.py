@@ -231,55 +231,58 @@ for i in range(0, df_symbols.index[-1]):
         g_Marg_a.tick_params(axis='y', colors = '#BF5757')
         g_Marg_a.grid(False)
 
-        ### Price
-        df_temp_price = df_temp_EV[['date', 'stockPrice']].reset_index(drop=True)
-        df_temp_price['stockPrice'] = df_temp_price['stockPrice'].round(2)
-        df_temp_price_to_append = df_price[df_price['symbol'] == df_symbols['symbol'][i]]
-        df_temp_price_to_append['date'] = datetime.datetime.now().date().strftime("%Y-%m-%d")
-        df_temp_price_to_append_two = df_temp_price_to_append[['date','price']]
-        df_temp_price_to_append_two.rename(columns={'price': 'stockPrice'}, inplace=True)
-        df_temp_price = pd.concat([df_temp_price, df_temp_price_to_append_two])
-        df_temp_price.reset_index(drop=True, inplace=True)
-        df_temp_price_max_index = len(df_temp_price) - 1
-        #print(df_temp_price)
-        #df_temp_price.to_csv(os.path.join(cwd, input_folder, charts_folder, test_df_EV_ticker_csv))
-        g_Price_q = df_temp_price.plot('date', color='#05445E', kind='area', stacked=False, alpha=1, ax=ax3)
-        g_Price_q.set_title('Price vs shares outstanding, quarterly', fontsize=8, color='white')
-        g_Price_q.get_legend().set_visible(False)
-        g_Price_q.set_xticks(g_Price_q.get_xticks())
-        g_Price_q.set_xticks(df_temp_price.index, labels = df_temp_price['date'])
-        g_Price_q.set_xticklabels(g_Price_q.get_xticklabels(), rotation=90, fontsize=5, color='white')
+        try:
+            ### Price
+            df_temp_price = df_temp_EV[['date', 'stockPrice']].reset_index(drop=True)
+            df_temp_price['stockPrice'] = df_temp_price['stockPrice'].round(2)
+            df_temp_price_to_append = df_price[df_price['symbol'] == df_symbols['symbol'][i]]
+            df_temp_price_to_append['date'] = datetime.datetime.now().date().strftime("%Y-%m-%d")
+            df_temp_price_to_append_two = df_temp_price_to_append[['date','price']]
+            df_temp_price_to_append_two.rename(columns={'price': 'stockPrice'}, inplace=True)
+            df_temp_price = pd.concat([df_temp_price, df_temp_price_to_append_two])
+            df_temp_price.reset_index(drop=True, inplace=True)
+            df_temp_price_max_index = len(df_temp_price) - 1
+            #print(df_temp_price)
+            #df_temp_price.to_csv(os.path.join(cwd, input_folder, charts_folder, test_df_EV_ticker_csv))
+            g_Price_q = df_temp_price.plot('date', color='#05445E', kind='area', stacked=False, alpha=1, ax=ax3)
+            g_Price_q.set_title('Price vs shares outstanding, quarterly', fontsize=8, color='white')
+            g_Price_q.get_legend().set_visible(False)
+            g_Price_q.set_xticks(g_Price_q.get_xticks())
+            g_Price_q.set_xticks(df_temp_price.index, labels = df_temp_price['date'])
+            g_Price_q.set_xticklabels(g_Price_q.get_xticklabels(), rotation=90, fontsize=5, color='white')
 
-        every_nth = 4
-        for n, label in enumerate(g_Price_q.xaxis.get_ticklabels()):
-            if n % every_nth != 0 and n != df_temp_price_max_index:
-                label.set_visible(False)
+            every_nth = 4
+            for n, label in enumerate(g_Price_q.xaxis.get_ticklabels()):
+                if n % every_nth != 0 and n != df_temp_price_max_index:
+                    label.set_visible(False)
 
-        g_Price_q.set_yticks(g_Price_q.get_yticks())
-        g_Price_q.yaxis.label.set_visible(False)
-        g_Price_q_ylabels = ['{0:.2f}'.format(y) for y in ((g_Price_q.get_yticks()*100).astype('int64')/100)]
-        g_Price_q.set_yticklabels(g_Price_q_ylabels, size=5, color='gray')
-        g_Price_q.set_ylim(0, max(g_Price_q.get_yticks()))
-        g_Price_q.set_yticklabels(g_Price_q.get_yticks(), size=5, color='white')
-        g_Price_q.set_facecolor('black')
+            g_Price_q.set_yticks(g_Price_q.get_yticks())
+            g_Price_q.yaxis.label.set_visible(False)
+            g_Price_q_ylabels = ['{0:.2f}'.format(y) for y in ((g_Price_q.get_yticks()*100).astype('int64')/100)]
+            g_Price_q.set_yticklabels(g_Price_q_ylabels, size=5, color='gray')
+            g_Price_q.set_ylim(0, max(g_Price_q.get_yticks()))
+            g_Price_q.set_yticklabels(g_Price_q.get_yticks(), size=5, color='white')
+            g_Price_q.set_facecolor('black')
 
-        ### Shares Outstanding
-        df_temp_price = df_temp_EV[['date', 'numberOfShares']].reset_index(drop=True)
-        g_SO_q = df_temp_price.plot('date', color = '#BF5757', kind='line', linewidth=0.5, alpha=0.8 , linestyle='--', ax=ax3_secondy)
-        # formatting
-        g_SO_q.set_xticks(g_SO_q.get_xticks())
-        g_SO_q.set_yticks(g_SO_q.get_yticks())
-        g_SO_q.get_legend().set_visible(False)
-        g_SO_q.yaxis.label.set_visible(False)
-        g_SO_q_ylabels = ['{:,}'.format(y) + ' M' for y in (g_SO_q.get_yticks() / 1000000).astype('int64')]
-        g_SO_q.set_yticklabels(g_SO_q_ylabels, size=5, color='#12b8ff')
-        g_SO_q.set_ylim(0, max(g_SO_q.get_yticks()))
-        #g_SO_q.axes.get_xaxis().set_visible(False)
-        #g_SO_q.xaxis.label.set_visible(False)
-        g_SO_q.spines['left'].set_color('none')
-        g_SO_q.tick_params(axis='y', colors = '#BF5757')
-        g_SO_q.spines['bottom'].set_color('none')
-        g_SO_q.grid(False)
+            ### Shares Outstanding
+            df_temp_price = df_temp_EV[['date', 'numberOfShares']].reset_index(drop=True)
+            g_SO_q = df_temp_price.plot('date', color = '#BF5757', kind='line', linewidth=0.5, alpha=0.8 , linestyle='--', ax=ax3_secondy)
+            # formatting
+            g_SO_q.set_xticks(g_SO_q.get_xticks())
+            g_SO_q.set_yticks(g_SO_q.get_yticks())
+            g_SO_q.get_legend().set_visible(False)
+            g_SO_q.yaxis.label.set_visible(False)
+            g_SO_q_ylabels = ['{:,}'.format(y) + ' M' for y in (g_SO_q.get_yticks() / 1000000).astype('int64')]
+            g_SO_q.set_yticklabels(g_SO_q_ylabels, size=5, color='#12b8ff')
+            g_SO_q.set_ylim(0, max(g_SO_q.get_yticks()))
+            #g_SO_q.axes.get_xaxis().set_visible(False)
+            #g_SO_q.xaxis.label.set_visible(False)
+            g_SO_q.spines['left'].set_color('none')
+            g_SO_q.tick_params(axis='y', colors = '#BF5757')
+            g_SO_q.spines['bottom'].set_color('none')
+            g_SO_q.grid(False)
+        except:
+            pass
 
         try:
             ### EQUITY DEBT CHARTS
@@ -361,37 +364,39 @@ for i in range(0, df_symbols.index[-1]):
         g_Inv_q.tick_params(axis='y', colors='white')
         g_Inv_q.set_facecolor('black')
 
-        # OwnEa annually
-        df_temp_a_OwneEa_a = df_temp_a[['calendarYear', 'OwnEa']].reset_index(drop=True)
-        #print(df_temp_a_OwneEa_a)
-        #df_temp_a_OwneEa_a.to_csv(os.path.join(cwd, input_folder, charts_folder, 'ownea.csv'), index=False)
-        g_OwnEa_a = df_temp_a_OwneEa_a.plot(kind='bar', width=1, stacked=False, alpha=1, color='#05445E', legend=None, ax=ax6)
-        # formatting
-        g_OwnEa_a.set_xticks(df_temp_a_OwneEa_a.index, labels=df_temp_a_OwneEa_a['calendarYear'])
-        g_OwnEa_a.set_xticklabels(g_OwnEa_a.get_xticklabels(), rotation=90, fontsize=5, color='white')
-        g_OwnEa_a.set_yticks(g_OwnEa_a.get_yticks())
-        g_OwnEa_a.set_title('Owners Earnings, annually', fontsize=8, color='white')
-        g_OwnEa_a_ylabels = ['{:,}'.format(y) + ' M' for y in (g_OwnEa_a.get_yticks() / 1000000).astype('int64')]
-        g_OwnEa_a.set_yticklabels(g_OwnEa_a_ylabels, size=5, color='white')
-        g_OwnEa_a.tick_params(axis='x', colors='white')
-        g_OwnEa_a.tick_params(axis='y', colors='white')
-        g_OwnEa_a.yaxis.label.set_visible(False)
-        g_OwnEa_a.xaxis.label.set_visible(False)
-        g_OwnEa_a.spines['left'].set_color('none')
-        g_OwnEa_a.spines['bottom'].set_color('none')
-        g_OwnEa_a.set_facecolor('black')
+        try:
+            # OwnEa annually
+            df_temp_a_OwneEa_a = df_temp_a[['calendarYear', 'OwnEa']].reset_index(drop=True)
+            #print(df_temp_a_OwneEa_a)
+            #df_temp_a_OwneEa_a.to_csv(os.path.join(cwd, input_folder, charts_folder, 'ownea.csv'), index=False)
+            g_OwnEa_a = df_temp_a_OwneEa_a.plot(kind='bar', width=1, stacked=False, alpha=1, color='#05445E', legend=None, ax=ax6)
+            # formatting
+            g_OwnEa_a.set_xticks(df_temp_a_OwneEa_a.index, labels=df_temp_a_OwneEa_a['calendarYear'])
+            g_OwnEa_a.set_xticklabels(g_OwnEa_a.get_xticklabels(), rotation=90, fontsize=5, color='white')
+            g_OwnEa_a.set_yticks(g_OwnEa_a.get_yticks())
+            g_OwnEa_a.set_title('Owners Earnings, annually', fontsize=8, color='white')
+            g_OwnEa_a_ylabels = ['{:,}'.format(y) + ' M' for y in (g_OwnEa_a.get_yticks() / 1000000).astype('int64')]
+            g_OwnEa_a.set_yticklabels(g_OwnEa_a_ylabels, size=5, color='white')
+            g_OwnEa_a.tick_params(axis='x', colors='white')
+            g_OwnEa_a.tick_params(axis='y', colors='white')
+            g_OwnEa_a.yaxis.label.set_visible(False)
+            g_OwnEa_a.xaxis.label.set_visible(False)
+            g_OwnEa_a.spines['left'].set_color('none')
+            g_OwnEa_a.spines['bottom'].set_color('none')
+            g_OwnEa_a.set_facecolor('black')
 
-        ### Description
-        descr_str = df_temp_a['description'][0]
-        plt.figtext(0.8, 0.5 # location on plot in general
-                    , descr_str
-                    , verticalalignment='top'
-                    , horizontalalignment='left'
-                    , fontsize=8
-                    , color='white'
-                    , fontstyle='italic'
-                    , wrap = True)
-
+            ### Description
+            descr_str = df_temp_a['description'][0]
+            plt.figtext(0.8, 0.5 # location on plot in general
+                        , descr_str
+                        , verticalalignment='top'
+                        , horizontalalignment='left'
+                        , fontsize=8
+                        , color='white'
+                        , fontstyle='italic'
+                        , wrap = True)
+        except:
+            pass
     #######################
         # save plots as pdf
         plt.tick_params(axis='both', which='both', left=False, right=False, bottom=False, top=False, labelbottom=False)
