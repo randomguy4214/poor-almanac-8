@@ -403,10 +403,10 @@ for i in range(0, df_symbols.index[-1]):
         num_in_list_str = str(num_in_list)
         underscore = '_'
         symbol_marg_pdf = df_temp_q['symbol'][0] + '.pdf'
-        output_raw = num_in_list_str + underscore + symbol_marg_pdf
+        #output_raw = num_in_list_str + underscore + symbol_marg_pdf
         #print(output_raw)
 
-        plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=30, facecolor='black')
+        plt.savefig(os.path.join(cwd, input_folder, charts_folder, symbol_marg_pdf), dpi=30, facecolor='black')
         plt.tight_layout()
         #plt.show()
         #sys.exit()

@@ -49,7 +49,7 @@ df['marg_of_saf_5y_perp_q'] = 50 - df['marg_of_saf_5y_perp_quantile']
 #df = df[df['marg_of_saf_perp_q'] >= 2] # exclude outliers
 
 # sort data
-df = df.sort_values(['country','industry','marg_of_saf_perp'], ascending=[True, True, False])
+#df = df.sort_values(['country','industry','marg_of_saf_perp'], ascending=[True, True, False])
 
 # export symbols
 df_exp = df[['symbol','marg_of_saf_perp']]
