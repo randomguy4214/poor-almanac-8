@@ -408,38 +408,21 @@ for i in range(0, df_symbols.index[-1]):
             pass
     #######################
         # save plots as pdf
-        plt.tick_params(axis='both', which='both', left=False, right=False, bottom=False, top=False, labelbottom=False)
-        num_in_list = i+1
+        plt.tick_params(axis='both', which='both', left=False, right=False, bottom=False, top=False,
+                        labelbottom=False)
+        num_in_list = i + 1
         num_in_list_str = str(num_in_list)
         underscore = '_'
         symbol_marg_pdf = df_temp_q['symbol'][0] + '.pdf'
-        #output_raw = num_in_list_str + underscore + symbol_marg_pdf
-        #print(output_raw)
+        # output_raw = num_in_list_str + underscore + symbol_marg_pdf
+        # print(output_raw)
 
         plt.savefig(os.path.join(cwd, input_folder, charts_folder, symbol_marg_pdf)
                     , dpi=30
                     , facecolor='black')
         plt.tight_layout()
-        #plt.show()
-        #sys.exit()
-
-        # reset
-        mpl.rc_file_defaults()
-        plt.close('all')
-    #######################
-        # save plots as pdf
-        plt.tick_params(axis='both', which='both', left=False, right=False, bottom=False, top=False, labelbottom=False)
-        num_in_list = i+1
-        num_in_list_str = str(num_in_list)
-        underscore = '_'
-        symbol_marg_pdf = df_temp_q['symbol'][0] + '.pdf'
-        #output_raw = num_in_list_str + underscore + symbol_marg_pdf
-        #print(output_raw)
-
-        plt.savefig(os.path.join(cwd, input_folder, charts_folder, symbol_marg_pdf), dpi=30, facecolor='black')
-        plt.tight_layout()
-        #plt.show()
-        #sys.exit()
+        # plt.show()
+        # sys.exit()
 
         # reset
         mpl.rc_file_defaults()
