@@ -56,7 +56,7 @@ df_exp = df[['symbol','marg_of_saf_perp']]
 df_exp.to_csv(os.path.join(cwd,input_folder,"5_symbols_marg_of_safety.csv"), index = False)
 
 # plot
-sns.set(style='darkgrid', color_codes=True,rc = {'figure.figsize':(14, 8.5)})
+sns.set(style='darkgrid', color_codes=True,rc = {'figure.figsize':(11.69, 8.27)})
 splot_func = sns.scatterplot(data = df, x = df['marg_of_saf_perp'], y = df['from_low']
                 , size = df['marketCap_q']
                 , hue = "industry"
@@ -65,8 +65,8 @@ splot_func = sns.scatterplot(data = df, x = df['marg_of_saf_perp'], y = df['from
                 #, colorfont = 'gray'
                 ) # make scatterplot as variable
 splot_func.set(xscale='log', yscale='log')
-splot_func.set_yticklabels(splot_func.get_yticks().astype('int64'), size=5, color='gray')
-splot_func.set_xticklabels(splot_func.get_xticks().astype('int64'), size=5, color='gray')
+splot_func.set_yticklabels(splot_func.get_yticks().astype('int64'), size=8, color='gray')
+splot_func.set_xticklabels(splot_func.get_xticks().astype('int64'), size=8, color='gray')
 splot_func.set_facecolor('black')
 splot_func.grid(color='gray', linestyle='--', linewidth=0.7)
 
@@ -89,8 +89,9 @@ plt.ylabel('from low', fontsize=8, color='gray')
 
 plt.tight_layout()
 output_raw = '010_scatterplot.pdf'
-plt.savefig(os.path.join(cwd,input_folder,charts_folder,output_raw), dpi=30, facecolor='black')
+plt.savefig(os.path.join(cwd,input_folder,charts_folder,output_raw)
+                    #, dpi=30
+                    , facecolor='#00224B')
 plt.close('all')
-#sns.set(style='white')
 mpl.rc_file_defaults()
 #plt.show()

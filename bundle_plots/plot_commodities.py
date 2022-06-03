@@ -3,13 +3,7 @@ print('commodities plots - initiating')
 
 import os
 import pandas as pd
-import numpy as np
-import seaborn as sns
-import matplotlib as mpl
 import matplotlib.pyplot as plt
-import sys
-from datetime import date
-from matplotlib.gridspec import GridSpec
 
 cwd = os.getcwd()
 input_folder = "0_input"
@@ -57,8 +51,9 @@ for df_name in alldfs:
         #comm_df.to_csv(os.path.join(cwd, input_folder, charts_folder, df_name_csv))
         #print(comm_df)
 
+
         #### start plotting
-        plt.rcParams["figure.figsize"] = (14, 8.5)
+        plt.rcParams["figure.figsize"] = (11.69, 8.27) # pdf dimensions
         g = comm_df.plot(
             alpha=1
             , linewidth=1
@@ -66,7 +61,7 @@ for df_name in alldfs:
         )
         g.set_facecolor('black')
         g.set_xticks(range(0, len(comm_df.index)), comm_df['Date'])
-        g.set_xticklabels(comm_df['Date'], rotation=90, fontsize=5, color='white')
+        g.set_xticklabels(comm_df['Date'], rotation=90, fontsize=6, color='white')
         every_nth = 4
         for n, label in enumerate(g.xaxis.get_ticklabels()):
             if n % every_nth != 0:
@@ -75,7 +70,7 @@ for df_name in alldfs:
 
         g.set_yticks(g.get_yticks())
         g_ylabels = ['{:,}'.format(y) for y in (g.get_yticks()).round(2)]
-        g.set_yticklabels(g_ylabels, size=5, color='white')
+        g.set_yticklabels(g_ylabels, size=10, color='white')
         g.set_ylim(0, max(g.get_yticks()))
         g.legend(loc='upper left', frameon=False, ncol=1, fontsize=10, labelcolor='white')
 
@@ -83,7 +78,8 @@ for df_name in alldfs:
         #plt.tight_layout()
         zeros_commod = '000_commodity_'
         output_raw = zeros_commod + df_name + '.pdf'
-        plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=30, facecolor='black')
+        plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw)
+                    , facecolor='#00224B')
         plt.close('all')
         #plt.show()
         #sys.exit()

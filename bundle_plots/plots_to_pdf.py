@@ -16,7 +16,6 @@ input_folder = "0_input"
 output_folder = "0_output"
 charts_folder = "5_charts"
 
-
 # tickers processed - 5_df_output_unflitered.xlsx, properly sorting them
 five_df_output_unflitered = pd.read_excel(os.path.join(cwd,"5_df_output_unflitered.xlsx"), index_col=None)
 five_df_output_unflitered = five_df_output_unflitered.sort_values(['country','industry','EV'], ascending=[True, True, False])
@@ -38,9 +37,10 @@ for path in paths:
         name_df = name_path_reduced_two.split('\\')
         pdf_name = name_df[1]
         if pdf_name not in df_symbols.values:
-            #print(pdf_name)
-            merger.append(PdfFileReader(open(path_in_str, 'rb')))
-            #print(path_in_str)
+            try:
+                merger.append(PdfFileReader(open(path_in_str, 'rb')))
+            except:
+                pass
     except:
         pass
 

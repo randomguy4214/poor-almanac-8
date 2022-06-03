@@ -134,29 +134,28 @@ for i in range(0, df_symbols.index[-1]):
         # START PLOTTING ###########################################################################
         ### overall template for subplots
         fig, grid = plt.subplots(
-            figsize=(14, 8.5)                       # pdf dimensions
+            figsize=(8.27, 11.69) # pdf dimensions
             , sharey=False, sharex=False            # do not sync axes
             , tight_layout=True
             , subplot_kw=dict(frameon=False         # switch off spines
-                              , visible = False     # fuck you stupid cunt. literally one week wasted for this shit.
+                              , visible=False     # fuck you stupid cunt. literally one week wasted for this shit.
                               )
             );
         # create a grid for plots
         # https://matplotlib.org/3.5.0/gallery/userdemo/demo_gridspec03.html#sphx-glr-gallery-userdemo-demo-gridspec03-py
-        grid = GridSpec(2 # rows
-                        ,4 # columns
-                        , width_ratios=[2, 1, 1, 1]
-                        , height_ratios=[1, 1])
-            # 1st row
+        grid = GridSpec(4 # rows
+                        ,2 # columns
+                        , width_ratios=[1, 1]
+                        , height_ratios=[1, 1, 1, 0.5])
         ax1 = fig.add_subplot(grid[0])  # OpCash q
         ax2 = fig.add_subplot(grid[1])  # OpCash a / Sales a
-        ax2_secondy = ax2.twinx() # second Y axis
+        #ax2_secondy = ax2.twinx() # second Y axis
         ax3 = fig.add_subplot(grid[2])  #
         ax3_secondy = ax3.twinx() #
-        ax4 = fig.add_subplot(grid[3])  # capital structure
-            # 2nd row
-        ax5 = fig.add_subplot(grid[4])  # inventory / AccPay / AccReceiv q
-        ax6 = fig.add_subplot(grid[5])  # Owners Earnings a
+        ax4 = fig.add_subplot(grid[3]) #
+        ax4_secondy = ax4.twinx()
+        ax5 = fig.add_subplot(grid[4])  #
+        ax6 = fig.add_subplot(grid[5])  #
         ax7 = fig.add_subplot(grid[6])  #
         ax7.set_facecolor('black')
         #ax8 is where "text" plot should be, but its fucked up
@@ -176,35 +175,41 @@ for i in range(0, df_symbols.index[-1]):
         g_OpCash_q.legend(loc='upper left', frameon=False, ncol=1, fontsize=5, labelcolor='white')
         g_OpCash_q.tick_params(axis='y', which='major', labelsize=5, color='white')
         g_OpCash_q.yaxis.label.set_visible(False)
-        g_OpCash_q.set_title('Operating CF and Income, quarterly', fontsize=8, color='white')
+        g_OpCash_q.set_title('Sales, NI & Operating CF, quarterly', fontsize=8, color='white')
         ylabels = ['{:,}'.format(y) + ' M' for y in (g_OpCash_q.get_yticks() / 1000000).astype('int64')]
         g_OpCash_q.set_yticklabels(ylabels, size=5, color='white')
         g_OpCash_q.minorticks_off()
         g_OpCash_q.set_xticklabels(g_OpCash_q.get_xticklabels(), rotation=90, fontsize=5, color='white')
-        g_OpCash_q.axes.get_xaxis().set_visible(False)
+        #g_OpCash_q.axes.get_xaxis().set_visible(False)
+        g_OpCash_q.tick_params(axis='x', colors='white')
+        g_OpCash_q.tick_params(axis='y', colors='white')
         g_OpCash_q.spines['left'].set_color('none')
         g_OpCash_q.spines['bottom'].set_color('none')
         g_OpCash_q.tick_params(axis='y', colors='white')
         g_OpCash_q.set_facecolor('black')
+        every_nth = 4 # draw only some of the x labels
+        for n, label in enumerate(g_OpCash_q.xaxis.get_ticklabels()):
+            if n % every_nth != 0 and n != len(g_OpCash_q.xaxis.get_ticklabels()):
+                label.set_visible(False)
 
         ### Annually Cash Op, Net Income, Revenue
         df_temp_q_Rev_a = df_temp_a[['calendarYear_str', 'revenue']]
-        g_Rev_q = df_temp_q_Rev_a.plot('calendarYear_str', color='#05445E', alpha=1, width=1, kind='bar', ax=ax2, stacked=False)
+        g_Rev_q = df_temp_q_Rev_a.plot('calendarYear_str', color='#05445E', alpha=1, width=1, kind='bar', ax=ax3, stacked=False)
         df_temp_a_ni_a = df_temp_a[['calendarYear_str', 'netIncome']]
-        g_NI_a = df_temp_a_ni_a.plot('calendarYear_str', color='#189AB4', alpha=1, width=1, kind='bar', ax=ax2, stacked=False)
+        g_NI_a = df_temp_a_ni_a.plot('calendarYear_str', color='#189AB4', alpha=1, width=1, kind='bar', ax=ax3, stacked=False)
         df_temp_a_opcash_a = df_temp_a[['calendarYear_str', 'operatingCashFlow']]
-        g_OpCash_a = df_temp_a_opcash_a.plot('calendarYear_str', color='#C76280', alpha=1, width = 1, kind='bar', ax=ax2, stacked=False)
+        g_OpCash_a = df_temp_a_opcash_a.plot('calendarYear_str', color='#C76280', alpha=1, width = 1, kind='bar', ax=ax3, stacked=False)
 
         # formatting
         g_OpCash_a.set_xticks(g_OpCash_a.get_xticks())
         g_OpCash_a.set_yticks(g_OpCash_a.get_yticks())
         g_OpCash_a.legend(loc='upper left', frameon=False, ncol=1, fontsize=5, labelcolor='white')
         g_OpCash_a.yaxis.label.set_visible(False)
-        g_OpCash_a.set_title('Sales, Margin & Operating CF, annually', fontsize=8, color='white')
+        g_OpCash_a.set_title('Sales, NI & Operating CF, annually', fontsize=8, color='white')
         g_OpCash_a_ylabels = ['{:,}'.format(y) + ' M' for y in (g_OpCash_a.get_yticks() / 1000000).astype('int64')]
         g_OpCash_a.set_yticklabels(g_OpCash_a_ylabels, size=5, color='gray')
         g_OpCash_a.minorticks_off()
-        g_OpCash_a.axes.get_xaxis().set_visible(False)
+        #g_OpCash_a.axes.get_xaxis().set_visible(False)
         g_OpCash_a.set_xticklabels(g_OpCash_a.get_xticklabels(), rotation=90, fontsize=5, color='gray')
         g_OpCash_a.xaxis.label.set_visible(True)
         g_OpCash_a.spines['left'].set_color('none')
@@ -215,7 +220,7 @@ for i in range(0, df_symbols.index[-1]):
 
         ### Margin annually
         df_temp_a_Marg_a = df_temp_a[['calendarYear_str','grossProfitRatio']]
-        g_Marg_a = df_temp_a_Marg_a.plot('calendarYear_str', color = '#BF5757', kind='line', linewidth=0.8, alpha=0.5, linestyle='--', ax=ax2_secondy)
+        g_Marg_a = df_temp_a_Marg_a.plot('calendarYear_str', color = '#BF5757', kind='line', linewidth=0.8, alpha=0.5, linestyle='--', ax=ax3_secondy)
         # formatting
         g_Marg_a.set_xticks(g_Marg_a.get_xticks())
         g_Marg_a.set_yticks(g_Marg_a.get_yticks())
@@ -243,7 +248,7 @@ for i in range(0, df_symbols.index[-1]):
             df_temp_price_max_index = len(df_temp_price) - 1
             #print(df_temp_price)
             #df_temp_price.to_csv(os.path.join(cwd, input_folder, charts_folder, test_df_EV_ticker_csv))
-            g_Price_q = df_temp_price.plot('date', color='#05445E', kind='area', stacked=False, alpha=1, ax=ax3)
+            g_Price_q = df_temp_price.plot('date', color='#05445E', kind='area', stacked=False, alpha=1, ax=ax4)
             g_Price_q.set_title('Price vs shares outstanding, quarterly', fontsize=8, color='white')
             g_Price_q.get_legend().set_visible(False)
             g_Price_q.set_xticks(g_Price_q.get_xticks())
@@ -262,10 +267,12 @@ for i in range(0, df_symbols.index[-1]):
             g_Price_q.set_ylim(0, max(g_Price_q.get_yticks()))
             g_Price_q.set_yticklabels(g_Price_q.get_yticks(), size=5, color='white')
             g_Price_q.set_facecolor('black')
+            g_Price_q.tick_params(axis='x', colors='white')
+            g_Price_q.tick_params(axis='y', colors='white')
 
             ### Shares Outstanding
             df_temp_price = df_temp_EV[['date', 'numberOfShares']].reset_index(drop=True)
-            g_SO_q = df_temp_price.plot('date', color = '#BF5757', kind='line', linewidth=0.5, alpha=0.8 , linestyle='--', ax=ax3_secondy)
+            g_SO_q = df_temp_price.plot('date', color = '#BF5757', kind='line', linewidth=0.5, alpha=0.8 , linestyle='--', ax=ax4_secondy)
             # formatting
             g_SO_q.set_xticks(g_SO_q.get_xticks())
             g_SO_q.set_yticks(g_SO_q.get_yticks())
@@ -276,6 +283,7 @@ for i in range(0, df_symbols.index[-1]):
             g_SO_q.set_ylim(0, max(g_SO_q.get_yticks()))
             #g_SO_q.axes.get_xaxis().set_visible(False)
             #g_SO_q.xaxis.label.set_visible(False)
+            g_SO_q.minorticks_off()
             g_SO_q.spines['left'].set_color('none')
             g_SO_q.tick_params(axis='y', colors = '#BF5757')
             g_SO_q.spines['bottom'].set_color('none')
@@ -309,7 +317,7 @@ for i in range(0, df_symbols.index[-1]):
             g_EqD_pivot = g_EqD_pivot_temp[['longTermDebt','shortTermDebt', 'cashAndCashEquivalents','totalStockholdersEquity']]
             #df_g_EqD_pivot.to_csv(os.path.join(cwd, input_folder, "test_g_EqD_pivot.csv"))
             #sys.exit()
-            g_EqD = g_EqD_pivot.plot(kind='area', alpha=.7, color=['#05445E', '#189AB4', '#C76280', '#304390'], ax=ax4)
+            g_EqD = g_EqD_pivot.plot(kind='area', alpha=.7, color=['#05445E', '#189AB4', '#C76280', '#304390'], ax=ax2)
             # formatting
             g_EqD.set_xticks(g_EqD.get_xticks())
             g_EqD.set_yticks(g_EqD.get_yticks())
@@ -339,7 +347,7 @@ for i in range(0, df_symbols.index[-1]):
             , alpha=0.5
             , kind='area'
             , stacked=False
-            , ax=ax5
+            , ax=ax6
             )
         # formatting
         g_Inv_q.set_title('Inventory CF, quarterly', fontsize=8, color='white')
@@ -368,7 +376,7 @@ for i in range(0, df_symbols.index[-1]):
             df_temp_a_OwneEa_a = df_temp_a[['calendarYear', 'OwnEa']].reset_index(drop=True)
             #print(df_temp_a_OwneEa_a)
             #df_temp_a_OwneEa_a.to_csv(os.path.join(cwd, input_folder, charts_folder, 'ownea.csv'), index=False)
-            g_OwnEa_a = df_temp_a_OwneEa_a.plot(kind='bar', width=1, stacked=False, alpha=1, color='#05445E', legend=None, ax=ax6)
+            g_OwnEa_a = df_temp_a_OwneEa_a.plot(kind='bar', width=1, stacked=False, alpha=1, color='#05445E', legend=None, ax=ax5)
             # formatting
             g_OwnEa_a.set_xticks(df_temp_a_OwneEa_a.index, labels=df_temp_a_OwneEa_a['calendarYear'])
             g_OwnEa_a.set_xticklabels(g_OwnEa_a.get_xticklabels(), rotation=90, fontsize=5, color='white')
@@ -386,16 +394,38 @@ for i in range(0, df_symbols.index[-1]):
 
             ### Description
             descr_str = df_temp_a['description'][0]
-            plt.figtext(0.8, 0.5 # location on plot in general
+            hor = 0.02
+            ver = 1.5/10
+            plt.figtext(hor, ver # location on plot in general
                         , descr_str
                         , verticalalignment='top'
                         , horizontalalignment='left'
-                        , fontsize=8
+                        , fontsize=12
                         , color='white'
                         , fontstyle='italic'
                         , wrap = True)
         except:
             pass
+    #######################
+        # save plots as pdf
+        plt.tick_params(axis='both', which='both', left=False, right=False, bottom=False, top=False, labelbottom=False)
+        num_in_list = i+1
+        num_in_list_str = str(num_in_list)
+        underscore = '_'
+        symbol_marg_pdf = df_temp_q['symbol'][0] + '.pdf'
+        #output_raw = num_in_list_str + underscore + symbol_marg_pdf
+        #print(output_raw)
+
+        plt.savefig(os.path.join(cwd, input_folder, charts_folder, symbol_marg_pdf)
+                    , dpi=30
+                    , facecolor='black')
+        plt.tight_layout()
+        #plt.show()
+        #sys.exit()
+
+        # reset
+        mpl.rc_file_defaults()
+        plt.close('all')
     #######################
         # save plots as pdf
         plt.tick_params(axis='both', which='both', left=False, right=False, bottom=False, top=False, labelbottom=False)

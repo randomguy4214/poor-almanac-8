@@ -23,7 +23,7 @@ try:
     png = '002_WCI.png'
     path_png = os.path.join(cwd,input_folder,charts_folder,png)
     urllib.request.urlretrieve(api_screenshot_url, path_png)
-    plt.rcParams["figure.figsize"] = (14, 8.5)
+    plt.rcParams["figure.figsize"] = (11.69, 8.27) # pdf dimensions
     img = mpimg.imread(path_png)
     g = plt.imshow(img)
     plt.xticks([])
@@ -33,7 +33,8 @@ try:
     plt.tight_layout()
     pdf = '002_WCI.pdf'
     path_pdf = os.path.join(cwd,input_folder,charts_folder,pdf)
-    plt.savefig(path_pdf, dpi=100, facecolor='black')
+    plt.savefig(path_pdf
+                    , facecolor='#00224B')
     mpl.rc_file_defaults()
     plt.close('all')
 except:
@@ -46,7 +47,7 @@ try:
     png = '003_SCFI.png'
     path_png = os.path.join(cwd,input_folder,charts_folder,png)
     urllib.request.urlretrieve(url, path_png)
-    plt.rcParams["figure.figsize"] = (14, 8.5)
+    plt.rcParams["figure.figsize"] = (11.69, 8.27) # pdf dimensions
     img = mpimg.imread(path_png)
     g = plt.imshow(img)
     plt.xticks([])
@@ -56,7 +57,8 @@ try:
     plt.tight_layout()
     pdf = '002_SCFI.pdf'
     path_pdf = os.path.join(cwd,input_folder,charts_folder,pdf)
-    plt.savefig(path_pdf, dpi=50, facecolor='black')
+    plt.savefig(path_pdf
+                    , facecolor='#00224B')
     mpl.rc_file_defaults()
     plt.close('all')
 except:

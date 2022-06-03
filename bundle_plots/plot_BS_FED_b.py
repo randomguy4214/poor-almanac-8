@@ -60,7 +60,7 @@ color_palette = [
 
 
 #### start plotting
-plt.rcParams["figure.figsize"] = (14, 8.5)
+plt.rcParams["figure.figsize"] = (11.69, 8.27) # pdf dimensions
 g = df_BS_FED_b.plot(
     alpha=1
     , stacked=True
@@ -86,7 +86,8 @@ plt.tight_layout()
 BS_FED = '001_BS_FED_b'
 output_raw = BS_FED + '.pdf'
 
-plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw), dpi=30, facecolor='black')
+plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw)
+                    , facecolor='#00224B')
 #plt.show()
 plt.close('all')
 #sys.exit()

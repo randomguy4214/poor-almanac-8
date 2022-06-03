@@ -38,9 +38,10 @@ for path in paths:
         name_df = name_path_reduced_two.split('\\')
         pdf_name = name_df[1]
         if pdf_name not in df_symbols.values:
-            #print(pdf_name)
-            merger.append(PdfFileReader(open(path_in_str, 'rb')))
-            #print(path_in_str)
+            try:
+                merger.append(PdfFileReader(open(path_in_str, 'rb')))
+            except:
+                pass
     except:
         pass
 
