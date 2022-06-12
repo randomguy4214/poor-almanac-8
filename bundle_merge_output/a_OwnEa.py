@@ -24,7 +24,8 @@ recent_OwnEa_a.rename(columns={'symbol': 'symbol', 'OwnEa_a': 'OwnEa'}, inplace=
 recent_OwnEa_q.rename(columns={'symbol': 'symbol', 'OwnEa_q': 'OwnEa'}, inplace=True)
 
 # append annuals and unprocessed quarters
-recent_OwnEa = recent_OwnEa_a.append(recent_OwnEa_q)
+df_append = [recent_OwnEa_a, recent_OwnEa_q]
+recent_OwnEa = pd.concat(df_append, ignore_index=True, sort=False, axis=0)
 recent_OwnEa_sum = recent_OwnEa.groupby('symbol').sum().reset_index()
 
 # add as a separate column last 8 quarters

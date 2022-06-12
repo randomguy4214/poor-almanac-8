@@ -21,8 +21,16 @@ five_df_output_unflitered = pd.read_excel(os.path.join(cwd,"5_df_output_unfliter
 five_df_output_unflitered = five_df_output_unflitered.sort_values(['country','industry','EV'], ascending=[True, True, False])
 df_symbols = five_df_output_unflitered['symbol'].drop_duplicates().reset_index(drop=False).drop(columns='index')
 
+# only updated tickers
+reduced_symbols = pd.read_csv(os.path.join(cwd,'0_symbols.csv'), low_memory=False, index_col=0)
+
+# merge lists and remove duplicates, ie put updated above
+symbols_all = [reduced_symbols,df_symbols]
+df_symbols_all = pd.concat(symbols_all, ignore_index=True, sort=False, axis=0)
+
 # Create a new PdfFileWriter object which represents a blank PDF document
 merger = PdfFileMerger()
+print('go grab a coffee. we dont show anything here just to annoy you. but it happens. trust me.')
 
 # https://stackoverflow.com/questions/17104926/pypdf-merging-multiple-pdf-files-into-one-pdf
 # Loop through pdfs and append them to each other
@@ -36,7 +44,7 @@ for path in paths:
         name_path_reduced_two = name_path_reduced_one.replace('.pdf', '')
         name_df = name_path_reduced_two.split('\\')
         pdf_name = name_df[1]
-        if pdf_name not in df_symbols.values:
+        if pdf_name not in df_symbols_all.values:
             try:
                 merger.append(PdfFileReader(open(path_in_str, 'rb')))
             except:
@@ -44,8 +52,7 @@ for path in paths:
     except:
         pass
 
-# now loop only through stock pdf and in a very specific order
-for s in df_symbols['symbol']:
+for s in df_symbols_all['symbol']:
     paths = Path(os.path.join(cwd,input_folder,charts_folder)).glob('**/*.pdf')
     #print(s)
     for path in paths:
@@ -56,7 +63,7 @@ for s in df_symbols['symbol']:
         name_df = name_path_reduced_two.split('\\')
         pdf_name = name_df[1]
         if str(pdf_name) == str(s):
-            print(pdf_name)
+            #print(pdf_name)
             merger.append(PdfFileReader(open(path_in_str, 'rb')))
             #print(path_in_str)
 

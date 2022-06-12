@@ -7,7 +7,7 @@ cwd = os.getcwd()
 input_folder = "0_input"
 temp_folder = 'temp'
 
-token_df = pd.read_csv(os.path.join(cwd,"0_api_token.csv"))
+token_df = pd.read_csv(os.path.join(cwd,"0_api_token.csv"), low_memory=False)
 token = token_df.iloc[0,1]
 url1 = "https://financialmodelingprep.com/api/v4/"
 earn_cal = "earning-calendar-confirmed?"
