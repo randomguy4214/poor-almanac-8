@@ -83,7 +83,15 @@ df_a['OwnEa'] = df_a['OwnEa'].round(0)
 df_a['calendarYear_str'] = df_a['calendarYear'].astype(int).astype(str) + ' ' + df_a['period'].astype(str)
 
 # create symbols from margin of safety file, should be pre-sorted in specific way
-df_symbols = df_5_symbols_marg_of_safety['symbol'].drop_duplicates().reset_index(drop=False).drop(columns='index')
+df_symbols_temp = df_5_symbols_marg_of_safety['symbol'].drop_duplicates().reset_index(drop=False).drop(columns='index')
+
+# merge them with recently updated symbols and filter out
+tickers_narrowed = pd.read_csv(os.path.join(cwd,"0_symbols.csv"))
+df_merged = pd.merge(tickers_narrowed, df_symbols_temp, how='left', left_on=['symbol'], right_on=['symbol'],
+                     suffixes=('', '_drop'))
+df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
+df_symbols = df_merged
+
 #df_symbols = df_symbols #.head(5)
 #df_symbols = df_symbols.iloc[2: , :]
 # loop through each ticker, create charts, and save pdfs

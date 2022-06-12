@@ -62,5 +62,5 @@ for s in df_symbols['symbol']:
 
 
 #save to one large pdf
-Charts = '5_Charts.pdf'
+Charts = '5_Charts_recent.pdf'
 merger.write(os.path.join(cwd,Charts))

@@ -16,13 +16,15 @@ output_folder = "0_output"
 temp_folder = "temp"
 
 # import
-financials_a = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_financials_a.csv"), low_memory=False)
+financials_a = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_financials_a.csv")
+                           , parse_dates =["date"]
+                           , low_memory=False)
 #financials_a = financials_a[(financials_a['symbol'].str.contains('AAPL|MSFT'))]
 
 # find recent q and a, merge and fix missing values in q from a, then calculate EV, and yearly price diffs5
 recent_a = financials_a.sort_values(['symbol','date'], ascending=[False, True])
 main_fin = recent_a[['symbol', 'date', 'revenue', 'propertyPlantEquipmentNet', 'netCashProvidedByOperatingActivites']]
-PPE_Sales = main_fin.rolling(5, on='symbol',min_periods=0).sum(numeric_only=True)
+PPE_Sales = main_fin[['symbol', 'revenue', 'propertyPlantEquipmentNet', 'netCashProvidedByOperatingActivites']].rolling(5, on='symbol', min_periods=0).sum(numeric_only=True)
 PPE_Sales.rename(columns={'revenue': 'revenue_5', 'propertyPlantEquipmentNet': 'PPE_5'}, inplace=True)
 PPE_Sales.drop(['symbol','netCashProvidedByOperatingActivites'], axis=1, inplace=True)
 df_roll5 = pd.concat([main_fin,PPE_Sales],axis=1)
