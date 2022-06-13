@@ -47,8 +47,8 @@ financials_table_old = pd.read_csv(os.path.join(cwd,input_folder,'3_processed_fi
 df_append = [financials_table, financials_table_old]
 df_financials_all = pd.concat(df_append, ignore_index=True, sort=False, axis=0)
 df_financials_all = df_financials_all\
-    .sort_values(['symbol','date'], ascending=[True, False])\
-    .drop_duplicates(['symbol','date'])
+    .sort_values(['symbol','fillingDate'], ascending=[True, False])\
+    .drop_duplicates(['symbol','fillingDate'])
 df_financials_all.reset_index(drop=True, inplace=True)
 
 

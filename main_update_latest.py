@@ -11,15 +11,15 @@ bundle_charts = "bundle_plots"
 
 from bundle_other import put_reduced_symbols
 
-from bundle_update import update_financials_q
 from bundle_update import update_financials_a
+from bundle_update import update_financials_q
 from bundle_update import update_other
 from bundle_update import update_EV
 from bundle_update import update_commodities
 from bundle_update import update_FED_balance_sheet
 
-from bundle_process_incremental import process_financials_q_incr
 from bundle_process_incremental import process_financials_a_incr
+from bundle_process_incremental import process_financials_q_incr
 from bundle_process_incremental import process_other_incr
 from bundle_process_incremental import process_EV_incr
 
@@ -44,11 +44,11 @@ from bundle_plots import plot_scatterplot_marg_of_safety
 from bundle_plots import plot_companies_incr
 from bundle_plots import plots_to_pdf
 
+from bundle_update import update_new_plots_to_all_plots_folder
+from bundle_plots import plots_to_pdf_all_but_only_adding_incremental
+
 from bundle_other import put_original_symbols
 from bundle_other import put_latest_updated_date
-
-from bundle_update import update_new_plots_to_all_plots_folder
-from bundle_plots import plots_to_pdf_all_incremental_only
 
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))

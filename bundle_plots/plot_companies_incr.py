@@ -7,7 +7,8 @@ import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
-import datetime
+from datetime import datetime
+import sys
 
 pd.options.mode.chained_assignment = None  # default='warn'
 pd.options.mode.use_inf_as_na = True
@@ -29,12 +30,14 @@ df_q = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_financials_q.csv")
                                 , 'inventory', 'accountsReceivables', 'accountsPayables', 'netIncome'
                                 , 'revenue', 'cashAndCashEquivalents']
                    , low_memory=False)
-df_merged = pd.merge(df_5_symbols_marg_of_safety, df_q
+df_merged = pd.merge(df_q, df_5_symbols_marg_of_safety
                      , how='left', left_on=['symbol']
                      , right_on=['symbol'], suffixes=('', '_drop'))
 df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
 #df_q = df_merged #.head(150)
 df_q = df_merged.groupby('symbol').head(80).reset_index(drop=True) # selecting only 20 years per symbol
+#df_q.to_csv(os.path.join(cwd, input_folder, charts_folder, 'test_df_q_original.csv'), index=False)
+#sys.exit()
 ########## annual
 df_a = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_financials_a.csv")
                    , usecols = ['symbol','date', 'grossProfitRatio', 'operatingCashFlow', 'calendarYear'
@@ -42,6 +45,7 @@ df_a = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_financials_a.csv")
                                 , 'inventory', 'revenue', 'netIncome']
                    , low_memory=False)
 df_a = df_a.groupby('symbol').head(20).reset_index(drop=True) # selecting only 20 years per symbol
+#df_a.to_csv(os.path.join(cwd, input_folder, charts_folder, 'test_df_a_original.csv'), index=False)
 ########## other
 df_other = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_other.csv")
                    , usecols = ['symbol','description', 'country', 'industry'], low_memory=False)
@@ -62,16 +66,19 @@ df_price = pd.read_csv(os.path.join(cwd,input_folder,'2_processed_prices.csv')
 df_q = df_q[df_q['operatingCashFlow'].notna()]
 df_q = df_q[df_q['date'].notna()]
 df_q = df_q[df_q['calendarYear'].notna()]
-df_q['calendarYear'] = df_q['calendarYear'].astype(int)
-df_q['marg_of_saf_perp'] = df_q['marg_of_saf_perp'].astype(int)
+df_q['calendarYear'] = df_q['calendarYear'].astype('Int64')
+df_q['marg_of_saf_perp'] = df_q['marg_of_saf_perp'].astype('Int64')
 df_q['yearQ_str'] = df_q['calendarYear'].astype(str) + ' ' + df_q['period'].astype(str)
 df_q['symbol_marg_of_saf'] = df_q['symbol'].astype(str) + ' / ' + df_q['marg_of_saf_perp'].astype(str) + ' %'
 df_q = df_q.sort_values(['symbol','date'], ascending=[True, True])
+#df_q.to_csv(os.path.join(cwd, input_folder, charts_folder, 'test_df_q_original_full.csv'), index=False)
+#sys.exit()
     # ANNUAL DATAFRAME with Other and OwnEa
 df_merged = pd.merge(df_a, df_other
                      , how='left', left_on=['symbol']
                      , right_on=['symbol'], suffixes=('', '_drop'))
 df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
+#df_merged.to_csv(os.path.join(cwd, input_folder, charts_folder, 'test_df_a_other.csv'), index=False)
 df_to_merge = df_merged
 df_merged = pd.merge(df_to_merge, df_own_ea
                      , how='left', left_on=['symbol']
@@ -81,30 +88,37 @@ df_a = df_merged.fillna(0)
 df_a['OwnEa'] = df_a['operatingCashFlow'] + (((-1 * df_a['revenue'])) * (df_a['maint_capex_ratio']/100))
 df_a['OwnEa'] = df_a['OwnEa'].round(0)
 df_a['calendarYear_str'] = df_a['calendarYear'].astype(int).astype(str) + ' ' + df_a['period'].astype(str)
-
+#df_a.to_csv(os.path.join(cwd, input_folder, charts_folder, 'test_df_a_ownea_other.csv'), index=False)
+#sys.exit()
 # create symbols from margin of safety file, should be pre-sorted in specific way
 df_symbols_temp = df_5_symbols_marg_of_safety['symbol'].drop_duplicates().reset_index(drop=False).drop(columns='index')
 
 # merge them with recently updated symbols and filter out
 tickers_narrowed = pd.read_csv(os.path.join(cwd,"0_symbols.csv"))
-df_merged = pd.merge(tickers_narrowed, df_symbols_temp, how='left', left_on=['symbol'], right_on=['symbol'],
-                     suffixes=('', '_drop'))
-df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
-df_symbols = df_merged
-
+#df_merged = pd.merge(tickers_narrowed, df_symbols_temp, how='left', left_on=['symbol'], right_on=['symbol'],
+                     #suffixes=('', '_drop'))
+#df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
+#df_symbols = df_merged.reset_index(drop=True)
+df_symbols = tickers_narrowed
+#df_symbols.to_csv(os.path.join(cwd, input_folder, charts_folder, 'test_df_symbols.csv'))
+#print(df_symbols)
 #df_symbols = df_symbols #.head(5)
 #df_symbols = df_symbols.iloc[2: , :]
 # loop through each ticker, create charts, and save pdfs
 index_max = pd.to_numeric(df_symbols.index.values.max())
-for i in range(0, df_symbols.index[-1]):
+for i in range(0, df_symbols.index[-1]+1):
     try:
+        # prepare ticker
         ticker_str = df_symbols['symbol'][i]
         undersc = '_'
+        test_df_narrow_ticker_csv = 'test_df_narrow' + undersc + ticker_str + '.csv'
         test_df_q_ticker_csv = 'test_df_q' + undersc + ticker_str + '.csv'
         test_df_a_ticker_csv = 'test_df_a' + undersc + ticker_str + '.csv'
         test_df_EV_ticker_csv = 'test_df_EV' + undersc + ticker_str + '.csv'
         df_narrow = pd.DataFrame(df_symbols.iloc[i]).T              #whythefuck selecting a row is series and not DF???
         df_narrow.reset_index(inplace=True, drop=True)
+        #df_narrow.to_csv(os.path.join(cwd, input_folder, charts_folder, test_df_narrow_ticker_csv), index=False)
+
         # prepare quarterly statements
         df_merged = pd.merge(df_narrow, df_q
                              , how='left', left_on=['symbol']
@@ -129,6 +143,7 @@ for i in range(0, df_symbols.index[-1]):
         df_temp_a = df_temp_a.sort_values(['symbol', 'calendarYear'], ascending=[False, True])
         df_temp_a['industry'] = df_temp_a['industry'].astype('str')
         #df_temp_a.to_csv(os.path.join(cwd, input_folder, charts_folder, test_df_a_ticker_csv), index=False)
+        #sys.exit()
 
         # prepare ticker price and shares outstanding
         df_merged = pd.merge(df_narrow, df_EV
@@ -138,7 +153,7 @@ for i in range(0, df_symbols.index[-1]):
         df_temp_EV = df_merged.fillna(0)
         df_temp_EV = df_temp_EV.sort_values(['symbol', 'date'], ascending=[False, True])
         #df_temp_EV.to_csv(os.path.join(cwd, input_folder, charts_folder, test_df_EV_ticker_csv), index=False)
-
+        #sys.exit()
         ############################################################################################
         # START PLOTTING ###########################################################################
         ### overall template for subplots
@@ -246,10 +261,10 @@ for i in range(0, df_symbols.index[-1]):
 
         try:
             ### Price
-            df_temp_price = df_temp_EV[['date', 'stockPrice']].reset_index(drop=True)
+            df_temp_price = df_temp_EV[['date', 'stockPrice']].tail(100).reset_index(drop=True)
             df_temp_price['stockPrice'] = df_temp_price['stockPrice'].round(2)
             df_temp_price_to_append = df_price[df_price['symbol'] == df_symbols['symbol'][i]]
-            df_temp_price_to_append['date'] = datetime.datetime.now().date().strftime("%Y-%m-%d")
+            df_temp_price_to_append['date'] = datetime.now().date().strftime("%Y-%m-%d")
             df_temp_price_to_append_two = df_temp_price_to_append[['date','price']]
             df_temp_price_to_append_two.rename(columns={'price': 'stockPrice'}, inplace=True)
             df_temp_price = pd.concat([df_temp_price, df_temp_price_to_append_two])
@@ -261,13 +276,14 @@ for i in range(0, df_symbols.index[-1]):
             g_Price_q.set_title('Price vs shares outstanding, quarterly', fontsize=8, color='white')
             g_Price_q.get_legend().set_visible(False)
             g_Price_q.set_xticks(g_Price_q.get_xticks())
+            print(g_Price_q.get_xticks())
             g_Price_q.set_xticks(df_temp_price.index, labels = df_temp_price['date'])
             g_Price_q.set_xticklabels(g_Price_q.get_xticklabels(), rotation=90, fontsize=5, color='white')
+            g_OpCash_q.set_facecolor('black')
 
-            every_nth = 4
+            every_nth = 10
             for n, label in enumerate(g_Price_q.xaxis.get_ticklabels()):
-                if n % every_nth != 0 and n != df_temp_price_max_index:
-                    label.set_visible(False)
+                label.set_visible(True)
 
             g_Price_q.set_yticks(g_Price_q.get_yticks())
             g_Price_q.yaxis.label.set_visible(False)
@@ -278,10 +294,13 @@ for i in range(0, df_symbols.index[-1]):
             g_Price_q.set_facecolor('black')
             g_Price_q.tick_params(axis='x', colors='white')
             g_Price_q.tick_params(axis='y', colors='white')
+        except:
+            print('g_Price fail')
 
+        try:
             ### Shares Outstanding
-            df_temp_price = df_temp_EV[['date', 'numberOfShares']].reset_index(drop=True)
-            g_SO_q = df_temp_price.plot('date', color = '#BF5757', kind='line', linewidth=0.5, alpha=0.8 , linestyle='--', ax=ax4_secondy)
+            df_temp_SO = df_temp_EV[['date', 'numberOfShares']].tail(100).reset_index(drop=True)
+            g_SO_q = df_temp_SO.plot('date', color = '#BF5757', kind='line', linewidth=0.5, alpha=0.8 , linestyle='--', ax=ax4_secondy)
             # formatting
             g_SO_q.set_xticks(g_SO_q.get_xticks())
             g_SO_q.set_yticks(g_SO_q.get_yticks())
@@ -297,13 +316,14 @@ for i in range(0, df_symbols.index[-1]):
             g_SO_q.tick_params(axis='y', colors = '#BF5757')
             g_SO_q.spines['bottom'].set_color('none')
             g_SO_q.grid(False)
+            g_SO_q.set_facecolor('black')
         except:
-            pass
+            print('g_SO fail')
 
         try:
             ### EQUITY DEBT CHARTS
             # ticker / marg of safety and date as plot label
-            print(ticker_str,' / ',  i+1, ' out of ',df_symbols.index[-1])
+            print(ticker_str,' / ',  i+1, ' out of ',df_symbols.index[-1] + 1)
 
             # reshape q data to create stacked bar chart
             # https://stackoverflow.com/questions/49046317/pandas-pivot-merge-multiple-columns-into-single-using-column-headers-as-values
@@ -331,8 +351,10 @@ for i in range(0, df_symbols.index[-1]):
             g_EqD.set_xticks(g_EqD.get_xticks())
             g_EqD.set_yticks(g_EqD.get_yticks())
             industry = df_temp_a['industry'][0]
-            ticker_industr = ticker_str + ' / ' + industry
-            g_EqD.set_title(ticker_industr, fontsize=8, color='white')
+            country = df_temp_a['country'][0]
+            today_date = datetime.today().strftime('%Y-%m-%d')
+            ticker_industr = ticker_str + ' / ' + industry + ' / ' + country + ' / ' + today_date
+            g_EqD.set_title(ticker_industr, fontsize=12, color='white')
             ylabels = ['{:,}'.format(y) + ' M' for y in (g_EqD.get_yticks() / 1000000).astype('int64')]
             g_EqD.set_yticklabels(ylabels, size=5, color='white')
             g_EqD.set_ylim(0, max(g_EqD.get_yticks()))
@@ -403,10 +425,11 @@ for i in range(0, df_symbols.index[-1]):
 
             ### Description
             descr_str = df_temp_a['description'][0]
+            today_and_desc = descr_str
             hor = 0.02
             ver = 1.5/10
             plt.figtext(hor, ver # location on plot in general
-                        , descr_str
+                        , today_and_desc
                         , verticalalignment='top'
                         , horizontalalignment='left'
                         , fontsize=12

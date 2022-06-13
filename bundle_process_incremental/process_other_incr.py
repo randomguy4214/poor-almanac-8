@@ -49,7 +49,7 @@ table_old = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_other.csv"),l
 # concat, clean up, save
 df_append = [table, table_old]
 df_all = pd.concat(df_append, ignore_index=True, sort=False, axis=0)
-df_all.drop_duplicates(inplace=True)
+df_all.drop_duplicates(subset=['symbol'], inplace=True)
 
 df_all.to_csv(os.path.join(cwd,input_folder,"3_processed_other.csv"), index=False)
 print('process_other_incr - done')

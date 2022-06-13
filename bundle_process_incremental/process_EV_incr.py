@@ -49,7 +49,7 @@ table_old = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_EV_q.csv"),lo
 # concat, clean up, save
 df_append = [table, table_old]
 df_all = pd.concat(df_append, ignore_index=True, sort=False, axis=0)
-df_all.drop_duplicates(inplace=True)
+df_all.drop_duplicates(subset=['symbol','date'], inplace=True)
 
 df_all.to_csv(os.path.join(cwd,input_folder,"3_processed_EV_q.csv"), index=False)
 print('process_EV_incr - done')
