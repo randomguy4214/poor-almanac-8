@@ -4,7 +4,7 @@ print('merging pdfs for all companies')
 import os
 import pandas as pd
 import sys
-from PyPDF2 import PdfFileMerger, PdfFileReader
+from PyPDF2 import PdfFileMerger, PdfFileReader, PdfFileWriter
 from pathlib import Path
 
 pd.options.mode.chained_assignment = None  # default='warn'

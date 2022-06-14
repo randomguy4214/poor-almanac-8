@@ -42,10 +42,10 @@ from bundle_plots import plot_freight
 
 from bundle_plots import plot_scatterplot_marg_of_safety
 from bundle_plots import plot_companies_incr
-from bundle_plots import plots_to_pdf
+#from bundle_plots import pdfs_recent_to_one
 
 from bundle_update import update_new_plots_to_all_plots_folder
-from bundle_plots import plots_to_pdf_all_but_only_adding_incremental
+#from bundle_plots import pdfs_all_but_only_adding_incremental_to_one
 
 from bundle_other import put_original_symbols
 from bundle_update import put_latest_updated_date
