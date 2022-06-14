@@ -36,8 +36,8 @@ from bundle_plots import plot_freight
 from bundle_plots import plot_BS_FED
 from bundle_plots import plot_BS_FED_b
 from bundle_plots import plot_companies_incr
-#from bundle_plots import pdfs_recent_to_one
+from bundle_plots import pdfs_recent_to_one
 
 from bundle_process_first_time import process_plot_folder_all_setup
 from bundle_plots import plot_companies_all
-#from bundle_plots import pdfs_all_to_one
+from bundle_plots import pdfs_all_to_one
