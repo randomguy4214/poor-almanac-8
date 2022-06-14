@@ -48,7 +48,7 @@ from bundle_update import update_new_plots_to_all_plots_folder
 from bundle_plots import plots_to_pdf_all_but_only_adding_incremental
 
 from bundle_other import put_original_symbols
-from bundle_other import put_latest_updated_date
+from bundle_update import put_latest_updated_date
 
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))

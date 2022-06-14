@@ -276,7 +276,7 @@ for i in range(0, df_symbols.index[-1]+1):
             g_Price_q.set_title('Price vs shares outstanding, quarterly', fontsize=8, color='white')
             g_Price_q.get_legend().set_visible(False)
             g_Price_q.set_xticks(g_Price_q.get_xticks())
-            print(g_Price_q.get_xticks())
+            #print(g_Price_q.get_xticks())
             g_Price_q.set_xticks(df_temp_price.index, labels = df_temp_price['date'])
             g_Price_q.set_xticklabels(g_Price_q.get_xticklabels(), rotation=90, fontsize=5, color='white')
             g_OpCash_q.set_facecolor('black')
@@ -295,7 +295,7 @@ for i in range(0, df_symbols.index[-1]+1):
             g_Price_q.tick_params(axis='x', colors='white')
             g_Price_q.tick_params(axis='y', colors='white')
         except:
-            print('g_Price fail')
+            print('g_Price fail / ' + ticker_str)
 
         try:
             ### Shares Outstanding

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-print('merging pdfs for filtered companies')
+print('merging pdfs for recently updated companies')
 
 import os
 import pandas as pd
@@ -56,7 +56,7 @@ for s in df_symbols['symbol']:
         name_df = name_path_reduced_two.split('\\')
         pdf_name = name_df[1]
         if str(pdf_name) == str(s):
-            print(pdf_name)
+            #print(pdf_name)
             merger.append(PdfFileReader(open(path_in_str, 'rb')))
             #print(path_in_str)
 
