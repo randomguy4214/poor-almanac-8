@@ -1,5 +1,5 @@
 #!/usr/bin/python
-print('drawing companies')
+print('reducing pdf size for recently updated tickers')
 #import warnings
 #warnings.filterwarnings("ignore")
 import os
