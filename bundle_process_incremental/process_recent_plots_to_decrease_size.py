@@ -1,18 +1,13 @@
 #!/usr/bin/python
 print('reducing pdf size for recently updated tickers')
-#import warnings
-#warnings.filterwarnings("ignore")
+
 import os
 import pandas as pd
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-from matplotlib.gridspec import GridSpec
-from datetime import datetime
-import sys
-from PyPDF2 import PdfFileMerger, PdfFileReader
 from pathlib import Path
 import pdfminify
+import sys
 import subprocess
+
 
 pd.options.mode.chained_assignment = None  # default='warn'
 pd.options.mode.use_inf_as_na = True
@@ -32,10 +27,11 @@ for path in paths:
     name_path_reduced_two = name_path_reduced_one.replace('.pdf', '')
     name_df = name_path_reduced_two.split('\\')
     pdf_name = name_df[1]
+    #print(path_in_str)
+    #p = subprocess.run('pdfminify path_in_str path_in_str', shell=True)
+    p = subprocess.run('$path', shell=True)
 
-    arg1 = '-sOutputFile=' + './compressed/' + pdf_name + '.pdf'
-    print(arg1)
-    p = subprocess.Popen(['gs', '-sDEVICE=pdfwrite', '-dCompatibilityLevel=1.4', '-dPDFSETTINGS=/screen', '-dNOPAUSE'
-         , '-dBATCH',  '-dQUIET', str(arg1), path], stdout=subprocess.PIPE).wait()
+
+    sys.exit()
 
     #pdfminify(path)
