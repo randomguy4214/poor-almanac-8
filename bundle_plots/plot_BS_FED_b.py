@@ -66,6 +66,7 @@ g = df_BS_FED_b.plot(
     , stacked=True
     , kind='area'
     , color = color_palette
+    , rasterized=True
 )
 g.set_facecolor('black')
 g.set_xticks(range(0, len(df_BS_FED_b.index)), df_BS_FED_b.index.values)
@@ -87,7 +88,8 @@ BS_FED = '001_BS_FED_b'
 output_raw = BS_FED + '.pdf'
 
 plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw)
-                    , facecolor='#00224B')
+                    , facecolor='#00224B'
+            )
 #plt.show()
 plt.close('all')
 #sys.exit()

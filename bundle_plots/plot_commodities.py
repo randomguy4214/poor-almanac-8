@@ -5,6 +5,7 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
 cwd = os.getcwd()
 input_folder = "0_input"
 prices_folder = "data"
@@ -58,6 +59,7 @@ for df_name in alldfs:
             alpha=1
             , linewidth=1
             , kind='line'
+            , rasterized=True
         )
         g.set_facecolor('black')
         g.set_xticks(range(0, len(comm_df.index)), comm_df['Date'])
@@ -79,7 +81,8 @@ for df_name in alldfs:
         zeros_commod = '000_commodity_'
         output_raw = zeros_commod + df_name + '.pdf'
         plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw)
-                    , facecolor='#00224B')
+                    , facecolor='#00224B'
+                    )
         plt.close('all')
         #plt.show()
         #sys.exit()
