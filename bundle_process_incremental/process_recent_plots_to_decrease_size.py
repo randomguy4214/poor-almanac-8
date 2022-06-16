@@ -6,7 +6,7 @@ import pandas as pd
 from pathlib import Path
 import pdfminify
 import sys
-import subprocess
+from subprocess import PIPE, Popen
 
 
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -28,8 +28,10 @@ for path in paths:
     name_df = name_path_reduced_two.split('\\')
     pdf_name = name_df[1]
     #print(path_in_str)
-    #p = subprocess.run('pdfminify path_in_str path_in_str', shell=True)
-    p = subprocess.run('$path', shell=True)
+    pdfminify path_in_str path_in_str
+
+
+
 
 
     sys.exit()
