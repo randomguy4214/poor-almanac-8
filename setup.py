@@ -5,7 +5,8 @@ setup(
     version='',
     install_requires=['pandas', 'openpyxl', 'requests_html'
         , 'numpy', 'seaborn', 'matplotlib', 'PyPDF2', 'shutil'
-        ,'pdfminify'],
+        , 'pyhtml2pdf', 'PDFknife'
+        , 'ghostscript'],
     url='',
     license='',
     author='https://linkedin.com/in/kirsmir/',

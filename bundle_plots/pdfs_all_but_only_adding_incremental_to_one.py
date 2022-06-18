@@ -41,11 +41,13 @@ for path in paths:
         path_in_str = str(path)
         path_to_folder_only = os.path.join(cwd,input_folder,charts_folder)
         name_path_reduced_one = path_in_str.replace(path_to_folder_only, '')
-        name_path_reduced_two = name_path_reduced_one.replace('.pdf', '')
-        name_df = name_path_reduced_two.split('\\')
+        name_path_reduced_two = name_path_reduced_one.replace('_compr', '')
+        name_path_reduced_three = name_path_reduced_two.replace('.pdf', '')
+        name_df = name_path_reduced_three.split('\\')
         pdf_name = name_df[1]
         if pdf_name not in df_symbols_all.values:
             try:
+                #print(pdf_name)
                 merger.append(PdfFileReader(open(path_in_str, 'rb')))
             except:
                 pass
@@ -59,15 +61,18 @@ for s in df_symbols_all['symbol']:
         path_in_str = str(path)
         path_to_folder_only = os.path.join(cwd,input_folder,charts_folder)
         name_path_reduced_one = path_in_str.replace(path_to_folder_only, '')
-        name_path_reduced_two = name_path_reduced_one.replace('.pdf', '')
-        name_df = name_path_reduced_two.split('\\')
+        name_path_reduced_two = name_path_reduced_one.replace('_compr', '')
+        name_path_reduced_three = name_path_reduced_two.replace('.pdf', '')
+        name_df = name_path_reduced_three.split('\\')
         pdf_name = name_df[1]
         if str(pdf_name) == str(s):
             #print(pdf_name)
             merger.append(PdfFileReader(open(path_in_str, 'rb')))
-            #print(path_in_str)
 
 
 #save to one large pdf
+print('saving laaaarge pdf')
+print('you can try ghostscript to compress')
+print('GUI tested to work on windows - workerPdf Ghostscript and 4dots Free')
 Charts = '5_Charts_unfiltered.pdf'
 merger.write(os.path.join(cwd,Charts))
