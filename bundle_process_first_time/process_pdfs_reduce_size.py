@@ -37,11 +37,20 @@ for path in paths:
             , '-dNOPROMPT'
             , '-q'
             , '-sDEVICE=pdfwrite'
-            , '-dPDFSETTINGS=/screen'
-            #, '-dNORANGEPAGESIZE'
-            #, '-dAutoRotatePages=/All'
+            #, '-dPDFSETTINGS=/screen'
+            , '-dDownsampleColorImages=true'
+            , '-dColorImageDownsampleThreshold=1.0'
+            , '-dCompressFonts'
+            , '-dEmbedAllFonts'
+            , '-dColorImageResolution=150'
+            , '-dDEVICEWIDTHPOINTS=595'
+            , '-dDEVICEHEIGHTPOINTS=842'
+            , '-dFIXEDMEDIA'
+            , '-dPDFFitPage'
+            , '-dAutoRotatePages=/None'
             ,'-sOutputFile=' + path_out_str
-            ,path_in_str]
+            ,path_in_str
+        ]
         p = subprocess.run(cmd, cwd=path_to_ghostscript, shell=True)
         # delete old file and rename new
         if os.path.isfile(new_path):
