@@ -27,7 +27,6 @@ for path in paths:
         name_path_reduced_two = name_path_reduced_one.replace('.pdf', '')
         name_df = name_path_reduced_two.split('\\')
         pdf_name = name_df[1]
-        compr = 'compr_'
         new_pdf_name = pdf_name + '_compr.pdf'
         new_path = Path(os.path.join(cwd,input_folder,charts_folder, new_pdf_name))
         path_out_str = str(new_path)
