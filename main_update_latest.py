@@ -39,10 +39,10 @@ from bundle_plots import plot_commodities
 from bundle_plots import plot_BS_FED
 from bundle_plots import plot_BS_FED_b
 from bundle_plots import plot_freight
-
 from bundle_plots import plot_scatterplot_marg_of_safety
+from bundle_process_incremental import process_pdfs_reduce_size_for_non_stock
+
 from bundle_plots import plot_companies_incr
-from bundle_process_incremental import process_pdfs_reduce_size
 from bundle_pdf import pdfs_recent_to_one
 
 from bundle_update import update_new_plots_to_all_plots_folder
