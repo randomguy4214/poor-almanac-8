@@ -25,6 +25,7 @@ amp = "&"
 csv = "?datatype=csv"
 
 earn_url = url1 + earn_cal + earn_from + first_date + amp + earn_to + today_date + amp + apikey + token
+print(earn_url)
 #print(earn_url)
 df_earn = pd.read_json(earn_url)
 symbol_list = df_earn['symbol']

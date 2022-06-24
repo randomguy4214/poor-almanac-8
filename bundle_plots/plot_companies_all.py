@@ -111,7 +111,7 @@ index_max = pd.to_numeric(df_symbols.index.values.max())
 for i in range(0, df_symbols.index[-1]+1):
     try:
         # prepare ticker
-        ticker_str = df_symbols['symbol'][i]
+        ticker_str = str(df_symbols['symbol'][i])
         undersc = '_'
         test_df_narrow_ticker_csv = 'test_df_narrow' + undersc + ticker_str + '.csv'
         test_df_q_ticker_csv = 'test_df_q' + undersc + ticker_str + '.csv'
@@ -122,10 +122,13 @@ for i in range(0, df_symbols.index[-1]+1):
         #df_narrow.to_csv(os.path.join(cwd, input_folder, charts_folder, test_df_narrow_ticker_csv), index=False)
 
         # prepare quarterly statements
-        df_merged = pd.merge(df_narrow, df_q
-                             , how='left', left_on=['symbol']
-                             , right_on=['symbol'], suffixes=('', '_drop'))
-        df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
+        try:
+            df_merged = pd.merge(df_narrow, df_q
+                                 , how='left', left_on=['symbol']
+                                 , right_on=['symbol'], suffixes=('', '_drop'))
+            df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
+        except:
+            df_merged = []
         #df_merged.to_csv(os.path.join(cwd, input_folder, charts_folder, test_df_q_ticker_csv), index=False)
         if len(df_merged) > 2:
             df_temp_q = df_merged.fillna(0)
@@ -197,11 +200,11 @@ for i in range(0, df_symbols.index[-1]+1):
 
             ###  Quarterly Cash Op, Net Income, Revenue
             df_temp_q_Rev_q = df_temp_q[['yearQ_str', 'revenue']]
-            g_Rev_q = df_temp_q_Rev_q.plot('yearQ_str', color='#05445E', alpha=1, width=1, kind='bar', ax=ax1, stacked=False, rasterized=True)
+            g_Rev_q = df_temp_q_Rev_q.plot('yearQ_str', color='#05445E', alpha=1, width=1, kind='bar', ax=ax1, stacked=False, rasterized=False)
             df_temp_q_ni_q = df_temp_q[['yearQ_str', 'netIncome']]
-            g_NI_q = df_temp_q_ni_q.plot('yearQ_str', color='#189AB4', alpha=1, width = 1, kind='bar', ax=ax1, stacked=False, rasterized=True)
+            g_NI_q = df_temp_q_ni_q.plot('yearQ_str', color='#189AB4', alpha=1, width = 1, kind='bar', ax=ax1, stacked=False, rasterized=False)
             df_temp_q_opcash_q = df_temp_q[['yearQ_str', 'operatingCashFlow']]
-            g_OpCash_q = df_temp_q_opcash_q.plot('yearQ_str', color='#C76280', alpha=1, width=1, kind='bar', ax=ax1, stacked=False, rasterized=True)
+            g_OpCash_q = df_temp_q_opcash_q.plot('yearQ_str', color='#C76280', alpha=1, width=1, kind='bar', ax=ax1, stacked=False, rasterized=False)
 
             # formatting
             g_OpCash_q.set_xticks(g_OpCash_q.get_xticks())
@@ -228,11 +231,11 @@ for i in range(0, df_symbols.index[-1]+1):
 
             ### Annually Cash Op, Net Income, Revenue
             df_temp_q_Rev_a = df_temp_a[['calendarYear_str', 'revenue']]
-            g_Rev_q = df_temp_q_Rev_a.plot('calendarYear_str', color='#05445E', alpha=1, width=1, kind='bar', ax=ax3, stacked=False, rasterized=True)
+            g_Rev_q = df_temp_q_Rev_a.plot('calendarYear_str', color='#05445E', alpha=1, width=1, kind='bar', ax=ax3, stacked=False, rasterized=False)
             df_temp_a_ni_a = df_temp_a[['calendarYear_str', 'netIncome']]
-            g_NI_a = df_temp_a_ni_a.plot('calendarYear_str', color='#189AB4', alpha=1, width=1, kind='bar', ax=ax3, stacked=False, rasterized=True)
+            g_NI_a = df_temp_a_ni_a.plot('calendarYear_str', color='#189AB4', alpha=1, width=1, kind='bar', ax=ax3, stacked=False, rasterized=False)
             df_temp_a_opcash_a = df_temp_a[['calendarYear_str', 'operatingCashFlow']]
-            g_OpCash_a = df_temp_a_opcash_a.plot('calendarYear_str', color='#C76280', alpha=1, width = 1, kind='bar', ax=ax3, stacked=False, rasterized=True)
+            g_OpCash_a = df_temp_a_opcash_a.plot('calendarYear_str', color='#C76280', alpha=1, width = 1, kind='bar', ax=ax3, stacked=False, rasterized=False)
 
             # formatting
             g_OpCash_a.set_xticks(g_OpCash_a.get_xticks())
@@ -310,7 +313,7 @@ for i in range(0, df_symbols.index[-1]+1):
                 #print(df_temp_price)
                 #df_temp_price.to_csv(os.path.join(cwd, input_folder, charts_folder, test_df_EV_ticker_csv))
                 g_Price_q = df_temp_price.plot('date', color='#05445E', kind='area', stacked=False, alpha=1
-                                               , ax=ax4, rasterized=True)
+                                               , ax=ax4, rasterized=False)
                 g_Price_q.set_title('Price vs shares outstanding, quarterly', fontsize=8, color='white')
                 g_Price_q.get_legend().set_visible(False)
                 g_Price_q.set_xticks(g_Price_q.get_xticks())
@@ -365,7 +368,7 @@ for i in range(0, df_symbols.index[-1]+1):
                 #df_g_EqD_pivot.to_csv(os.path.join(cwd, input_folder, "test_g_EqD_pivot.csv"))
                 #sys.exit()
                 g_EqD = g_EqD_pivot.plot(kind='area', alpha=.7, color=['#05445E', '#189AB4', '#C76280', '#304390']
-                                         , ax=ax2, rasterized=True)
+                                         , ax=ax2, rasterized=False)
                 # formatting
                 g_EqD.set_xticks(g_EqD.get_xticks())
                 g_EqD.set_yticks(g_EqD.get_yticks())
@@ -390,7 +393,7 @@ for i in range(0, df_symbols.index[-1]+1):
             df_temp_q_Inv_q_AR_q_AP_q = df_temp_q[['yearQ_str', 'CF_AccReceiv', 'CF_AccPayab', 'inventory_cf']]
             g_Inv_q = df_temp_q_Inv_q_AR_q_AP_q.plot('yearQ_str' #x axis variable
                 , color = ['#05445E','#ee2a41','#eeeff1'], alpha=0.5, kind='area'
-                , stacked=False, ax=ax6, rasterized=True)
+                , stacked=False, ax=ax6, rasterized=False)
             # formatting
             g_Inv_q.set_title('Inventory CF, quarterly', fontsize=8, color='white')
             g_Inv_q.legend(loc='upper left', frameon=False, ncol=1, fontsize=5, labelcolor='white')
@@ -419,7 +422,7 @@ for i in range(0, df_symbols.index[-1]+1):
                 #print(df_temp_a_OwneEa_a)
                 #df_temp_a_OwneEa_a.to_csv(os.path.join(cwd, input_folder, charts_folder, 'ownea.csv'), index=False)
                 g_OwnEa_a = df_temp_a_OwneEa_a.plot(kind='bar', width=1, stacked=False
-                                                    , alpha=1, color='#05445E', legend=None, ax=ax5, rasterized=True)
+                                                    , alpha=1, color='#05445E', legend=None, ax=ax5, rasterized=False)
                 # formatting
                 g_OwnEa_a.set_xticks(df_temp_a_OwneEa_a.index, labels=df_temp_a_OwneEa_a['calendarYear'])
                 g_OwnEa_a.set_xticklabels(g_OwnEa_a.get_xticklabels(), rotation=90, fontsize=5, color='white')
@@ -448,7 +451,7 @@ for i in range(0, df_symbols.index[-1]+1):
                             , color='white'
                             , fontstyle='italic'
                             , wrap = True
-                            , rasterized=True
+                            , rasterized=False
                             )
             except:
                 pass
@@ -463,7 +466,7 @@ for i in range(0, df_symbols.index[-1]+1):
             #print(output_raw)
 
             plt.savefig(os.path.join(cwd, input_folder, charts_folder, symbol_marg_pdf)
-                        , dpi=150
+                        #, dpi=10
                         , facecolor='black'
                         )
             plt.tight_layout()
@@ -475,43 +478,45 @@ for i in range(0, df_symbols.index[-1]+1):
             plt.close('all')
 
         #######################
-            # start compressing
-            #path to ghostscript = 'C:\Program Files\gs\gs9.56.1\bin'
-            path_to_ghostscript = Path(os.path.join('C:\\Program Files\\gs\\gs9.56.1\\bin'))
-            ticker_str_pdf = ticker_str + '.pdf'
-            path_in_str = str(Path(os.path.join(cwd, input_folder, charts_folder, ticker_str_pdf)))
-            new_pdf_name = ticker_str + '_compr.pdf'
-            path_out_str = str(Path(os.path.join(cwd, input_folder, charts_folder, new_pdf_name)))
-            cmd = [
-                'gswin64c' #no-window mode
-                , '-dSAFER'
-                , '-dNOPAUSE'
-                , '-dBATCH'
-                , '-dNoCancel'
-                , '-dNOPROMPT'
-                , '-q'
-                , '-sDEVICE=pdfwrite'
-                #, '-dPDFSETTINGS=/screen'
-                , '-dDownsampleColorImages=true'
-                , '-dColorImageDownsampleThreshold=1.0'
-                , '-dCompressFonts'
-                , '-dEmbedAllFonts'
-                , '-dColorImageResolution=150'
-                , '-dDEVICEWIDTHPOINTS=595'
-                , '-dDEVICEHEIGHTPOINTS=842'
-                , '-dFIXEDMEDIA'
-                , '-dPDFFitPage'
-                , '-dAutoRotatePages=/None'
-                ,'-sOutputFile=' + path_out_str
-                ,path_in_str
-            ]
-            p = subprocess.run(cmd, cwd=path_to_ghostscript, shell=True)
-            if os.path.isfile(path_out_str):
-                os.remove(path_in_str)
-                os.rename(path_out_str, path_in_str)
-            else:
+            try:
+                # start compressing
+                #path to ghostscript = 'C:\Program Files\gs\gs9.56.1\bin'
+                path_to_ghostscript = Path(os.path.join('C:\\Program Files\\gs\\gs9.56.1\\bin'))
+                ticker_str_pdf = ticker_str + '.pdf'
+                path_in_str = str(Path(os.path.join(cwd, input_folder, charts_folder, ticker_str_pdf)))
+                new_pdf_name = ticker_str + '_compr.pdf'
+                path_out_str = str(Path(os.path.join(cwd, input_folder, charts_folder, new_pdf_name)))
+                cmd = [
+                    'gswin64c' #no-window mode
+                    , '-dSAFER'
+                    , '-dNOPAUSE'
+                    , '-dBATCH'
+                    , '-dNoCancel'
+                    , '-dNOPROMPT'
+                    , '-q'
+                    , '-sDEVICE=pdfwrite'
+                    #, '-dPDFSETTINGS=/screen'
+                    , '-dDownsampleColorImages=true'
+                    , '-dColorImageDownsampleThreshold=1.0'
+                    , '-dCompressFonts'
+                    , '-dEmbedAllFonts'
+                    , '-dColorImageResolution=150'
+                    , '-dDEVICEWIDTHPOINTS=595'
+                    , '-dDEVICEHEIGHTPOINTS=842'
+                    , '-dFIXEDMEDIA'
+                    , '-dPDFFitPage'
+                    , '-dAutoRotatePages=/None'
+                    ,'-sOutputFile=' + path_out_str
+                    ,path_in_str
+                ]
+                p = subprocess.run(cmd, cwd=path_to_ghostscript, shell=True)
+                if os.path.isfile(path_out_str):
+                    os.remove(path_in_str)
+                    os.rename(path_out_str, path_in_str)
+                else:
+                    pass
+            except:
                 pass
-
         else:
             pass
             #print('smth is wrong with ticker ' + df_temp_q['symbol'][0]+1)

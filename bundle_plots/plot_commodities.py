@@ -81,6 +81,7 @@ for df_name in alldfs:
         zeros_commod = '000_commodity_'
         output_raw = zeros_commod + df_name + '.pdf'
         plt.savefig(os.path.join(cwd, input_folder, charts_folder, output_raw)
+                    #, dpi=10
                     , facecolor='#00224B'
                     )
         plt.close('all')
