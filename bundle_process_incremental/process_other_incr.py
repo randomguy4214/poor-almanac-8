@@ -49,7 +49,13 @@ table_old = pd.read_csv(os.path.join(cwd,input_folder,"3_processed_other.csv"),l
 # concat, clean up, save
 df_append = [table, table_old]
 df_all = pd.concat(df_append, ignore_index=True, sort=False, axis=0)
-df_all.drop_duplicates(subset=['symbol'], inplace=True)
+df_all['industry'] = df_all['industry'].astype(str)
+df_all["companyName"] = df_all["companyName"].astype(str)
+df_all['industry'] = df_all['industry'].str.replace('?',' - ', regex=True)
+ass_mng_list = 'amundi|invesco|venture|xtrackers|dividen|etf|trust|fund|Growth Opportunities|aberdeen|advisorShares|%|secured|proshares|holdings|alliance|equity|minishares|VelocityShares|REIT|warrant|investment|acquisition|wisdomtree|investors|lazard|ubs|acquisition corp|vanguard|Allianz|financial|capital|blackrock|citigroup'
+df_all.loc[(df_all["industry"]=='nan') & (df_all["companyName"].str.contains(ass_mng_list, case=False, na=False)), 'industry'] = 'Asset Management'
 
+df_all.drop_duplicates()
+df_all = df_all.iloc[: , 1:]
 df_all.to_csv(os.path.join(cwd,input_folder,"3_processed_other.csv"), index=False)
 print('process_other_incr - done')
