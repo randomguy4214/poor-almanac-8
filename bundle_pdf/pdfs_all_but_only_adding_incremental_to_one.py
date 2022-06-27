@@ -47,7 +47,7 @@ for path in paths:
         pdf_name = name_df[1]
         if pdf_name not in df_symbols_all.values:
             try:
-                #print(pdf_name)
+                print(pdf_name + ' added')
                 merger.append(PdfFileReader(open(path_in_str, 'rb')))
             except:
                 pass

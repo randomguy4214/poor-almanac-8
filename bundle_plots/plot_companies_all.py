@@ -107,6 +107,7 @@ df_merged_reduced = df_merged[~df_merged['industry'].str.contains(useless_indust
 #sys.exit()
 #df_symbols = df_merged.reset_index(drop=True)
 df_symbols = df_merged_reduced['symbol']
+df_symbols = df_symbols.reset_index(drop=False)
 #df_symbols.to_csv(os.path.join(cwd, input_folder, charts_folder, 'test_df_symbols.csv'))
 #print(df_symbols)
 #df_symbols = df_symbols #.head(5)

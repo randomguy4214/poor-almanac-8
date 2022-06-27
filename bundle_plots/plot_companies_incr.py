@@ -107,6 +107,7 @@ df_merged_reduced = df_merged[~df_merged['industry'].str.contains(useless_indust
 #sys.exit()
 #df_symbols = df_merged.reset_index(drop=True)
 df_symbols = df_merged_reduced['symbol']
+df_symbols = df_symbols.reset_index(drop=False)
 # loop through each ticker, create charts, and save pdfs
 index_max = pd.to_numeric(df_symbols.index.values.max())
 for i in range(0, df_symbols.index[-1]+1):

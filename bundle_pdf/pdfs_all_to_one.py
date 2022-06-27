@@ -39,28 +39,26 @@ for path in paths:
         if pdf_name not in df_symbols.values:
             try:
                 merger.append(PdfFileReader(open(path_in_str, 'rb')))
+                print(path_in_str)
             except:
                 pass
     except:
         pass
 
 # now loop only through stock pdf and in a very specific order
-for s in df_symbols['symbol']:
-    paths = Path(os.path.join(cwd,input_folder,charts_folder)).glob('**/*.pdf')
-    #print(s)
-    for path in paths:
-        path_in_str = str(path)
-        path_to_folder_only = os.path.join(cwd,input_folder,charts_folder)
-        name_path_reduced_one = path_in_str.replace(path_to_folder_only, '')
-        name_path_reduced_two = name_path_reduced_one.replace('.pdf', '')
-        name_df = name_path_reduced_two.split('\\')
-        pdf_name = name_df[1]
-        if str(pdf_name) == str(s):
-            print(pdf_name)
-            merger.append(PdfFileReader(open(path_in_str, 'rb')))
-            #print(path_in_str)
+for i in range(0, df_symbols.index[-1]+1):
+    ticker_str = str(df_symbols['symbol'][i])
+    ticker_str_pdf = ticker_str + '.pdf'
+    path = Path(os.path.join(cwd,input_folder,charts_folder,ticker_str_pdf))
+    path_in_str = str(path)
+
+    if os.path.isfile(path):
+        merger.append(PdfFileReader(open(path_in_str, 'rb')))
+        print(ticker_str + ' pdf added' + '  ' + df_symbols.index[i] + '/' + df_symbols.index[-1])
+        #print(path_in_str)
 
 
 #save to one large pdf
+print('merging...will take a while...')
 Charts = '5_Charts_unfiltered.pdf'
 merger.write(os.path.join(cwd,Charts))
