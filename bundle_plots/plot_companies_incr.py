@@ -101,7 +101,8 @@ df_merged = pd.merge(tickers_narrowed, df_other, how='left', left_on=['symbol'],
                      suffixes=('', '_drop'))
 df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
 #filter useless shit
-df_merged_reduced = df_merged[~df_merged['industry'].str.contains('asset management|shell|biotechnology|banks', case=False, na=False)]
+useless_industries = 'asset management|shell|biotechnology|banks|capital markets|credit|REIT'
+df_merged_reduced = df_merged[~df_merged['industry'].str.contains(useless_industries, case=False, na=False)]
 #df_merged_reduced.to_csv(os.path.join(cwd, 'test_df_merged_reduced.csv'), index=False)
 #sys.exit()
 #df_symbols = df_merged.reset_index(drop=True)
