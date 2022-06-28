@@ -490,35 +490,17 @@ for i in range(0, df_symbols.index[-1]+1):
                 path_to_ghostscript = Path(os.path.join('C:\\Program Files\\gs\\gs9.56.1\\bin'))
                 ticker_str_pdf = ticker_str + '.pdf'
                 path_in_str = str(Path(os.path.join(cwd, input_folder, charts_folder, ticker_str_pdf)))
-                new_pdf_name = ticker_str + '_compr.pdf'
-                path_out_str = str(Path(os.path.join(cwd, input_folder, charts_folder, new_pdf_name)))
+                # path to 4dots software = 'C:\Program Files (x86)\4dots Software\4dots Free PDF Compress\4dotsFreePDFCompress.exe'
+                path_to_compressor = Path(
+                    os.path.join('C:\\Program Files (x86)\\4dots Software\\4dots Free PDF Compress'))
                 cmd = [
-                    'gswin64c' #no-window mode
-                    , '-dSAFER'
-                    , '-dNOPAUSE'
-                    , '-dBATCH'
-                    , '-dNoCancel'
-                    , '-dNOPROMPT'
-                    , '-q'
-                    , '-sDEVICE=pdfwrite'
-                    #, '-dPDFSETTINGS=/screen'
-                    , '-dDownsampleColorImages=true'
-                    , '-dColorImageDownsampleThreshold=1.0'
-                    , '-dCompressFonts'
-                    , '-dEmbedAllFonts'
-                    , '-dColorImageResolution=150'
-                    , '-dDEVICEWIDTHPOINTS=595'
-                    , '-dDEVICEHEIGHTPOINTS=842'
-                    , '-dFIXEDMEDIA'
-                    , '-dPDFFitPage'
-                    , '-dAutoRotatePages=/None'
-                    ,'-sOutputFile=' + path_out_str
-                    ,path_in_str
+                    '4dotsFreePDFCompress.exe'
+                    , path_in_str
+                    , '/quality:15'
+                    , '/overwrite'
                 ]
-                p = subprocess.run(cmd, cwd=path_to_ghostscript, shell=True)
-                if os.path.isfile(path_out_str):
-                    os.remove(path_in_str)
-                    os.rename(path_out_str, path_in_str)
+                if os.path.isfile(path_in_str):
+                    p = subprocess.run(cmd, cwd=path_to_compressor, shell=True)
                 else:
                     pass
             except:

@@ -45,6 +45,7 @@ from bundle_process_incremental import process_pdfs_reduce_size_for_non_stock
 from bundle_plots import plot_companies_incr
 from bundle_update import update_new_plots_to_all_plots_folder
 from bundle_pdf import pdfs_all_to_one
+from bundle_process_first_time import process_pdfs_reduce_size
 
 from bundle_other import put_original_symbols
 from bundle_update import put_latest_updated_date

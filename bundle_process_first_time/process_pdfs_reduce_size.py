@@ -8,56 +8,28 @@ import subprocess
 
 # set directories and files
 cwd = os.getcwd()
-input_folder = "0_input"
-output_folder = "0_output"
-charts_folder = "5_charts_all"
+charts_folder = "5_plots_final"
 
 # first loop through non-stock pdfs
-paths = Path(os.path.join(cwd,input_folder,charts_folder)).glob('**/*.pdf')
+paths = Path(os.path.join(cwd,charts_folder)).glob('**/*.pdf')
 for path in paths:
     try:
         path_in_str = str(path)
-        path_to_folder_only = os.path.join(cwd,input_folder,charts_folder)
+        path_to_folder_only = os.path.join(cwd,charts_folder)
         name_path_reduced_one = path_in_str.replace(path_to_folder_only, '')
         name_path_reduced_two = name_path_reduced_one.replace('.pdf', '')
         name_df = name_path_reduced_two.split('\\')
-        pdf_name = name_df[1]
-        compr = 'compr_'
-        new_pdf_name = pdf_name + '_compr.pdf'
-        new_path = Path(os.path.join(cwd,input_folder,charts_folder, new_pdf_name))
-        path_out_str = str(new_path)
-        #path to ghostscript = 'C:\Program Files\gs\gs9.56.1\bin'
-        path_to_ghostscript = Path(os.path.join('C:\\Program Files\\gs\\gs9.56.1\\bin'))
+        pdf_name = str(name_df[1])
+        pdf_name_pdf = pdf_name + '.pdf'
+        #path to 4dots software = 'C:\Program Files (x86)\4dots Software\4dots Free PDF Compress\4dotsFreePDFCompress.exe'
+        path_to_compressor = Path(os.path.join('C:\\Program Files (x86)\\4dots Software\\4dots Free PDF Compress'))
         cmd = [
-            'gswin64c' #no-window mode
-            , '-dSAFER'
-            , '-dNOPAUSE'
-            , '-dBATCH'
-            , '-dNoCancel'
-            , '-dNOPROMPT'
-            , '-q'
-            , '-sDEVICE=pdfwrite'
-            #, '-dPDFSETTINGS=/screen'
-            , '-dDownsampleColorImages=true'
-            , '-dColorImageDownsampleThreshold=1.0'
-            , '-dCompressFonts'
-            , '-dEmbedAllFonts'
-            , '-dColorImageResolution=150'
-            , '-dDEVICEWIDTHPOINTS=595'
-            , '-dDEVICEHEIGHTPOINTS=842'
-            , '-dFIXEDMEDIA'
-            , '-dPDFFitPage'
-            , '-dAutoRotatePages=/None'
-            ,'-sOutputFile=' + path_out_str
-            ,path_in_str
+            '4dotsFreePDFCompress.exe'
+            , path_in_str
+            ,'/quality:15'
+            ,'/overwrite'
         ]
-        p = subprocess.run(cmd, cwd=path_to_ghostscript, shell=True)
-        # delete old file and rename new
-        if os.path.isfile(new_path):
-            os.remove(path)
-            os.rename(new_path, path)
-        else:
-            print('error on ' + path)
+        p = subprocess.run(cmd, cwd=path_to_compressor, shell=True)
         print(pdf_name + ' compressed')
     except:
         print('error with ticker in path ' + str(path))
