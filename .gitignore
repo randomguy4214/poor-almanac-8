@@ -134,6 +134,7 @@ dmypy.json
 # other
 0_input/
 0_input/*
+5_plots_final/nan.pdf
 test.py
 0_api_token.csv
 z_notes.py

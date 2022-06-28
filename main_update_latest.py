@@ -34,7 +34,7 @@ from bundle_process_first_time import process_prices
 from bundle_merge_output import a_recent_EV_prices_diff
 from bundle_merge_output import output
 
-from bundle_plots import plot_folder_setup
+from bundle_process_incremental import process_plot_folder_setup
 from bundle_plots import plot_commodities
 from bundle_plots import plot_BS_FED
 from bundle_plots import plot_BS_FED_b
@@ -43,10 +43,8 @@ from bundle_plots import plot_scatterplot_marg_of_safety
 from bundle_process_incremental import process_pdfs_reduce_size_for_non_stock
 
 from bundle_plots import plot_companies_incr
-from bundle_pdf import pdfs_recent_to_one
-
 from bundle_update import update_new_plots_to_all_plots_folder
-from bundle_pdf import pdfs_all_but_only_adding_incremental_to_one
+from bundle_pdf import pdfs_all_to_one
 
 from bundle_other import put_original_symbols
 from bundle_update import put_latest_updated_date
