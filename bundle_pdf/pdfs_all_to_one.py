@@ -6,6 +6,7 @@ import pandas as pd
 import sys
 from PyPDF2 import PdfFileMerger, PdfFileReader
 from pathlib import Path
+import subprocess
 
 pd.options.mode.chained_assignment = None  # default='warn'
 pd.options.mode.use_inf_as_na = True
@@ -62,10 +63,22 @@ for path in paths:
         pass
 
 #save to one large pdf
-print('merging non-stock...')
 pdf_batch = '0_non_stock.pdf'
 merger.write(os.path.join(cwd,plots_final_folder,pdf_batch))
 merger.close()
+
+#compress
+path_in_str = str(os.path.join(cwd,plots_final_folder,pdf_batch))
+path_to_compressor = Path(os.path.join('C:\\Program Files (x86)\\4dots Software\\4dots Free PDF Compress'))
+cmd = [
+    '4dotsFreePDFCompress.exe'
+    , path_in_str
+    , '/quality:15'
+    , '/overwrite'
+]
+p = subprocess.run(cmd, cwd=path_to_compressor, shell=True)
+#print(pdf_batch + ' compressed')
+print('non-stock added')
 
 
 # 1 take all asset industries
@@ -90,6 +103,19 @@ for j in range(0, df_industries.index[-1]+1):
         else:
             pass
     #save to one large pdf
-    print(industry_str + ' added')
     merger.write(os.path.join(cwd,plots_final_folder,industry_str_pdf))
     merger.close()
+
+    # compress
+    path_in_str = str(os.path.join(cwd, plots_final_folder, industry_str_pdf))
+    path_to_compressor = Path(os.path.join('C:\\Program Files (x86)\\4dots Software\\4dots Free PDF Compress'))
+    cmd = [
+        '4dotsFreePDFCompress.exe'
+        , path_in_str
+        , '/quality:15'
+        , '/overwrite'
+    ]
+    p = subprocess.run(cmd, cwd=path_to_compressor, shell=True)
+    #print(industry_str_pdf + ' compressed')
+    print(industry_str + ' added')
+
