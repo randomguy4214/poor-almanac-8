@@ -23,7 +23,6 @@ if not os.path.exists(os.path.join(cwd, plots_final_folder)):
     os.mkdir(os.path.join(cwd, plots_final_folder))
 else:
     shutil.rmtree(os.path.join(cwd, plots_final_folder))
-    shutil.rmtree(os.path.join(cwd, plots_final_folder))
     os.mkdir(os.path.join(cwd, plots_final_folder))
 
 
