@@ -23,8 +23,13 @@ df_other.fillna('nan', inplace=True)
 tickers_narrowed = pd.read_csv(os.path.join(cwd,"0_symbols_original.csv"))
 df_merged = pd.merge(tickers_narrowed, df_other, how='left', left_on=['symbol'], right_on=['symbol'],suffixes=('', '_drop'))
 df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
+df_EV = pd.read_csv(os.path.join(cwd,input_folder,'4_recent_EV_prices_diff.csv'), usecols = ['symbol', 'EV'], low_memory=False)
+df_to_merge = df_merged
+df_merged = pd.merge(df_to_merge, df_EV, how='left', left_on=['symbol'], right_on=['symbol'],suffixes=('', '_drop'))
+df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
 useless_industries = 'asset management|shell|biotechnology|banks|capital markets|credit|REIT'
 df_merged_reduced = df_merged[~df_merged['industry'].str.contains(useless_industries, case=False, na=False)]
+df_merged_reduced = df_merged_reduced.sort_values(['industry', 'EV'],ascending = [True, False])
 #df_merged_reduced.to_csv(os.path.join(cwd, 'test_df_merged_reduced.csv'), index=False)
 #df_symbols = df_merged.reset_index(drop=True)
 df_symbols = df_merged_reduced[['symbol','industry']]
