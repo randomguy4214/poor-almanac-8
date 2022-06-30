@@ -72,17 +72,20 @@ pdf_batch = '0_non_stock.pdf'
 merger.write(os.path.join(cwd,plots_final_folder,pdf_batch))
 merger.close()
 
-#compress
-path_in_str = str(os.path.join(cwd,plots_final_folder,pdf_batch))
-path_to_compressor = Path(os.path.join('C:\\Program Files (x86)\\4dots Software\\4dots Free PDF Compress'))
-cmd = [
-    '4dotsFreePDFCompress.exe'
-    , path_in_str
-    , '/quality:15'
-    , '/overwrite'
-]
-p = subprocess.run(cmd, cwd=path_to_compressor, shell=True)
-#print(pdf_batch + ' compressed')
+try:
+    #compress
+    path_in_str = str(os.path.join(cwd,plots_final_folder,pdf_batch))
+    path_to_compressor = Path(os.path.join('C:\\Program Files (x86)\\4dots Software\\4dots Free PDF Compress'))
+    cmd = [
+        '4dotsFreePDFCompress.exe'
+        , path_in_str
+        , '/quality:15'
+        , '/overwrite'
+    ]
+    p = subprocess.run(cmd, cwd=path_to_compressor, shell=True)
+    #print(pdf_batch + ' compressed')
+except:
+    pass
 print('non-stock added')
 
 
@@ -111,16 +114,19 @@ for j in range(0, df_industries.index[-1]+1):
     merger.write(os.path.join(cwd,plots_final_folder,industry_str_pdf))
     merger.close()
 
-    # compress
-    path_in_str = str(os.path.join(cwd, plots_final_folder, industry_str_pdf))
-    path_to_compressor = Path(os.path.join('C:\\Program Files (x86)\\4dots Software\\4dots Free PDF Compress'))
-    cmd = [
-        '4dotsFreePDFCompress.exe'
-        , path_in_str
-        , '/quality:15'
-        , '/overwrite'
-    ]
-    p = subprocess.run(cmd, cwd=path_to_compressor, shell=True)
-    #print(industry_str_pdf + ' compressed')
+    try:
+        # compress
+        path_in_str = str(os.path.join(cwd, plots_final_folder, industry_str_pdf))
+        path_to_compressor = Path(os.path.join('C:\\Program Files (x86)\\4dots Software\\4dots Free PDF Compress'))
+        cmd = [
+            '4dotsFreePDFCompress.exe'
+            , path_in_str
+            , '/quality:15'
+            , '/overwrite'
+        ]
+        p = subprocess.run(cmd, cwd=path_to_compressor, shell=True)
+        #print(industry_str_pdf + ' compressed')
+    except:
+        pass
     print(industry_str + ' added')
 
