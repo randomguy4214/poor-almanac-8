@@ -72,6 +72,7 @@ pdf_batch = '0_non_stock.pdf'
 merger.write(os.path.join(cwd,plots_final_folder,pdf_batch))
 merger.close()
 
+"""
 try:
     #compress
     path_in_str = str(os.path.join(cwd,plots_final_folder,pdf_batch))
@@ -87,6 +88,7 @@ try:
 except:
     pass
 print('non-stock added')
+"""
 
 
 # 1 take all asset industries
@@ -115,17 +117,27 @@ for j in range(0, df_industries.index[-1]+1):
     merger.close()
 
     try:
-        # compress
+        # define
         path_in_str = str(os.path.join(cwd, plots_final_folder, industry_str_pdf))
         path_to_compressor = Path(os.path.join('C:\\Program Files (x86)\\4dots Software\\4dots Free PDF Compress'))
-        cmd = [
-            '4dotsFreePDFCompress.exe'
-            , path_in_str
-            , '/quality:15'
-            , '/overwrite'
-        ]
-        p = subprocess.run(cmd, cwd=path_to_compressor, shell=True)
-        #print(industry_str_pdf + ' compressed')
+
+        # check size if more than 10 mb
+
+        file_stat = os.stat(path_in_str)
+        pdf_size = file_stat.st_size
+
+        if pdf_size > 10000000: #10mb
+            # compress
+            cmd = [
+                '4dotsFreePDFCompress.exe'
+                , path_in_str
+                , '/quality:15'
+                , '/overwrite'
+            ]
+            p = subprocess.run(cmd, cwd=path_to_compressor, shell=True)
+            #print(industry_str_pdf + ' compressed')
+        else:
+            pass
     except:
         pass
     print(industry_str + ' added')
