@@ -346,8 +346,6 @@ for i in range(0, df_symbols.index[-1]+1):
 
             try:
                 ### EQUITY DEBT CHARTS
-                # ticker / marg of safety and date as plot label
-                print(ticker_str,' / ',  i+1, ' out of ',df_symbols.index[-1] + 1)
 
                 # reshape q data to create stacked bar chart
                 # https://stackoverflow.com/questions/49046317/pandas-pivot-merge-multiple-columns-into-single-using-column-headers-as-values
@@ -392,6 +390,7 @@ for i in range(0, df_symbols.index[-1]+1):
                 ax2.set_facecolor('black')
                 ax2.set_title(ticker_industr, fontsize=12, color='white')
 
+            """ 
             # CF INVENTORY, AccReceiv, AccPayab  quarterly
             df_temp_q_Inv_q_AR_q_AP_q = df_temp_q[['yearQ_str', 'CF_AccReceiv', 'CF_AccPayab', 'inventory_cf']]
             g_Inv_q = df_temp_q_Inv_q_AR_q_AP_q.plot('yearQ_str' #x axis variable
@@ -418,6 +417,7 @@ for i in range(0, df_symbols.index[-1]+1):
             g_Inv_q.tick_params(axis='x', colors='white')
             g_Inv_q.tick_params(axis='y', colors='white')
             g_Inv_q.set_facecolor('black')
+            """
 
             try:
                 # OwnEa annually
@@ -479,6 +479,8 @@ for i in range(0, df_symbols.index[-1]+1):
             # reset
             mpl.rc_file_defaults()
             plt.close('all')
+
+            print("plotted: " + ticker_str,' / ',  i+1, ' out of ',df_symbols.index[-1] + 1)
 
         #######################
             try:
