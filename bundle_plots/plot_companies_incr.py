@@ -201,81 +201,86 @@ for i in range(0, df_symbols.index[-1]+1):
             #ax8 is where "text" plot should be, but its fucked up
             #plt.style.use('dark_background')
 
-            ###  Quarterly Cash Op, Net Income, Revenue
-            df_temp_q_Rev_q = df_temp_q[['yearQ_str', 'revenue']]
-            g_Rev_q = df_temp_q_Rev_q.plot('yearQ_str', color='#05445E', alpha=1, width=1, kind='bar', ax=ax1, stacked=False, rasterized=False)
-            df_temp_q_ni_q = df_temp_q[['yearQ_str', 'netIncome']]
-            g_NI_q = df_temp_q_ni_q.plot('yearQ_str', color='#189AB4', alpha=1, width = 1, kind='bar', ax=ax1, stacked=False, rasterized=False)
-            df_temp_q_opcash_q = df_temp_q[['yearQ_str', 'operatingCashFlow']]
-            g_OpCash_q = df_temp_q_opcash_q.plot('yearQ_str', color='#C76280', alpha=1, width=1, kind='bar', ax=ax1, stacked=False, rasterized=False)
+            try:
+                ###  Quarterly Cash Op, Net Income, Revenue
+                df_temp_q_Rev_q = df_temp_q[['yearQ_str', 'revenue']]
+                g_Rev_q = df_temp_q_Rev_q.plot('yearQ_str', color='#05445E', alpha=1, width=1, kind='bar', ax=ax1, stacked=False, rasterized=False)
+                df_temp_q_ni_q = df_temp_q[['yearQ_str', 'netIncome']]
+                g_NI_q = df_temp_q_ni_q.plot('yearQ_str', color='#189AB4', alpha=1, width = 1, kind='bar', ax=ax1, stacked=False, rasterized=False)
+                df_temp_q_opcash_q = df_temp_q[['yearQ_str', 'operatingCashFlow']]
+                g_OpCash_q = df_temp_q_opcash_q.plot('yearQ_str', color='#C76280', alpha=1, width=1, kind='bar', ax=ax1, stacked=False, rasterized=False)
 
-            # formatting
-            g_OpCash_q.set_xticks(g_OpCash_q.get_xticks())
-            g_OpCash_q.set_yticks(g_OpCash_q.get_yticks())
-            g_OpCash_q.legend(loc='upper left', frameon=False, ncol=1, fontsize=5, labelcolor='white')
-            g_OpCash_q.tick_params(axis='y', which='major', labelsize=5, color='white')
-            g_OpCash_q.yaxis.label.set_visible(False)
-            g_OpCash_q.set_title('Sales, NI & Operating CF, quarterly', fontsize=8, color='white')
-            ylabels = ['{:,}'.format(y) + ' M' for y in (g_OpCash_q.get_yticks() / 1000000).astype('int64')]
-            g_OpCash_q.set_yticklabels(ylabels, size=5, color='white')
-            g_OpCash_q.minorticks_off()
-            g_OpCash_q.set_xticklabels(g_OpCash_q.get_xticklabels(), rotation=90, fontsize=5, color='white')
-            #g_OpCash_q.axes.get_xaxis().set_visible(False)
-            g_OpCash_q.tick_params(axis='x', colors='white')
-            g_OpCash_q.tick_params(axis='y', colors='white')
-            g_OpCash_q.spines['left'].set_color('none')
-            g_OpCash_q.spines['bottom'].set_color('none')
-            g_OpCash_q.tick_params(axis='y', colors='white')
-            g_OpCash_q.set_facecolor('black')
-            every_nth = 4 # draw only some of the x labels
-            for n, label in enumerate(g_OpCash_q.xaxis.get_ticklabels()):
-                if n % every_nth != 0 and n != len(g_OpCash_q.xaxis.get_ticklabels()):
-                    label.set_visible(False)
+                # formatting
+                g_OpCash_q.set_xticks(g_OpCash_q.get_xticks())
+                g_OpCash_q.set_yticks(g_OpCash_q.get_yticks())
+                g_OpCash_q.legend(loc='upper left', frameon=False, ncol=1, fontsize=5, labelcolor='white')
+                g_OpCash_q.tick_params(axis='y', which='major', labelsize=5, color='white')
+                g_OpCash_q.yaxis.label.set_visible(False)
+                g_OpCash_q.set_title('Sales, NI & Operating CF, quarterly', fontsize=8, color='white')
+                ylabels = ['{:,}'.format(y) + ' M' for y in (g_OpCash_q.get_yticks() / 1000000).astype('int64')]
+                g_OpCash_q.set_yticklabels(ylabels, size=5, color='white')
+                g_OpCash_q.minorticks_off()
+                g_OpCash_q.set_xticklabels(g_OpCash_q.get_xticklabels(), rotation=90, fontsize=5, color='white')
+                #g_OpCash_q.axes.get_xaxis().set_visible(False)
+                g_OpCash_q.tick_params(axis='x', colors='white')
+                g_OpCash_q.tick_params(axis='y', colors='white')
+                g_OpCash_q.spines['left'].set_color('none')
+                g_OpCash_q.spines['bottom'].set_color('none')
+                g_OpCash_q.tick_params(axis='y', colors='white')
+                g_OpCash_q.set_facecolor('black')
+                every_nth = 4 # draw only some of the x labels
+                for n, label in enumerate(g_OpCash_q.xaxis.get_ticklabels()):
+                    if n % every_nth != 0 and n != len(g_OpCash_q.xaxis.get_ticklabels()):
+                        label.set_visible(False)
+            except:
+                pass
 
-            ### Annually Cash Op, Net Income, Revenue
-            df_temp_q_Rev_a = df_temp_a[['calendarYear_str', 'revenue']]
-            g_Rev_q = df_temp_q_Rev_a.plot('calendarYear_str', color='#05445E', alpha=1, width=1, kind='bar', ax=ax3, stacked=False, rasterized=False)
-            df_temp_a_ni_a = df_temp_a[['calendarYear_str', 'netIncome']]
-            g_NI_a = df_temp_a_ni_a.plot('calendarYear_str', color='#189AB4', alpha=1, width=1, kind='bar', ax=ax3, stacked=False, rasterized=False)
-            df_temp_a_opcash_a = df_temp_a[['calendarYear_str', 'operatingCashFlow']]
-            g_OpCash_a = df_temp_a_opcash_a.plot('calendarYear_str', color='#C76280', alpha=1, width = 1, kind='bar', ax=ax3, stacked=False, rasterized=False)
+            try:
+                ### Annually Cash Op, Net Income, Revenue
+                df_temp_q_Rev_a = df_temp_a[['calendarYear_str', 'revenue']]
+                g_Rev_q = df_temp_q_Rev_a.plot('calendarYear_str', color='#05445E', alpha=1, width=1, kind='bar', ax=ax3, stacked=False, rasterized=False)
+                df_temp_a_ni_a = df_temp_a[['calendarYear_str', 'netIncome']]
+                g_NI_a = df_temp_a_ni_a.plot('calendarYear_str', color='#189AB4', alpha=1, width=1, kind='bar', ax=ax3, stacked=False, rasterized=False)
+                df_temp_a_opcash_a = df_temp_a[['calendarYear_str', 'operatingCashFlow']]
+                g_OpCash_a = df_temp_a_opcash_a.plot('calendarYear_str', color='#C76280', alpha=1, width = 1, kind='bar', ax=ax3, stacked=False, rasterized=False)
 
-            # formatting
-            g_OpCash_a.set_xticks(g_OpCash_a.get_xticks())
-            g_OpCash_a.set_yticks(g_OpCash_a.get_yticks())
-            g_OpCash_a.legend(loc='upper left', frameon=False, ncol=1, fontsize=5, labelcolor='white')
-            g_OpCash_a.yaxis.label.set_visible(False)
-            g_OpCash_a.set_title('Sales, NI & Operating CF, annually', fontsize=8, color='white')
-            g_OpCash_a_ylabels = ['{:,}'.format(y) + ' M' for y in (g_OpCash_a.get_yticks() / 1000000).astype('int64')]
-            g_OpCash_a.set_yticklabels(g_OpCash_a_ylabels, size=5, color='gray')
-            g_OpCash_a.minorticks_off()
-            #g_OpCash_a.axes.get_xaxis().set_visible(False)
-            g_OpCash_a.set_xticklabels(g_OpCash_a.get_xticklabels(), rotation=90, fontsize=5, color='gray')
-            g_OpCash_a.xaxis.label.set_visible(True)
-            g_OpCash_a.spines['left'].set_color('none')
-            g_OpCash_a.spines['bottom'].set_color('none')
-            g_OpCash_a.tick_params(axis='x', colors='white')
-            g_OpCash_a.tick_params(axis='y', colors='white')
-            g_OpCash_a.set_facecolor('black')
+                # formatting
+                g_OpCash_a.set_xticks(g_OpCash_a.get_xticks())
+                g_OpCash_a.set_yticks(g_OpCash_a.get_yticks())
+                g_OpCash_a.legend(loc='upper left', frameon=False, ncol=1, fontsize=5, labelcolor='white')
+                g_OpCash_a.yaxis.label.set_visible(False)
+                g_OpCash_a.set_title('Sales, NI & Operating CF, annually', fontsize=8, color='white')
+                g_OpCash_a_ylabels = ['{:,}'.format(y) + ' M' for y in (g_OpCash_a.get_yticks() / 1000000).astype('int64')]
+                g_OpCash_a.set_yticklabels(g_OpCash_a_ylabels, size=5, color='gray')
+                g_OpCash_a.minorticks_off()
+                #g_OpCash_a.axes.get_xaxis().set_visible(False)
+                g_OpCash_a.set_xticklabels(g_OpCash_a.get_xticklabels(), rotation=90, fontsize=5, color='gray')
+                g_OpCash_a.xaxis.label.set_visible(True)
+                g_OpCash_a.spines['left'].set_color('none')
+                g_OpCash_a.spines['bottom'].set_color('none')
+                g_OpCash_a.tick_params(axis='x', colors='white')
+                g_OpCash_a.tick_params(axis='y', colors='white')
+                g_OpCash_a.set_facecolor('black')
 
-            ### Margin annually
-            df_temp_a_Marg_a = df_temp_a[['calendarYear_str','grossProfitRatio']]
-            g_Marg_a = df_temp_a_Marg_a.plot('calendarYear_str', color = '#BF5757', kind='line', linewidth=0.
-                                             , alpha=0.5, linestyle='--', ax=ax3_secondy, rasterized=False)
-            # formatting
-            g_Marg_a.set_xticks(g_Marg_a.get_xticks())
-            g_Marg_a.set_yticks(g_Marg_a.get_yticks())
-            g_Marg_a.get_legend().set_visible(False)
-            g_Marg_a.yaxis.label.set_visible(False)
-            g_Marg_a_ylabels = ['{:,}'.format(y) + ' %' for y in (g_Marg_a.get_yticks() * 100).astype('int64')]
-            g_Marg_a.set_yticklabels(g_Marg_a_ylabels, size=5, color='#12b8ff')
-            g_Marg_a.axes.get_xaxis().set_visible(False)
-            g_Marg_a.xaxis.label.set_visible(False)
-            g_Marg_a.spines['left'].set_color('none')
-            g_Marg_a.spines['bottom'].set_color('none')
-            g_Marg_a.tick_params(axis='y', colors = '#BF5757')
-            g_Marg_a.grid(False)
-
+                ### Margin annually
+                df_temp_a_Marg_a = df_temp_a[['calendarYear_str','grossProfitRatio']]
+                g_Marg_a = df_temp_a_Marg_a.plot('calendarYear_str', color = '#BF5757', kind='line', linewidth=0.
+                                                 , alpha=0.5, linestyle='--', ax=ax3_secondy, rasterized=False)
+                # formatting
+                g_Marg_a.set_xticks(g_Marg_a.get_xticks())
+                g_Marg_a.set_yticks(g_Marg_a.get_yticks())
+                g_Marg_a.get_legend().set_visible(False)
+                g_Marg_a.yaxis.label.set_visible(False)
+                g_Marg_a_ylabels = ['{:,}'.format(y) + ' %' for y in (g_Marg_a.get_yticks() * 100).astype('int64')]
+                g_Marg_a.set_yticklabels(g_Marg_a_ylabels, size=5, color='#12b8ff')
+                g_Marg_a.axes.get_xaxis().set_visible(False)
+                g_Marg_a.xaxis.label.set_visible(False)
+                g_Marg_a.spines['left'].set_color('none')
+                g_Marg_a.spines['bottom'].set_color('none')
+                g_Marg_a.tick_params(axis='y', colors = '#BF5757')
+                g_Marg_a.grid(False)
+            except:
+                pass
 
             try:
                 ### Shares Outstanding
@@ -458,6 +463,7 @@ for i in range(0, df_symbols.index[-1]+1):
                             )
             except:
                 pass
+
         #######################
             # save plots as pdf
             plt.tick_params(axis='both', which='both', left=False, right=False, bottom=False, top=False, labelbottom=False)
