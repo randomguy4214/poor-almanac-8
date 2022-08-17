@@ -4,6 +4,8 @@ print('update_sec_fillings - initiating.')
 import os
 import pandas as pd
 import shutil
+from pathlib import Path
+
 from sec_edgar_downloader import Downloader
 
 cwd = os.getcwd()
@@ -28,6 +30,9 @@ for t in tickers.split(' '):
         # check ticker folder
         if not os.path.exists(os.path.join(cwd, sec_fillings_folder, t)):
             os.mkdir(os.path.join(cwd, sec_fillings_folder, t))
+        else
+            shutil.rmtree(os.path.join(cwd, sec_fillings_folder, t))
+            os.mkdir(os.path.join(cwd, sec_fillings_folder, t))
 
         # set up downloader
         dl = Downloader(os.path.join(cwd, sec_fillings_folder, t))
@@ -36,6 +41,16 @@ for t in tickers.split(' '):
         dl.get("10-K", t, amount=1)
         dl.get("10-Q", t, amount=4)
         dl.get("8-K", t, amount=10, include_amends=True)
+
+        # delete heavy txt files
+        paths = Path(os.path.join(cwd, sec_fillings_folder, t)).glob('**/*.txt')
+        for path in paths:
+            # path_in_str = str(path)
+            # print(path_in_str)
+            if not os.path.exists(path):
+                pass
+            else:
+                os.remove(path)
 
         print('downloading SEC fillings: ' + t)
     except:
