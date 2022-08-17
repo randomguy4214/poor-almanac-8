@@ -30,7 +30,7 @@ for t in tickers.split(' '):
         # check ticker folder
         if not os.path.exists(os.path.join(cwd, sec_fillings_folder, t)):
             os.mkdir(os.path.join(cwd, sec_fillings_folder, t))
-        else
+        else:
             shutil.rmtree(os.path.join(cwd, sec_fillings_folder, t))
             os.mkdir(os.path.join(cwd, sec_fillings_folder, t))
 
