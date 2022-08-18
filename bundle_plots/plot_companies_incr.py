@@ -321,8 +321,9 @@ for i in range(0, df_symbols.index[-1]+1):
                 #print(df_temp_price)
                 #df_temp_price.to_csv(os.path.join(cwd, input_folder, charts_folder, test_df_EV_ticker_csv))
                 g_Price_q = df_temp_price.plot('date', color='#05445E', kind='area', stacked=False, alpha=1
-                                               , ax=ax4, rasterized=False)
-                g_Price_q.set_title('Price vs shares outstanding, quarterly', fontsize=8, color='white')
+                                               , ax=ax2, rasterized=False)
+                #g_Price_q.set_title('Price vs shares outstanding, quarterly', fontsize=8, color='white')
+                g_Price_q.set_title('', fontsize=8, color='white')
                 g_Price_q.get_legend().set_visible(False)
                 g_Price_q.set_xticks(g_Price_q.get_xticks())
                 g_Price_q.set_xticks(df_temp_price.index, labels = df_temp_price['date'])
@@ -374,7 +375,7 @@ for i in range(0, df_symbols.index[-1]+1):
                 #df_g_EqD_pivot.to_csv(os.path.join(cwd, input_folder, "test_g_EqD_pivot.csv"))
                 #sys.exit()
                 g_EqD = g_EqD_pivot.plot(kind='area', alpha=.7, color=['#05445E', '#189AB4', '#C76280', '#304390']
-                                         , ax=ax2, rasterized=False)
+                                         , ax=ax4, rasterized=False)
                 # formatting
                 g_EqD.set_xticks(g_EqD.get_xticks())
                 g_EqD.set_yticks(g_EqD.get_yticks())
@@ -423,6 +424,7 @@ for i in range(0, df_symbols.index[-1]+1):
             g_Inv_q.tick_params(axis='y', colors='white')
             g_Inv_q.set_facecolor('black')
             """
+            ax6.set_facecolor('black')
 
             try:
                 # OwnEa annually
