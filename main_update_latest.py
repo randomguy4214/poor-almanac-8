@@ -17,7 +17,7 @@ from bundle_update import update_other
 from bundle_update import update_EV
 from bundle_update import update_commodities
 from bundle_update import update_FED_balance_sheet
-from bundle_update import update_sec_fillings
+#from bundle_update import update_sec_fillings
 
 from bundle_process_incremental import process_financials_a_incr
 from bundle_process_incremental import process_financials_q_incr
