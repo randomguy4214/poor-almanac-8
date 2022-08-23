@@ -39,6 +39,6 @@ from bundle_plots import plot_BS_FED_b
 from bundle_process_incremental import process_pdfs_reduce_size_for_non_stock
 
 from bundle_process_first_time import process_plot_folder_all_setup
-from bundle_plots import plot_companies_all
+from bundle_plots import plot_companies_all_T
 from bundle_pdf import pdfs_all_to_one
 #from bundle_process_first_time import process_pdfs_reduce_size

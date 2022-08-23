@@ -106,6 +106,7 @@ df_merged_reduced = df_merged[~df_merged['industry'].str.contains(useless_indust
 df_merged_reduced = df_merged_reduced[~df_merged_reduced['country'].str.contains('in', case=False, na=False)].drop_duplicates()
 #df_merged_reduced.to_csv(os.path.join(cwd, 'test_df_merged_reduced.csv'), index=False)
 #sys.exit()
+
 #df_symbols = df_merged.reset_index(drop=True)
 df_symbols = df_merged_reduced['symbol'].drop_duplicates()
 df_symbols = df_symbols.reset_index(drop=False)
