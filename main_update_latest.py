@@ -34,6 +34,7 @@ from bundle_update import update_prices
 from bundle_process_first_time import process_prices
 from bundle_merge_output import a_recent_EV_prices_diff
 from bundle_merge_output import output
+from bundle_process_first_time import process_tickers_cross_check
 
 from bundle_process_incremental import process_plot_folder_setup
 from bundle_plots import plot_commodities
