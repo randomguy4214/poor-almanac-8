@@ -4,7 +4,7 @@ setup(
     name='poor-almanac-8',
     version='',
     install_requires=['pandas', 'openpyxl', 'requests_html'
-        , 'numpy', 'seaborn', 'matplotlib', 'PyPDF2', 'shutil'
+        , 'numpy', 'seaborn', 'matplotlib', 'PyPDF2'
         , 'pyhtml2pdf', 'sec_edgar_downloader'],
     url='',
     license='',
