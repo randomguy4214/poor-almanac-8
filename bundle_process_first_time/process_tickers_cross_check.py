@@ -79,7 +79,6 @@ df_merged = pd.merge(df_to_merge, df_EV_q
 #df_merged.drop([col for col in df_merged.columns if 'drop' in col], axis=1, inplace=True)
 df_to_merge = df_merged.drop_duplicates()
 df_to_merge.reset_index(drop=True)
-print(df_to_merge)
 # to other
 df_merged = pd.merge(df_to_merge, df_other
                      , how='left', left_on=['symbol']
@@ -89,3 +88,4 @@ df_merged = pd.merge(df_to_merge, df_other
 symbols_comparison_xlsx = '3_symbols_comparison.xlsx'
 df_merged.to_excel(os.path.join(cwd,input_folder,symbols_comparison_xlsx), index=False)
 
+print(df_merged.count())
