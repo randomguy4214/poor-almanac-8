@@ -1,5 +1,9 @@
 # poor-almanac-8
 
+discontinued project
+
+
+---------------------------
 financialmodelingprep.com subscription is required.
 
 The idea is to find ratio of current price, and discounted Owners Earnings. 
